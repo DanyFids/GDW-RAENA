@@ -19,7 +19,7 @@ Player * Player::create(const std::string& filename, cocos2d::Scene * s)
 void Player::switchLight()
 {
 	if (!light_on) {
-		player_light = this->getEffect()->addLight(cocos2d::Vec3(this->getPosition().x, this->getPosition().y, 25));
+		player_light = this->getEffect()->addLight(cocos2d::Vec3(this->getPosition().x, this->getPosition().y, 20));
 		light_on = true;
 	}
 	else {
