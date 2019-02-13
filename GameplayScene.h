@@ -1,12 +1,14 @@
 #pragma once
 
 #include "cocos2d.h"
-#include"Player.h"
+#include "Entities/Player.h"
+#include "Entities/Enemies.h"
 
 class GameplayScene : public cocos2d::Scene {
 private:
 	const float PLAYER_SPEED = 100;
 	Player * player;
+	Knight * knight;
 
 public:
 	struct {

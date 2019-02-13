@@ -14,6 +14,7 @@ bool GameplayScene::init() {
 	}
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
+	//Center of screen
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	EffectSprite *_bgColor = EffectSprite::create("BG.png");
@@ -21,12 +22,23 @@ bool GameplayScene::init() {
 	_bgColor->setScale(1);
 	this->addChild(_bgColor, -10);
 
-	player = Player ::create("test_dummy.png");
+	player = Player::create("test_dummy.png");
 
 	if (player != nullptr) {
 		player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
 
 		this->addChild(player);
+	}
+	else {
+		return false;
+	}
+
+	knight = Knight::create("test_dummy.png");
+
+	if (knight != nullptr) {
+		knight->setPosition(Vec2((visibleSize.width / 2) - knight->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - knight->getBoundingBox().size.height / 2 + origin.y));
+		knight->setPosition(700, 50);
+		this->addChild(knight);
 	}
 	else {
 		return false;
@@ -130,4 +142,7 @@ void GameplayScene::update(float dt) {
 	}
 
 	player->moveLightToPlayer();
+	knight->AI(player, dt);
+	knight->Move();
+	knight->Update(dt);
 }

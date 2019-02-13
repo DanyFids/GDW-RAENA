@@ -23,7 +23,7 @@
  ****************************************************************************/
 
 #include "HelloWorldScene.h"
-#include "proj.win32/GameplayScene.h"
+#include "GameplayScene.h"
 #include "SimpleAudioEngine.h"
 
 USING_NS_CC;
