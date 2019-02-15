@@ -4,6 +4,8 @@
 #include"Entities/Player.h"
 #include"Entities/Block.h"
 #include"Entities/Torch.h"
+#include "Entities/Interactable.h"
+#include "Entities/Platforms.h"
 
 class GameplayScene : public cocos2d::Scene {
 private:
@@ -11,6 +13,8 @@ private:
 	Player * player;
 	cocos2d::Vector<Block *> platforms;
 	cocos2d::Vector<Torch *> torches;
+	cocos2d::Vector<Interactable *> interactables;
+	cocos2d::Vector<Platform *> ActualPlatforms;
 public:
 	struct {
 		bool key_up = false;
@@ -21,6 +25,8 @@ public:
 		bool key_space_p = false;
 		bool key_jump = false;
 		bool key_jump_p = false;
+		bool key_interact = false;
+
 	} GAMEPLAY_INPUT;
 
 	static cocos2d::Scene * createScene();

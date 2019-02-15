@@ -3,6 +3,8 @@
 #include "Effects/EffectLayer.h"
 #include "Entities/Fireball.h"
 #include "Constants.h"
+#include <string>
+
 
 USING_NS_CC;
 
@@ -43,10 +45,32 @@ bool GameplayScene::init() {
 	platforms.pushBack(Block::create(500,200, 300, 75));
 	platforms.pushBack(Block::create(280, 350, 180, 10));
 
+	interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));
+	std::string plat1_file = "Platform1.png";
+	ActualPlatforms.pushBack(Platform::create(plat1_file, 100.0f, 280.0f));
+
 	for each (Block* plat in platforms)
 	{
 		if (plat != nullptr) {
 			this->addChild(plat);
+		}
+		else {
+			return false;
+		}
+	}
+
+	for each (Interactable* inter in interactables) {
+		if (inter != nullptr) {
+			this->addChild(inter);
+		}
+		else {
+			return false;
+		}
+	}
+
+	for each (Platform* p in ActualPlatforms) {
+		if (p != nullptr) {
+			this->addChild(p);
 		}
 		else {
 			return false;
@@ -83,6 +107,9 @@ bool GameplayScene::init() {
 		case EventKeyboard::KeyCode::KEY_C:
 			GAMEPLAY_INPUT.key_jump = true;
 			break;
+		case EventKeyboard::KeyCode::KEY_E:
+			GAMEPLAY_INPUT.key_interact = true;
+			break;
 		}
 	};
 
@@ -111,6 +138,9 @@ bool GameplayScene::init() {
 		case EventKeyboard::KeyCode::KEY_C:
 			GAMEPLAY_INPUT.key_jump = false;
 			GAMEPLAY_INPUT.key_jump_p = false;
+			break;
+		case EventKeyboard::KeyCode::KEY_E:
+			GAMEPLAY_INPUT.key_interact = false;
 			break;
 		}
 	};
@@ -162,6 +192,14 @@ bool GameplayScene::init() {
 void GameplayScene::update(float dt) {
 	player->Update(dt);
 
+	if (GAMEPLAY_INPUT.key_interact) {
+		for each (Interactable* i in interactables) {
+			if (i->HitDetect(player)) {
+				i->Effect(i->getType());
+			}
+		}
+	}
+
 	if (GAMEPLAY_INPUT.key_left) {
 		player->spd.x = -PLAYER_SPEED * dt;
 	}
@@ -184,9 +222,15 @@ void GameplayScene::update(float dt) {
 		platform->HitDetect(player);
 	}
 
+	for each (Platform* p in ActualPlatforms) {
+		p->HitDetect(player);
+	}
+
 	for each (Torch* t in torches) {
 		player->HitDetectEnem(t);
 	}
+
+	
 
 	player->Move();
 	player->moveLightToPlayer();
