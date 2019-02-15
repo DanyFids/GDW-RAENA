@@ -33,6 +33,7 @@ void Knight::moveLightToPlayer()
 }
 
 void Knight::AI(Player* player, float dt) {
+
 	/*******************
 	* Player Detection
 	*******************/
@@ -103,10 +104,6 @@ void Knight::hurt(int dmg) {
 
 int Knight::getHp() {
 	return hp;
-}
-
-void Knight::hit(int dmg) {
-
 }
 
 bool Knight::HitDetect(Entity * other)

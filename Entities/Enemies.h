@@ -23,7 +23,6 @@ public:
 	void AI(Player* player, float dt);
 	void hurt(int dmg);
 	int getHp();
-	void hit(int dmg);
 
 	// Inherited via Entity
 	virtual bool HitDetect(Entity * other) override;
