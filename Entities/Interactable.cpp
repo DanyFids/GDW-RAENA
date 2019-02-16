@@ -9,6 +9,18 @@ Interactable * Interactable::create(int x, int y, int w, int h, InteractType typ
 
 		ret->objectType = type;
 
+		switch (type)
+		{
+		case SWITCH:
+			ret->CD = 0.6f;
+			ret->temp_CD = 0.6f;
+			break;
+		case DOOR:
+			break;
+		case S_DOOR:
+			break;
+		}
+
 		ret->setAnchorPoint(cocos2d::Vec2(0, 0));
 		ret->setPositionX(x);
 		ret->setPositionY(y);
@@ -32,6 +44,18 @@ Interactable * Interactable::create(std::string filename, cocos2d::Vec2 p, Inter
 		ret->autorelease();
 
 		ret->objectType = type;
+
+		switch (type)
+		{
+		case SWITCH:
+			ret->CD = 0.6f;
+			ret->temp_CD = 0.6f;
+			break;
+		case DOOR:
+			break;
+		case S_DOOR:
+			break;
+		}
 
 		ret->setAnchorPoint(cocos2d::Vec2(0, 0));
 		ret->setPosition(p);
@@ -59,17 +83,38 @@ bool Interactable::HitDetect(Entity * other)
 	float MAX_X = this->getPositionX() + (this->getBoundingBox().size.width / 2);
 	float MIN_X = this->getPositionX() + (this->getBoundingBox().size.width / 2);;
 
-
-	if (o_TOP >= MIN_Y || o_BOT <= MAX_Y && o_RIGHT >= MIN_X || o_LEFT <= MAX_X) 
-	{
-		return true;
+	if (this->objectType == SWITCH) {
+		if (o_TOP >= MIN_Y || o_BOT <= MAX_Y && o_RIGHT >= MIN_X || o_LEFT <= MAX_X)
+		{
+			return true;
+		}
+		else return false;
 	}
 	else
 	return false;
 }
 
+
+
 void Interactable::Update(float dt)
 {
+
+	if (CoolDownState == true)
+	{
+
+		if (objectType == SWITCH) {
+
+			temp_CD -= dt;
+			if (temp_CD <= 0) {
+				temp_CD = CD;
+				CoolDownState = false;
+			}
+
+		}
+
+
+	}
+
 }
 
 void Interactable::Move()
@@ -79,16 +124,21 @@ void Interactable::Move()
 void Interactable::Effect(InteractType t)
 {
 	
-	if (t == SWITCH) {
+	if (t == SWITCH && CoolDownState == false) {
+
+		this->CoolDownState = true;
+
 		if (this->Active == false) {
+
 			this->Active = true;
 			this->setPosition(this->getPosition() + cocos2d::Vec2(0, 5));
 		}
 		else {
+
 			this->Active = false;
 			this->setPosition(this->getPosition() - cocos2d::Vec2(0, 5));
 		}
-		
+	
 	}
 
 

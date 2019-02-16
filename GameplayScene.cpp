@@ -196,12 +196,19 @@ bool GameplayScene::init() {
 void GameplayScene::update(float dt) {
 	player->Update(dt);
 
-	if (GAMEPLAY_INPUT.key_interact) {
+																			 
+
+	if (GAMEPLAY_INPUT.key_interact) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
 		for each (Interactable* i in interactables) {
-			if (i->HitDetect(player)) {
+			if (i->HitDetect(player) ) {
 				i->Effect(i->getType());
+				i->setCooldown();
 			}
 		}
+	}
+
+	for each (Interactable* i in interactables) {
+		i->Update(dt);
 	}
 
 	if (GAMEPLAY_INPUT.key_left) {
