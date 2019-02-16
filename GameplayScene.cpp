@@ -1,8 +1,12 @@
 #include "GameplayScene.h"
 #include "Effects/LightEffect.h"
 #include "Effects/EffectLayer.h"
+#include "Textbox.h"
+#include "Prompt.h"
 
 USING_NS_CC;
+
+
 
 Scene* GameplayScene::createScene() {
 	return GameplayScene::create();
@@ -59,6 +63,21 @@ bool GameplayScene::init() {
 		case EventKeyboard::KeyCode::KEY_SPACE:
 			GAMEPLAY_INPUT.key_space = true;
 			break;
+		case EventKeyboard::KeyCode::KEY_M:
+			GAMEPLAY_INPUT.key_one = true;
+			break;
+		case EventKeyboard::KeyCode::KEY_F:
+			GAMEPLAY_INPUT.key_F = true;
+			break;
+		case EventKeyboard::KeyCode::KEY_L:
+			GAMEPLAY_INPUT.key_two = true;
+			break;
+		case EventKeyboard::KeyCode::KEY_1:
+			GAMEPLAY_INPUT.key_P1 = true;
+			break;
+		case EventKeyboard::KeyCode::KEY_2:
+			GAMEPLAY_INPUT.key_P2 = true;
+			break;
 		}
 	};
 
@@ -84,6 +103,26 @@ bool GameplayScene::init() {
 			GAMEPLAY_INPUT.key_space = false;
 			GAMEPLAY_INPUT.key_space_p = false;
 			break;
+		case EventKeyboard::KeyCode::KEY_M:
+			GAMEPLAY_INPUT.key_one = false;
+			GAMEPLAY_INPUT.key_oneP = false;
+			break;
+		case EventKeyboard::KeyCode::KEY_F:
+			GAMEPLAY_INPUT.key_F = false;
+			GAMEPLAY_INPUT.key_FP = false;
+			break;
+		case EventKeyboard::KeyCode::KEY_L:
+			GAMEPLAY_INPUT.key_two = false;
+			GAMEPLAY_INPUT.key_twoP = false;
+			break;
+		case EventKeyboard::KeyCode::KEY_1:
+			GAMEPLAY_INPUT.key_P1 = false;
+			GAMEPLAY_INPUT.key_P1P = false;
+			break;
+		case EventKeyboard::KeyCode::KEY_2:
+			GAMEPLAY_INPUT.key_P2 = false;
+			GAMEPLAY_INPUT.key_P2P = false;
+			break;
 		}
 	};
 
@@ -107,8 +146,13 @@ bool GameplayScene::init() {
 
 	this->scheduleUpdate();
 
+
+	
+
 	return true;
 }
+Textbox* ActiveTextbox;
+Prompt* ActivePrompt;
 
 void GameplayScene::update(float dt) {
 	if (GAMEPLAY_INPUT.key_up) {
@@ -127,6 +171,88 @@ void GameplayScene::update(float dt) {
 	if (GAMEPLAY_INPUT.key_space && ! GAMEPLAY_INPUT.key_space_p) {
 		player->switchLight();
 		GAMEPLAY_INPUT.key_space_p = true;
+	}
+	if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
+	{
+		auto Textbox1 = Textbox::create(1, { 1 }, { "What up fuckbois" }, (this));
+		addChild(Textbox1, 10);
+		Textbox1->Load();
+		if (ActiveTextbox)
+		{
+			ActiveTextbox->Close();
+		}
+		
+
+		ActiveTextbox = Textbox1;
+		
+		GAMEPLAY_INPUT.key_oneP = true;
+
+		
+	}
+	
+	
+
+	if (GAMEPLAY_INPUT.key_two && !GAMEPLAY_INPUT.key_twoP)
+	{
+		auto Textbox2 = Textbox::create(2, { 1,1 }, { "Yeet", "Get Dabbed on" }, (this));
+		addChild(Textbox2, 10);
+		Textbox2->Load();
+		if (ActiveTextbox)
+		{
+			ActiveTextbox->Close();
+		}
+		ActiveTextbox = Textbox2;
+
+		GAMEPLAY_INPUT.key_twoP = true;
+	
+	}
+
+	if (GAMEPLAY_INPUT.key_P1 && !GAMEPLAY_INPUT.key_P1P)
+	{
+		auto Prompt1 = Prompt::create(1, (this));
+		addChild(Prompt1, 10);
+		Prompt1->Load();
+		if (ActivePrompt)
+		{
+			ActivePrompt->Close();
+		}
+		ActivePrompt = Prompt1;
+
+		GAMEPLAY_INPUT.key_P1P = true;
+	}
+	if (GAMEPLAY_INPUT.key_P2 && !GAMEPLAY_INPUT.key_P2P)
+	{
+		auto Prompt2 = Prompt::create(2, (this));
+		addChild(Prompt2, 10);
+		Prompt2->Load();
+		if (ActivePrompt)
+		{
+			ActivePrompt->Close();
+		}
+		ActivePrompt = Prompt2;
+
+		GAMEPLAY_INPUT.key_P2P = true;
+	}
+
+	if (GAMEPLAY_INPUT.key_F && !GAMEPLAY_INPUT.key_FP)
+	{
+		
+		//ActiveTextbox->Load();
+		ActiveTextbox->Close();
+		int ActiveCurrPage = ActiveTextbox->getCurrPage();
+		int ActivePages = ActiveTextbox->getPages();
+		if (!(ActiveCurrPage == ActivePages - 1))
+		{
+			ActiveTextbox->Flippage();
+			ActiveTextbox->Load();
+		}
+		
+		GAMEPLAY_INPUT.key_FP = true;
+	}
+
+	if (ActivePrompt)
+	{
+		ActivePrompt->Follow(player);
 	}
 
 	player->moveLightToPlayer();
