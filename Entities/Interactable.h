@@ -7,14 +7,22 @@ enum InteractType {
 	S_DOOR
 };
 
+enum KeyType {
+
+	NONE,  //FOR DEFAULT CONSTUCTOR
+
+	GEN_KEY //General Key
+
+};
+
 
 
 class Interactable : public Entity {
 
 public :
 
-	static Interactable* create(int x,int y, int w, int h,InteractType type);
-	static Interactable* create(std::string filename, cocos2d::Vec2 p, InteractType type);
+	static Interactable* create(int x,int y, int w, int h,InteractType type, KeyType key = NONE);
+	static Interactable* create(std::string filename, cocos2d::Vec2 p, InteractType type, KeyType key = NONE);
 
 	const float SwitchCD = 0.6;
 
@@ -41,7 +49,8 @@ private:
 	float CD;
 	float temp_CD;
 
-	InteractType objectType;
+	InteractType objectType; // What is this object? ex. A door? A switch? 
+	KeyType requiredKey; // If this is a locked door what key does it use?
 
 	//Door Variables;
 	// Active == Open/Close , True == Open 

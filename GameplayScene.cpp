@@ -45,7 +45,11 @@ bool GameplayScene::init() {
 	platforms.pushBack(Block::create(500,200, 300, 75));
 	platforms.pushBack(Block::create(280, 350, 180, 10));
 
+
 	interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));
+
+	interactables.pushBack(Interactable::create(300, 200, 30, 70, DOOR));
+
 	std::string plat1_file = "Platform1.png";
 	ActualPlatforms.pushBack(Platform::create(plat1_file, cocos2d::Vec2(100,280)));
 
@@ -226,6 +230,12 @@ void GameplayScene::update(float dt) {
 	if (GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) {
 		player->Jump();
 		GAMEPLAY_INPUT.key_jump_p = true;
+	}
+
+	for each (Interactable* i in interactables) {
+		if (i->getType() == DOOR) {	//Add all object types that actually collide with the player here.
+			i->HitDetect(player);
+		}
 	}
 
 	for each (Block* platform in platforms)
