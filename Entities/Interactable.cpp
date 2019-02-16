@@ -24,6 +24,24 @@ Interactable * Interactable::create(int x, int y, int w, int h, InteractType typ
 	return nullptr;
 }
 
+Interactable * Interactable::create(std::string filename, cocos2d::Vec2 p, InteractType type)
+{
+	auto ret = new (std::nothrow) Interactable;
+
+	if (ret && ret->initWithFile(filename)) {
+		ret->autorelease();
+
+		ret->objectType = type;
+
+		ret->setAnchorPoint(cocos2d::Vec2(0, 0));
+		ret->setPosition(p);
+
+		return ret;
+	}
+	CC_SAFE_RELEASE(ret);
+	return nullptr;
+}
+
 bool Interactable::HitDetect(Entity * other)
 {
 	//	 Entities Bound.

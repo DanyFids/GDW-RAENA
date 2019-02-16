@@ -5,7 +5,10 @@
 class Platform : public Entity {
 public:
 	static Platform* create( std::string filename, float x, float y);
-	static Platform* create( std::string filename, float x,float y, float xSpeed, float ySpeed);
+	static Platform* create(std::string filename, cocos2d::Vec2 p);
+
+	static Platform* create(std::string filename, float x,float y, float xSpeed, float ySpeed);
+	static Platform* create(std::string filename, cocos2d::Vec2 p, float xSpeed, float ySpeed);
 
 
 

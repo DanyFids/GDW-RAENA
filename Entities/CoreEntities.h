@@ -13,6 +13,7 @@ public:
 	virtual void Update(float dt) = 0;
 
 	void SetOnGround(bool b) {on_ground = b;}
+	bool OnGround() { return on_ground; }
 };
 
 class Player;

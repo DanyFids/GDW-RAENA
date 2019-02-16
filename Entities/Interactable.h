@@ -10,6 +10,7 @@ class Interactable : public Entity {
 public :
 
 	static Interactable* create(int x,int y, int w, int h,InteractType type);
+	static Interactable* create(std::string filename, cocos2d::Vec2 p, InteractType type);
 
 
 

@@ -47,7 +47,7 @@ bool GameplayScene::init() {
 
 	interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));
 	std::string plat1_file = "Platform1.png";
-	ActualPlatforms.pushBack(Platform::create(plat1_file, 100.0f, 280.0f));
+	ActualPlatforms.pushBack(Platform::create(plat1_file, cocos2d::Vec2(100,280)));
 
 	for each (Block* plat in platforms)
 	{
@@ -70,6 +70,10 @@ bool GameplayScene::init() {
 
 	for each (Platform* p in ActualPlatforms) {
 		if (p != nullptr) {
+
+			/*p->setScale(SCALE);
+			p->getTexture()->setTexParameters(tp);*/
+
 			this->addChild(p);
 		}
 		else {
