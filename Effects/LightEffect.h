@@ -3,6 +3,15 @@
 
 #include "Effect.h"
 
+struct Light_Struct {
+	int id;
+	cocos2d::Vec3 _lightPos;
+	cocos2d::Color3B _lightColor;
+	cocos2d::Color3B _ambientLightColor;
+	float _lightCutoffRadius;
+	float _lightHalfRadius;
+	float _brightness;
+};
 
 class LightEffect : public Effect
 {
@@ -31,13 +40,13 @@ protected:
 	static const int MAX_LIGHTS = 10;
 
     cocos2d::Vec3 _lightPos[MAX_LIGHTS];
-    cocos2d::Color3B _lightColor;
-    cocos2d::Color3B _ambientLightColor;
-    float _lightCutoffRadius;
-    float _lightHalfRadius;
-    float _brightness;
 	int _num_lights = 0;
 	cocos2d::Texture2D * layer_normalmap;
+	cocos2d::Color3B _lightColor;
+	cocos2d::Color3B _ambientLightColor;
+	float _lightCutoffRadius;
+	float _lightHalfRadius;
+	float _brightness;
 };
 
 #endif

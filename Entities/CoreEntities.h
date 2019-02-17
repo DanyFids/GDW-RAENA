@@ -24,8 +24,6 @@ public:
 	virtual void AI(Player * p) = 0;
 	virtual void Hit(Player * p) = 0;
 
-	void Hurt(int d) {
-		hp -= d;
-	}
+	virtual void Hurt(int d) = 0;
 };
 
