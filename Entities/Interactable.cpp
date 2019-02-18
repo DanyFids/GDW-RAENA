@@ -103,7 +103,7 @@ bool Interactable::HitDetect(Entity * other)
 	float MIN_X = this->getPositionX();
 																									
 	if (this->objectType == SWITCH) {																//////// SWITCHES ////////////////
-		if (o_TOP >= MIN_Y && o_BOT <= MAX_Y && o_RIGHT >= MIN_X && o_LEFT <= MAX_X)	 // AABB Intersecting Collisions 
+		if (o_TOP > MIN_Y && o_BOT < MAX_Y && o_RIGHT > MIN_X && o_LEFT < MAX_X)	 // AABB Intersecting Collisions 
 		{
 			return true;
 		}
@@ -117,8 +117,8 @@ bool Interactable::HitDetect(Entity * other)
 
 		if (!(this->Active)) { // CLOSED
 				//o_TOP >= MIN_Y && o_BOT <= MAX_Y && o_RIGHT >= MIN_X && o_LEFT <= MAX_X
-			if (o_TOP >= MIN_Y && o_BOT <= MAX_Y &&
-				o_RIGHT + other->spd.x >= MIN_X && o_LEFT + other->spd.x <= MAX_X) {
+			if (o_TOP > MIN_Y && o_BOT < MAX_Y &&
+				o_RIGHT + other->spd.x > MIN_X && o_LEFT + other->spd.x < MAX_X) {
 			
 				if (other->spd.x >= 0) {
 					other->spd.x = MIN_X - o_RIGHT;
