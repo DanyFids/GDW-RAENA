@@ -117,7 +117,7 @@ bool Interactable::HitDetect(Entity * other)
 
 		if (!(this->Active)) { // CLOSED
 				//o_TOP >= MIN_Y && o_BOT <= MAX_Y && o_RIGHT >= MIN_X && o_LEFT <= MAX_X
-			if (o_TOP >= MIN_Y && o_BOT <= MAX_Y &&
+			if (o_TOP > MIN_Y && o_BOT < MAX_Y &&
 				o_RIGHT + other->spd.x >= MIN_X && o_LEFT + other->spd.x <= MAX_X) {
 			
 				if (other->spd.x >= 0) {
