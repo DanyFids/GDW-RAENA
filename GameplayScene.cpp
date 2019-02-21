@@ -43,7 +43,7 @@ bool GameplayScene::init() {
 
 	if (knight != nullptr) {
 		knight->setPosition(Vec2((visibleSize.width / 2) - knight->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - knight->getBoundingBox().size.height / 2 + origin.y));
-		knight->setPosition(700, 50);
+		knight->setPosition( 100, 220);
 		this->addChild(knight);
 	}
 	else {
@@ -173,6 +173,8 @@ bool GameplayScene::init() {
 
 void GameplayScene::update(float dt) {
 	player->Update(dt);
+	knight->Update(dt);
+	knight->AI(player, dt);
 
 	if (GAMEPLAY_INPUT.key_left) {
 		player->spd.x = -PLAYER_SPEED * dt;
@@ -194,6 +196,8 @@ void GameplayScene::update(float dt) {
 	for each (Block* platform in platforms)
 	{
 		platform->HitDetect(player);
+		platform->HitDetect(knight);
+		
 	}
 
 	for each (Torch* t in torches) {
@@ -203,9 +207,7 @@ void GameplayScene::update(float dt) {
 	player->Move();
 	player->moveLightToPlayer();
 
-	knight->AI(player, dt);
 	knight->Move();
-	knight->Update(dt);
 	if (knight->HitDetect(player)) {
 		player->hurt(2);
 	}
