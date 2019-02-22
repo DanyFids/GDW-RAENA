@@ -21,7 +21,7 @@ class Enemy: public Entity {
 protected:
 	int hp;
 public:
-	virtual void AI(Player * p) = 0;
+	virtual void AI(Player * p, float dt) = 0;
 	virtual void Hit(Player * p) = 0;
 
 	virtual void Hurt(int d) = 0;

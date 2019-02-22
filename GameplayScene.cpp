@@ -18,6 +18,7 @@ bool GameplayScene::init() {
 	}
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
+	//Center of screen
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	EffectSprite *_bgColor = EffectSprite::create("BG.png");
@@ -38,6 +39,17 @@ bool GameplayScene::init() {
 		return false;
 	}
 
+	knight = Knight::create("test_dummy.png");
+
+	if (knight != nullptr) {
+		knight->setPosition(Vec2((visibleSize.width / 2) - knight->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - knight->getBoundingBox().size.height / 2 + origin.y));
+		knight->setPosition( 100, 220);
+		this->addChild(knight);
+	}
+	else {
+		return false;
+		
+	}
 	//platforms
 	platforms.pushBack(Block::create(0,0, 800, 200));
 	platforms.pushBack(Block::create(500,200, 300, 75));
@@ -161,6 +173,8 @@ bool GameplayScene::init() {
 
 void GameplayScene::update(float dt) {
 	player->Update(dt);
+	knight->Update(dt);
+	knight->AI(player, dt);
 
 	if (GAMEPLAY_INPUT.key_left) {
 		player->spd.x = -PLAYER_SPEED * dt;
@@ -182,6 +196,8 @@ void GameplayScene::update(float dt) {
 	for each (Block* platform in platforms)
 	{
 		platform->HitDetect(player);
+		platform->HitDetect(knight);
+		
 	}
 
 	for each (Torch* t in torches) {
@@ -190,4 +206,9 @@ void GameplayScene::update(float dt) {
 
 	player->Move();
 	player->moveLightToPlayer();
+
+	knight->Move();
+	if (knight->HitDetect(player)) {
+		player->hurt(2);
+	}
 }

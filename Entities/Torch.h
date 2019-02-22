@@ -16,7 +16,7 @@ public:
 	virtual bool HitDetect(Entity * other) override;
 	virtual void Update(float dt) override;
 
-	virtual void AI(Player * p) override;
+	virtual void AI(Player * p, float dt) override;
 	virtual void Hit(Player * p) override;
 	virtual void Hurt(int d) override;
 
