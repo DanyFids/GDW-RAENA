@@ -43,7 +43,7 @@ bool GameplayScene::init() {
 
 	if (knight != nullptr) {
 		knight->setPosition(Vec2((visibleSize.width / 2) - knight->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - knight->getBoundingBox().size.height / 2 + origin.y));
-		knight->setPosition( 100, 220);
+		knight->setPosition( 700, 300);
 		this->addChild(knight);
 	}
 	else {
@@ -173,6 +173,13 @@ bool GameplayScene::init() {
 
 void GameplayScene::update(float dt) {
 	player->Update(dt);
+	//When scenes are added, add functions for these
+	if (player->getPosition().x >= 800) {
+		player->setPosition(45, 225);
+	}
+	if (player->getPosition().x <= 20) {
+		player->setPosition(750, 300);
+	}
 	knight->Update(dt);
 	knight->AI(player, dt);
 

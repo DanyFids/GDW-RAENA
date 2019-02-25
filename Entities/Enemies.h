@@ -6,13 +6,15 @@ class Knight : public Enemy {
 private:
 	int knight_light;
 	bool light_on = false;
-	bool face_right = false;
+	bool face_right = true;
 	bool attacking = false;
 	bool paused = false;
+	bool swipe = false;
 	int turn;
-	cocos2d::Vec2 spd = { 0, 0 };
 	const float TURNT_TIME = 3;
+	const float CHOP_TIME = 1;
 	float timer = TURNT_TIME;
+	float swing = CHOP_TIME;
 	int hp = 5;
 	int charge = 20;
 public:
@@ -21,6 +23,7 @@ public:
 	void moveLightToKnight();
 	static const int ENEMY_SPEED = 10;
 	bool onGround();
+	void greatSword();
 
 	// Inherited via Enemy
 	void AI(Player* player, float dt);
