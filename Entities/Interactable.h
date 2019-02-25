@@ -1,4 +1,6 @@
 #pragma once
+
+#include "2d/CCScene.h"
 #include "Entities/CoreEntities.h"
 #include "Enums.h"
 #include "PlayerInventory.h"
@@ -35,6 +37,8 @@ public :
 	void editKeys(player_inventory*, KeyType k, int i);
 
 	void SceneReturnCallBack(Ref* pSender);
+
+	CREATE_FUNC(cocos2d::Scene);
 
 private:
 
