@@ -7,11 +7,11 @@
 
 #include "Entities/Fireball.h"
 #include "Constants.h"
-#include "Xinput.h"
+#include "GamePad.h"
 
 USING_NS_CC;
 
-
+Gamepad* TheGamepad;
 
 Scene* GameplayScene::createScene() {
 	return GameplayScene::create();
@@ -23,6 +23,10 @@ bool GameplayScene::init() {
 	if (!Scene::init()) {
 		return false;
 	}
+
+	auto Updatepad = new (std::nothrow) Gamepad;
+	Updatepad->CheckConnection();
+	TheGamepad = Updatepad;
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -212,6 +216,7 @@ Prompt* ActivePrompt;
 
 void GameplayScene::update(float dt) {
 	player->Update(dt);
+	TheGamepad->Refresh();
 
 	if (GAMEPLAY_INPUT.key_left) {
 		player->spd.x = -PLAYER_SPEED * dt;
@@ -220,10 +225,30 @@ void GameplayScene::update(float dt) {
 		player->spd.x = PLAYER_SPEED * dt;
 	}
 
-	if (GAMEPLAY_INPUT.key_space && ! GAMEPLAY_INPUT.key_space_p) {
-		player->Attack();
-		GAMEPLAY_INPUT.key_space_p = true;
+
+
+	if (TheGamepad->leftStickX >= 0.2)
+	{
+		player->spd.x = TheGamepad->leftStickX * 100 * dt;
 	}
+	if (TheGamepad->leftStickX <= -0.2)
+	{
+		player->spd.x = TheGamepad->leftStickX * 100 * dt;
+	}
+
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
+	{
+		player->spd.x = PLAYER_SPEED * dt;
+	}
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT))
+	{
+		player->spd.x = -PLAYER_SPEED * dt;
+	}
+
+
+
+
+
 	if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
 	{
 		auto Textbox1 = Textbox::create(1, { 1 }, { "What up fuckbois" }, (this));
@@ -307,10 +332,38 @@ void GameplayScene::update(float dt) {
 		ActivePrompt->Follow(player);
 	}
 
+
+
+
+
+
+
+
 	if (GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) {
 		player->Jump();
 		GAMEPLAY_INPUT.key_jump_p = true;
 	}
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A))
+	{
+		player->Jump();
+	}
+
+	if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p) {
+		player->Attack();
+		GAMEPLAY_INPUT.key_space_p = true;
+	}
+
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_X))
+	{
+		player->Attack();
+	}
+
+
+
+
+
+
+
 
 	for each (Block* platform in platforms)
 	{
