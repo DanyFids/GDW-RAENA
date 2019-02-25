@@ -28,5 +28,6 @@ public:
 	void Close(/*cocos2d::Sprite del1, cocos2d::Label del2*/);
 	int getPages();
 	int getCurrPage();
+	void Init();
 
 };

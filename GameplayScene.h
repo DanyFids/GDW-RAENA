@@ -7,6 +7,7 @@ class GameplayScene : public cocos2d::Scene {
 private:
 	const float PLAYER_SPEED = 100;
 	Player * player;
+	//Textbox * initbox;
 
 public:
 	struct {

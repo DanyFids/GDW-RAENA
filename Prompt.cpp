@@ -42,8 +42,8 @@ void Prompt::Load()
 
 void Prompt::Close()
 {
-	this->PBox->setOpacity(0);
-
+	//this->PBox->setOpacity(0);
+	scene->removeChild(this->PBox);
 }
 
 void Prompt::Follow(Player* Target)
