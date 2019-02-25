@@ -226,24 +226,35 @@ void GameplayScene::update(float dt) {
 	}
 
 
+	if (TheGamepad->CheckConnection() == true)
+	{
+		if (TheGamepad->leftStickX >= 0.2)
+		{
+			player->spd.x = TheGamepad->leftStickX * 100 * dt;
+		}
+		if (TheGamepad->leftStickX <= -0.2)
+		{
+			player->spd.x = TheGamepad->leftStickX * 100 * dt;
+		}
 
-	if (TheGamepad->leftStickX >= 0.2)
-	{
-		player->spd.x = TheGamepad->leftStickX * 100 * dt;
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
+		{
+			player->spd.x = PLAYER_SPEED * dt;
+		}
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT))
+		{
+			player->spd.x = -PLAYER_SPEED * dt;
+		}
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A))
+		{
+			player->Jump();
+		}
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_X))
+		{
+			player->Attack();
+		}
 	}
-	if (TheGamepad->leftStickX <= -0.2)
-	{
-		player->spd.x = TheGamepad->leftStickX * 100 * dt;
-	}
-
-	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
-	{
-		player->spd.x = PLAYER_SPEED * dt;
-	}
-	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT))
-	{
-		player->spd.x = -PLAYER_SPEED * dt;
-	}
+	
 
 
 
@@ -343,20 +354,14 @@ void GameplayScene::update(float dt) {
 		player->Jump();
 		GAMEPLAY_INPUT.key_jump_p = true;
 	}
-	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A))
-	{
-		player->Jump();
-	}
+	
 
 	if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p) {
 		player->Attack();
 		GAMEPLAY_INPUT.key_space_p = true;
 	}
 
-	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_X))
-	{
-		player->Attack();
-	}
+	
 
 
 

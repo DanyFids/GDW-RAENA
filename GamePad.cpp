@@ -15,7 +15,7 @@ bool Gamepad::CheckConnection()
 {
 	int controllerId = -1;
 
-	for (DWORD i = 0; i < XUSER_MAX_COUNT && controllerId == -1; i++)
+	for (DWORD i = 0; i < 5 && controllerId == -1; i++)
 	{
 		XINPUT_STATE  state;
 		ZeroMemory(&state, sizeof(XINPUT_STATE));
@@ -32,8 +32,6 @@ bool Gamepad::CheckConnection()
 // Returns false if the controller has been disconnected
 bool Gamepad::Refresh()
 {
-	if (cId == -1)
-		CheckConnection();
 
 	if (cId != -1)
 	{
