@@ -2,6 +2,23 @@
 #include "Effects/EffectSprite.h"
 #include "cocos2d.h"
 
+struct player_inventory {
+	
+public:
+	player_inventory(int gen_keys) : general_keys(gen_keys) {
+
+	}
+
+	int general_keys;
+
+private:
+	
+
+};
+
+
+
+
 class Entity : public EffectSprite {
 protected:
 	bool on_ground;
@@ -12,9 +29,13 @@ public:
 	virtual bool HitDetect(Entity * other) = 0;
 	virtual void Update(float dt) = 0;
 
+	
+
 	void SetOnGround(bool b) {on_ground = b;}
 	bool OnGround() { return on_ground; }
 };
+
+
 
 class Player;
 

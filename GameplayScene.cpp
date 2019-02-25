@@ -35,6 +35,8 @@ bool GameplayScene::init() {
 	player->setScale(SCALE);
 	player->getTexture()->setTexParameters(tp);
 
+	 currInv = new player_inventory(1);
+
 	if (player != nullptr) {
 		player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
 
@@ -50,9 +52,15 @@ bool GameplayScene::init() {
 	platforms.pushBack(Block::create(280, 350, 180, 10));
 
 
-	interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));
+	interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));//Some Switch thing
 
-	interactables.pushBack(Interactable::create(300, 200, 30, 70, DOOR));
+	interactables.pushBack(Interactable::create(320, 200, 30, 70, DOOR)); //Normal Door
+
+	//interactables.pushBack(Interactable::create(550,270, 30, 70, S_DOOR)); // Scene Door
+
+	interactables.pushBack(Interactable::create(210, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
+	//interactables.pushBack(Interactable::create(50, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
+
 
 	std::string plat1_file = "Platform1.png";
 	ActualPlatforms.pushBack(Platform::create(plat1_file, cocos2d::Vec2(100,280)));
@@ -240,17 +248,49 @@ bool GameplayScene::init() {
 }
 Textbox* ActiveTextbox;
 Prompt* ActivePrompt;
+bool promptInit = false;
+bool overlap = false;
 
 void GameplayScene::update(float dt) {
 	player->Update(dt);
 
-																			 
+
+
+	for each (Interactable* i in interactables) { //Showing Prompts?
+		if (i->inRange(player)) {
+			if (promptInit == false) {
+				auto Prompt1 = Prompt::create(1, (this));
+				addChild(Prompt1, 10);
+				Prompt1->Load();
+				if (ActivePrompt)
+				{
+					ActivePrompt->Close();
+				}
+				ActivePrompt = Prompt1;
+				promptInit = true;
+			}
+			overlap = true;
+			promptInit = true;
+			ActivePrompt->Show();
+			break;
+		}
+		else
+		{
+			overlap = false;
+
+		}
+
+		if (!(i->inRange(player) || i->getCooldown() )) {
+			if (ActivePrompt && !(overlap)) { ActivePrompt->Hide();}
+		}
+	}
 
 	if (GAMEPLAY_INPUT.key_interact) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
 		for each (Interactable* i in interactables) {
-			if (i->HitDetect(player) ) {
-				i->Effect(i->getType());
+			if (i->inRange(player) ) {
+				i->Effect(i->getType(),player,currInv,this);
 				i->setCooldown();
+				break;
 			}
 		}
 	}
@@ -359,7 +399,7 @@ void GameplayScene::update(float dt) {
 	}
 
 	for each (Interactable* i in interactables) {
-		if (i->getType() == DOOR) {	//Add all object types that actually collide with the player here.
+		if (i->getType() == DOOR) {	//Add all interactable types that actually collide with the player here.
 			i->HitDetect(player);
 		}
 	}

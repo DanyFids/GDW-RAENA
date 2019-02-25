@@ -42,11 +42,22 @@ void Prompt::Load()
 
 void Prompt::Close()
 {
-	this->PBox->setOpacity(0);
+	
+	scene->removeChild(this->PBox);
+}
 
+void Prompt::Hide() {
+	this->PBox->setOpacity(0);
+}
+
+void Prompt::Show()
+{
+	this->PBox->setOpacity(255);
 }
 
 void Prompt::Follow(Player* Target)
 {
 	this->PBox->setPosition(Target->getPosition());
 }
+
+
