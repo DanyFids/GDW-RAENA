@@ -1,8 +1,13 @@
 #include "GameplayScene.h"
 #include "Effects/LightEffect.h"
 #include "Effects/EffectLayer.h"
+
 #include "Textbox.h"
 #include "Prompt.h"
+
+#include "Entities/Fireball.h"
+#include "Constants.h"
+#include "Xinput.h"
 
 USING_NS_CC;
 
@@ -13,6 +18,8 @@ Scene* GameplayScene::createScene() {
 }
 
 bool GameplayScene::init() {
+	Texture2D::TexParams tp = { GL_NEAREST , GL_NEAREST, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE };
+
 	if (!Scene::init()) {
 		return false;
 	}
@@ -25,15 +32,32 @@ bool GameplayScene::init() {
 	_bgColor->setScale(1);
 	this->addChild(_bgColor, -10);
 
-	player = Player ::create("test_dummy.png");
+	player = Player ::create("test_dummy.png", this);
+	player->setScale(SCALE);
+	player->getTexture()->setTexParameters(tp);
 
 	if (player != nullptr) {
 		player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
 
-		this->addChild(player);
+		this->addChild(player, 10);
 	}
 	else {
 		return false;
+	}
+
+	//platforms
+	platforms.pushBack(Block::create(0,0, 800, 200));
+	platforms.pushBack(Block::create(500,200, 300, 75));
+	platforms.pushBack(Block::create(280, 350, 180, 10));
+
+	for each (Block* plat in platforms)
+	{
+		if (plat != nullptr) {
+			this->addChild(plat);
+		}
+		else {
+			return false;
+		}
 	}
 
 	auto KeyHandler = EventListenerKeyboard::create();
@@ -63,6 +87,7 @@ bool GameplayScene::init() {
 		case EventKeyboard::KeyCode::KEY_SPACE:
 			GAMEPLAY_INPUT.key_space = true;
 			break;
+
 		case EventKeyboard::KeyCode::KEY_M:
 			GAMEPLAY_INPUT.key_one = true;
 			break;
@@ -77,6 +102,10 @@ bool GameplayScene::init() {
 			break;
 		case EventKeyboard::KeyCode::KEY_2:
 			GAMEPLAY_INPUT.key_P2 = true;
+
+		case EventKeyboard::KeyCode::KEY_C:
+			GAMEPLAY_INPUT.key_jump = true;
+
 			break;
 		}
 	};
@@ -103,6 +132,7 @@ bool GameplayScene::init() {
 			GAMEPLAY_INPUT.key_space = false;
 			GAMEPLAY_INPUT.key_space_p = false;
 			break;
+
 		case EventKeyboard::KeyCode::KEY_M:
 			GAMEPLAY_INPUT.key_one = false;
 			GAMEPLAY_INPUT.key_oneP = false;
@@ -122,6 +152,11 @@ bool GameplayScene::init() {
 		case EventKeyboard::KeyCode::KEY_2:
 			GAMEPLAY_INPUT.key_P2 = false;
 			GAMEPLAY_INPUT.key_P2P = false;
+
+		case EventKeyboard::KeyCode::KEY_C:
+			GAMEPLAY_INPUT.key_jump = false;
+			GAMEPLAY_INPUT.key_jump_p = false;
+
 			break;
 		}
 	};
@@ -135,14 +170,35 @@ bool GameplayScene::init() {
 	Vec3 l_pos(150, 300, 50);
 
 	//_effect->addLight(l_pos);
-	_effect->addLight(Vec3(500, 300, 50));
+	//_effect->addLight(Vec3(400, 250, 50));
+	//_effect->addLight(Vec3(600, 250, 50));
+	//_effect->addLight(Vec3(200, 250, 50));
+	//_effect->addLight(Vec3(0, 250, 50));
+	//_effect->addLight(Vec3(800, 250, 50));
 	_effect->setLightCutoffRadius(250);
-	_effect->setLightHalfRadius(0.1);
-	_effect->setBrightness(1.0);
+	_effect->setLightHalfRadius(0.5);
+	_effect->setBrightness(0.7);
 	_effect->setAmbientLightColor(Color3B(25, 25, 25));
 
 	player->setEffect(_effect, "test_NM.png");
 	_bgColor->setEffect(_effect, "layerNorm.png");
+
+	player->switchLight();
+
+	//Set Torches;
+	torches.pushBack(Torch::create(cocos2d::Vec2(200, 230), _effect));
+	torches.pushBack(Torch::create(cocos2d::Vec2(350, 400), _effect));
+	torches.pushBack(Torch::create(cocos2d::Vec2(600, 310), _effect));
+
+	for each (Torch* t in torches)
+	{
+		if (t != nullptr) {
+			addChild(t, 2);
+		}
+		else {
+			return false;
+		}
+	}
 
 	this->scheduleUpdate();
 
@@ -155,21 +211,17 @@ Textbox* ActiveTextbox;
 Prompt* ActivePrompt;
 
 void GameplayScene::update(float dt) {
-	if (GAMEPLAY_INPUT.key_up) {
-		player->setPosition(player->getPosition() + Vec2(0, PLAYER_SPEED * dt));
-	}
-	if (GAMEPLAY_INPUT.key_down) {
-		player->setPosition(player->getPosition() + Vec2(0, -PLAYER_SPEED * dt));
-	}
+	player->Update(dt);
+
 	if (GAMEPLAY_INPUT.key_left) {
-		player->setPosition(player->getPosition() + Vec2(-PLAYER_SPEED * dt, 0));
+		player->spd.x = -PLAYER_SPEED * dt;
 	}
 	if (GAMEPLAY_INPUT.key_right) {
-		player->setPosition(player->getPosition() + Vec2(PLAYER_SPEED * dt, 0));
+		player->spd.x = PLAYER_SPEED * dt;
 	}
 
 	if (GAMEPLAY_INPUT.key_space && ! GAMEPLAY_INPUT.key_space_p) {
-		player->switchLight();
+		player->Attack();
 		GAMEPLAY_INPUT.key_space_p = true;
 	}
 	if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
@@ -255,5 +307,20 @@ void GameplayScene::update(float dt) {
 		ActivePrompt->Follow(player);
 	}
 
+	if (GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) {
+		player->Jump();
+		GAMEPLAY_INPUT.key_jump_p = true;
+	}
+
+	for each (Block* platform in platforms)
+	{
+		platform->HitDetect(player);
+	}
+
+	for each (Torch* t in torches) {
+		player->HitDetectEnem(t);
+	}
+
+	player->Move();
 	player->moveLightToPlayer();
 }

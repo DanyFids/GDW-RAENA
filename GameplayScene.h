@@ -1,13 +1,19 @@
 #pragma once
 
 #include "cocos2d.h"
-#include "Entities/Player.h"
+
+#include"Entities/Player.h"
+#include"Entities/Block.h"
+#include"Entities/Torch.h"
+
 
 class GameplayScene : public cocos2d::Scene {
 private:
 	const float PLAYER_SPEED = 100;
 	Player * player;
-	//Textbox * initbox;
+
+	cocos2d::Vector<Block *> platforms;
+	cocos2d::Vector<Torch *> torches;
 
 public:
 	struct {
@@ -17,6 +23,7 @@ public:
 		bool key_left = false;
 		bool key_space = false;
 		bool key_space_p = false;
+
 		bool key_one = false;
 		bool key_oneP = false;
 		bool key_F = false;
@@ -28,6 +35,10 @@ public:
 		bool key_P1P = false;
 		bool key_P2 = false;
 		bool key_P2P = false;
+
+		bool key_jump = false;
+		bool key_jump_p = false;
+
 	} GAMEPLAY_INPUT;
 
 	static cocos2d::Scene * createScene();

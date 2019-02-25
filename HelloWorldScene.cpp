@@ -76,8 +76,15 @@ bool HelloWorld::init()
         closeItem->setPosition(Vec2(x,y));
     }
 
+	auto startBtn = MenuItemImage::create(
+		"CloseNormal.png",
+		"CloseSelected.png",
+		CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
+	startBtn->setScale(2);
+	startBtn->setPosition(Vec2(origin.x, origin.y - 150 ));
+
     // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem, NULL);
+    auto menu = Menu::create(closeItem, startBtn, NULL);
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
 
@@ -87,7 +94,7 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
 
-    auto label = Label::createWithTTF("Get F*cked F*ckboiz!", "fonts/Marker Felt.ttf", 24);
+    auto label = Label::createWithTTF("RAENA Prototype - D.E.r.N. Build", "fonts/Marker Felt.ttf", 24);
     if (label == nullptr)
     {
         problemLoading("'fonts/Marker Felt.ttf'");
@@ -103,7 +110,7 @@ bool HelloWorld::init()
     }
 
     // add "HelloWorld" splash screen"
-    auto sprite = Sprite::create("MF_2.png");
+    auto sprite = Sprite::create("HelloWorld.png");
     if (sprite == nullptr)
     {
         problemLoading("'MF_2.png'");
