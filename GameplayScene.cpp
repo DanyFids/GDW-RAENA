@@ -4,9 +4,13 @@
 #include "Entities/Fireball.h"
 #include "Constants.h"
 #include <string>
+#include "Textbox.h"
+#include "Prompt.h"
 
 
 USING_NS_CC;
+
+
 
 Scene* GameplayScene::createScene() {
 	return GameplayScene::create();
@@ -31,6 +35,8 @@ bool GameplayScene::init() {
 	player->setScale(SCALE);
 	player->getTexture()->setTexParameters(tp);
 
+	 currInv = new player_inventory(1);
+
 	if (player != nullptr) {
 		player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
 
@@ -46,9 +52,15 @@ bool GameplayScene::init() {
 	platforms.pushBack(Block::create(280, 350, 180, 10));
 
 
-	interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));
+	interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));//Some Switch thing
 
-	interactables.pushBack(Interactable::create(300, 200, 30, 70, DOOR));
+	interactables.pushBack(Interactable::create(320, 200, 30, 70, DOOR)); //Normal Door
+
+	//interactables.pushBack(Interactable::create(550,270, 30, 70, S_DOOR)); // Scene Door
+
+	interactables.pushBack(Interactable::create(210, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
+	//interactables.pushBack(Interactable::create(50, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
+
 
 	std::string plat1_file = "Platform1.png";
 	ActualPlatforms.pushBack(Platform::create(plat1_file, cocos2d::Vec2(100,280)));
@@ -118,6 +130,21 @@ bool GameplayScene::init() {
 		case EventKeyboard::KeyCode::KEY_E:
 			GAMEPLAY_INPUT.key_interact = true;
 			break;
+		case EventKeyboard::KeyCode::KEY_M:
+			GAMEPLAY_INPUT.key_one = true;
+			break;
+		case EventKeyboard::KeyCode::KEY_F:
+			GAMEPLAY_INPUT.key_F = true;
+			break;
+		case EventKeyboard::KeyCode::KEY_L:
+			GAMEPLAY_INPUT.key_two = true;
+			break;
+		case EventKeyboard::KeyCode::KEY_1:
+			GAMEPLAY_INPUT.key_P1 = true;
+			break;
+		case EventKeyboard::KeyCode::KEY_2:
+			GAMEPLAY_INPUT.key_P2 = true;
+			break;
 		}
 	};
 
@@ -149,6 +176,26 @@ bool GameplayScene::init() {
 			break;
 		case EventKeyboard::KeyCode::KEY_E:
 			GAMEPLAY_INPUT.key_interact = false;
+			break;
+		case EventKeyboard::KeyCode::KEY_M:
+			GAMEPLAY_INPUT.key_one = false;
+			GAMEPLAY_INPUT.key_oneP = false;
+			break;
+		case EventKeyboard::KeyCode::KEY_F:
+			GAMEPLAY_INPUT.key_F = false;
+			GAMEPLAY_INPUT.key_FP = false;
+			break;
+		case EventKeyboard::KeyCode::KEY_L:
+			GAMEPLAY_INPUT.key_two = false;
+			GAMEPLAY_INPUT.key_twoP = false;
+			break;
+		case EventKeyboard::KeyCode::KEY_1:
+			GAMEPLAY_INPUT.key_P1 = false;
+			GAMEPLAY_INPUT.key_P1P = false;
+			break;
+		case EventKeyboard::KeyCode::KEY_2:
+			GAMEPLAY_INPUT.key_P2 = false;
+			GAMEPLAY_INPUT.key_P2P = false;
 			break;
 		}
 	};
@@ -194,19 +241,56 @@ bool GameplayScene::init() {
 
 	this->scheduleUpdate();
 
+
+	
+
 	return true;
 }
+Textbox* ActiveTextbox;
+Prompt* ActivePrompt;
+bool promptInit = false;
+bool overlap = false;
 
 void GameplayScene::update(float dt) {
 	player->Update(dt);
 
-																			 
+
+
+	for each (Interactable* i in interactables) { //Showing Prompts?
+		if (i->inRange(player)) {
+			if (promptInit == false) {
+				auto Prompt1 = Prompt::create(1, (this));
+				addChild(Prompt1, 10);
+				Prompt1->Load();
+				if (ActivePrompt)
+				{
+					ActivePrompt->Close();
+				}
+				ActivePrompt = Prompt1;
+				promptInit = true;
+			}
+			overlap = true;
+			promptInit = true;
+			ActivePrompt->Show();
+			break;
+		}
+		else
+		{
+			overlap = false;
+
+		}
+
+		if (!(i->inRange(player) || i->getCooldown() )) {
+			if (ActivePrompt && !(overlap)) { ActivePrompt->Hide();}
+		}
+	}
 
 	if (GAMEPLAY_INPUT.key_interact) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
 		for each (Interactable* i in interactables) {
-			if (i->HitDetect(player) ) {
-				i->Effect(i->getType());
+			if (i->inRange(player) ) {
+				i->Effect(i->getType(),player,currInv,this);
 				i->setCooldown();
+				break;
 			}
 		}
 	}
@@ -226,6 +310,88 @@ void GameplayScene::update(float dt) {
 		player->Attack();
 		GAMEPLAY_INPUT.key_space_p = true;
 	}
+	if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
+	{
+		auto Textbox1 = Textbox::create(1, { 1 }, { "What up fuckbois" }, (this));
+		addChild(Textbox1, 10);
+		Textbox1->Load();
+		if (ActiveTextbox)
+		{
+			ActiveTextbox->Close();
+		}
+		
+
+		ActiveTextbox = Textbox1;
+		
+		GAMEPLAY_INPUT.key_oneP = true;
+
+		
+	}
+	
+	
+
+	if (GAMEPLAY_INPUT.key_two && !GAMEPLAY_INPUT.key_twoP)
+	{
+		auto Textbox2 = Textbox::create(2, { 1,1 }, { "Yeet", "Get Dabbed on" }, (this));
+		addChild(Textbox2, 10);
+		Textbox2->Load();
+		if (ActiveTextbox)
+		{
+			ActiveTextbox->Close();
+		}
+		ActiveTextbox = Textbox2;
+
+		GAMEPLAY_INPUT.key_twoP = true;
+	
+	}
+
+	if (GAMEPLAY_INPUT.key_P1 && !GAMEPLAY_INPUT.key_P1P)
+	{
+		auto Prompt1 = Prompt::create(1, (this));
+		addChild(Prompt1, 10);
+		Prompt1->Load();
+		if (ActivePrompt)
+		{
+			ActivePrompt->Close();
+		}
+		ActivePrompt = Prompt1;
+
+		GAMEPLAY_INPUT.key_P1P = true;
+	}
+	if (GAMEPLAY_INPUT.key_P2 && !GAMEPLAY_INPUT.key_P2P)
+	{
+		auto Prompt2 = Prompt::create(2, (this));
+		addChild(Prompt2, 10);
+		Prompt2->Load();
+		if (ActivePrompt)
+		{
+			ActivePrompt->Close();
+		}
+		ActivePrompt = Prompt2;
+
+		GAMEPLAY_INPUT.key_P2P = true;
+	}
+
+	if (GAMEPLAY_INPUT.key_F && !GAMEPLAY_INPUT.key_FP)
+	{
+		
+		//ActiveTextbox->Load();
+		ActiveTextbox->Close();
+		int ActiveCurrPage = ActiveTextbox->getCurrPage();
+		int ActivePages = ActiveTextbox->getPages();
+		if (!(ActiveCurrPage == ActivePages - 1))
+		{
+			ActiveTextbox->Flippage();
+			ActiveTextbox->Load();
+		}
+		
+		GAMEPLAY_INPUT.key_FP = true;
+	}
+
+	if (ActivePrompt)
+	{
+		ActivePrompt->Follow(player);
+	}
 
 	if (GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) {
 		player->Jump();
@@ -233,7 +399,7 @@ void GameplayScene::update(float dt) {
 	}
 
 	for each (Interactable* i in interactables) {
-		if (i->getType() == DOOR) {	//Add all object types that actually collide with the player here.
+		if (i->getType() == DOOR) {	//Add all interactable types that actually collide with the player here.
 			i->HitDetect(player);
 		}
 	}

@@ -1,4 +1,36 @@
 #include "Interactable.h"
+#include "HelloWorldScene.h"
+
+USING_NS_CC;
+
+//'External' FUNCTIONS
+
+int Interactable::getKeys(player_inventory* p_inv,KeyType k)
+{
+	if (k == GEN_KEY) {
+		return p_inv->general_keys;
+	}
+
+	return NONE;
+}
+
+void Interactable::editKeys(player_inventory* p_inv,KeyType k, int i)
+{
+	if (k == GEN_KEY)
+	{
+		if (i > 0) {
+			p_inv->general_keys += i;
+		}
+		else p_inv->general_keys -= i;
+	}
+}
+
+void Interactable::SceneReturnCallBack(Ref * pSender)
+{
+	Director::getInstance()->replaceScene(HelloWorld::createScene());
+}
+
+//'External' FUNCTIONS
 
 Interactable * Interactable::create(int x, int y, int w, int h, InteractType type, KeyType key)
 {
@@ -8,6 +40,7 @@ Interactable * Interactable::create(int x, int y, int w, int h, InteractType typ
 		ret->autorelease();
 
 		ret->objectType = type;
+		ret->requiredKey = key;
 
 		if (key != NONE) { ret->locked = true; } // If this door requires a key it starts as locked.
 
@@ -49,6 +82,7 @@ Interactable * Interactable::create(std::string filename, cocos2d::Vec2 p, Inter
 		ret->autorelease();
 
 		ret->objectType = type;
+		ret->requiredKey = key;
 
 		if (key != NONE) { ret->locked = true; } // If this door requires a key it starts as locked.
 
@@ -94,9 +128,9 @@ bool Interactable::HitDetect(Entity * other)
 	//float MAX_X = this->getPositionX() + (this->getBoundingBox().size.width  / 2);
 	//float MIN_X = this->getPositionX() - (this->getBoundingBox().size.width  / 2);	 
 	
-	// For simple shapes
+	
 
-	float MAX_Y = this->getPositionY() + (this->getBoundingBox().size.height);
+	float MAX_Y = this->getPositionY() + (this->getBoundingBox().size.height);				// For simple shapes
 	float MIN_Y = this->getPositionY();
 
 	float MAX_X = this->getPositionX() + (this->getBoundingBox().size.width);
@@ -142,6 +176,41 @@ bool Interactable::HitDetect(Entity * other)
 }
 																										//////// DOORS ////////////////	
 
+bool Interactable::inRange(Entity * other)
+{
+	//	 Entity's Bound.
+	float o_TOP = other->getPositionY() + (other->getBoundingBox().size.height / 2); //This is for Objs with A Sprite (beccause it has a centered Origin)
+	float o_BOT = other->getPositionY() - (other->getBoundingBox().size.height / 2);
+
+	float o_LEFT = other->getPositionX() - (other->getBoundingBox().size.width / 2);
+	float o_RIGHT = other->getPositionX() + (other->getBoundingBox().size.width / 2);
+
+	//
+
+	//Interactable's Position Bounds
+																								  //Use this when we convert to sprites
+	//float MAX_Y = this->getPositionY() + (this->getBoundingBox().size.height / 2);
+	//float MIN_Y = this->getPositionY() - (this->getBoundingBox().size.height / 2);
+	//
+	//float MAX_X = this->getPositionX() + (this->getBoundingBox().size.width  / 2);
+	//float MIN_X = this->getPositionX() - (this->getBoundingBox().size.width  / 2);	 
+
+	// For simple shapes
+
+	float MAX_Y = this->getPositionY() + (this->getBoundingBox().size.height);
+	float MIN_Y = this->getPositionY();
+
+	float MAX_X = this->getPositionX() + (this->getBoundingBox().size.width);
+	float MIN_X = this->getPositionX();
+
+	if (o_TOP > MIN_Y && o_BOT < MAX_Y &&
+		o_RIGHT + other->spd.x >= MIN_X - 15.0f && o_LEFT + other->spd.x <= MAX_X + 15.0f) {
+
+		return true;
+	}
+
+	return false;
+}
 
 void Interactable::Update(float dt)
 {
@@ -168,9 +237,11 @@ void Interactable::Move()
 {
 }
 
-void Interactable::Effect(InteractType t)
-{
-	
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////	EFFECTS
+// What does this specific Interactable Do? Define each Effect in it's own IF statement.
+void Interactable::Effect(InteractType t, Entity * player,player_inventory * p_inv, Scene * scn)
+{	
 	if (t == SWITCH && !(this->CoolDownState) ) {
 
 		this->CoolDownState = true;
@@ -185,30 +256,73 @@ void Interactable::Effect(InteractType t)
 			this->Active = false;
 			this->setPosition(this->getPosition() - cocos2d::Vec2(0, 5));
 		}
-	
 	}
 
-	if (t == DOOR && !(this->CoolDownState) && !(this->locked) ) {
+	if (t == DOOR) {
 
-		this->CoolDownState = true;
+		if (this->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
+			 
+			if (this->requiredKey == GEN_KEY) {
+				if (getKeys(p_inv,this->requiredKey) > 0) {
+					{
+						editKeys(p_inv,this->requiredKey, -1);
+						this->locked = false;
+					}
+			   }
+			}
+			//Include Each Keytype below
 
-		if (this->Active == false) {
-
-			this->Active = true;
-			
 		}
-		else {
 
-			this->Active = false;
-			
+		if (!(this->CoolDownState) && !(this->locked)) {
+
+			this->CoolDownState = true;
+
+			if (this->Active == false) {
+
+				this->Active = true;
+
+			}
+			else {
+				this->Active = false;
+			}
 		}
-
 	}
 
+	if (t == S_DOOR) {
 
+		if (this->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
 
+			if (this->requiredKey == GEN_KEY) {
+				if (getKeys(p_inv, this->requiredKey) > 0) {
+					{
+						editKeys(p_inv, this->requiredKey, -1);
+						this->locked = false;
+					}
+				}
+			}
+			//Include Each Keytype below
 
+		}
+
+		if (!(this->CoolDownState) && !(this->locked)) {
+
+			this->CoolDownState = true;
+
+			if (this->Active == false) {
+
+				this->Active = true;
+				CC_CALLBACK_1(Interactable::SceneReturnCallBack, scn);
+			}
+			else {
+				this->Active = false;
+			}
+		}
+	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////	EFFECTS
+
 
 InteractType Interactable::getType()
 {

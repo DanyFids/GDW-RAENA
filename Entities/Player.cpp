@@ -116,6 +116,7 @@ void Player::Attack()
 
 }
 
+
 void Player::HitDetectEnem(Enemy * e)
 {
 	if (attacking && atk != nullptr) {

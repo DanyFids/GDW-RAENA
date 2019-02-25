@@ -11,6 +11,9 @@ class GameplayScene : public cocos2d::Scene {
 private:
 	const float PLAYER_SPEED = 100;
 	Player * player;
+	
+	player_inventory * currInv;
+	
 	cocos2d::Vector<Block *> platforms;
 	cocos2d::Vector<Torch *> torches;
 	cocos2d::Vector<Interactable *> interactables;
@@ -27,6 +30,17 @@ public:
 		bool key_jump_p = false;
 		bool key_interact = false;
 
+		bool key_one = false;
+		bool key_oneP = false;
+		bool key_F = false;
+		bool key_FP = false;
+		bool key_two = false;
+		bool key_twoP = false;
+		
+		bool key_P1 = false;
+		bool key_P1P = false;
+		bool key_P2 = false;
+		bool key_P2P = false;
 	} GAMEPLAY_INPUT;
 
 	static cocos2d::Scene * createScene();

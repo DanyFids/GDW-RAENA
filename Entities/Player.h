@@ -1,5 +1,7 @@
 #pragma once
 #include"Entities/CoreEntities.h"
+#include "Enums.h"
+#include "PlayerInventory.h"
 
 namespace cocos2d {
 	class Scene;
@@ -18,6 +20,9 @@ private:
 	bool face_right = true;
 	float atk_timer = 0;
 
+	//Number of Keys 
+	int genKeys = 0; //General Key (can be used on most doors)
+
 	cocos2d::Scene * scn = nullptr;
 
 	Fireball * atk = nullptr;
@@ -34,6 +39,7 @@ public:
 
 	void Jump();
 	void Attack();
+
 
 	void HitDetectEnem(Enemy * e);
 
