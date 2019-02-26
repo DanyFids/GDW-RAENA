@@ -54,8 +54,8 @@ void Textbox::Load()
 void Textbox::Close(/*cocos2d::Sprite del1, cocos2d::Label del2*/)
 {
 	scene->removeChild(this->Yeet);
-	//scene->removeChild(this->Box);
-	this->Box->setOpacity(0);
+	scene->removeChild(this->Box);
+	//this->Box->setOpacity(0);
 }
 
 int Textbox::getPages()

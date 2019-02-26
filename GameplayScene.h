@@ -7,6 +7,7 @@
 #include "Entities/Interactable.h"
 #include "Entities/Platforms.h"
 
+
 class GameplayScene : public cocos2d::Scene {
 private:
 	const float PLAYER_SPEED = 100;
@@ -29,6 +30,7 @@ public:
 		bool key_jump = false;
 		bool key_jump_p = false;
 		bool key_interact = false;
+
 
 		bool key_one = false;
 		bool key_oneP = false;
