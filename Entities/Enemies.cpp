@@ -143,12 +143,11 @@ bool Knight::HitDetect(Entity * other)
 
 void Knight::Update(float dt)
 {
-	//spd.y += GRAVITY * dt;
-	//if (spd.y < T_VELOCITY) {
-	//	spd.y = T_VELOCITY;
-	//}
-	
-	spd.y = 0;
+	spd.y += GRAVITY * dt;
+	if (spd.y < T_VELOCITY) {
+		spd.y = T_VELOCITY;
+	}
+	//spd.y = 0;
 	spd.x = 0;
 }
 

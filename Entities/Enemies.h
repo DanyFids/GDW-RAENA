@@ -10,7 +10,6 @@ private:
 	bool attacking = false;
 	bool paused = false;
 	int turn;
-	cocos2d::Vec2 spd = { 0, 0 };
 	const float TURNT_TIME = 3;
 	float timer = TURNT_TIME;
 	int hp = 5;
