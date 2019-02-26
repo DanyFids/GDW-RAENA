@@ -459,6 +459,7 @@ void GameplayScene::update(float dt) {
 	for each (Interactable* i in interactables) {
 		if (i->getType() == DOOR) {	//Add all interactable types that actually collide with the player here.
 			i->HitDetect(player);
+			i->HitDetect(knight);
 		}
 	}
 
@@ -476,6 +477,7 @@ void GameplayScene::update(float dt) {
 
 	for each (Platform* p in ActualPlatforms) {
 		p->HitDetect(player);
+		p->HitDetect(knight);
 	}
 
 	for each (Torch* t in torches) {
