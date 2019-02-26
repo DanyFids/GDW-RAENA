@@ -63,9 +63,9 @@ bool GameplayScene::init() {
 		
 	}
 	//platforms
-	platforms.pushBack(Block::create(0,0, 800, 200));
-	platforms.pushBack(Block::create(500,200, 300, 75));
-	platforms.pushBack(Block::create(280, 350, 180, 10));
+	terrain.pushBack(Block::create(0,0, 800, 200));
+	terrain.pushBack(Block::create(500,200, 300, 75));
+	terrain.pushBack(Block::create(280, 350, 180, 10));
 
 
 	interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));//Some Switch thing
@@ -81,7 +81,10 @@ bool GameplayScene::init() {
 	std::string plat1_file = "Platform1.png";
 	ActualPlatforms.pushBack(Platform::create(plat1_file, cocos2d::Vec2(100,280)));
 
-	for each (Block* plat in platforms)
+	//ladders
+	ladders.pushBack(Ladder::create(248, 200, 32, 160));
+
+	for each (Entity* plat in terrain)
 	{
 		if (plat != nullptr) {
 			this->addChild(plat);
@@ -107,6 +110,11 @@ bool GameplayScene::init() {
 			p->getTexture()->setTexParameters(tp);*/
 
 			this->addChild(p);
+		}
+	}
+	for each (Ladder* lad in ladders) {
+		if (lad != nullptr) {
+			this->addChild(lad);
 		}
 		else {
 			return false;
@@ -161,6 +169,9 @@ bool GameplayScene::init() {
 		case EventKeyboard::KeyCode::KEY_2:
 			GAMEPLAY_INPUT.key_P2 = true;
 			break;
+		case EventKeyboard::KeyCode::KEY_X:
+			GAMEPLAY_INPUT.key_crouch = true;
+			break;
 		}
 	};
 
@@ -213,6 +224,10 @@ bool GameplayScene::init() {
 			GAMEPLAY_INPUT.key_P2 = false;
 			GAMEPLAY_INPUT.key_P2P = false;
 			break;
+		case EventKeyboard::KeyCode::KEY_X:
+			GAMEPLAY_INPUT.key_crouch = false;
+			GAMEPLAY_INPUT.key_crouch_p = false;
+			break;
 		}
 	};
 
@@ -257,8 +272,7 @@ bool GameplayScene::init() {
 
 	this->scheduleUpdate();
 
-
-	
+	view = this->getDefaultCamera();
 
 	return true;
 }
@@ -319,10 +333,28 @@ void GameplayScene::update(float dt) {
 	}
 
 	if (GAMEPLAY_INPUT.key_left) {
-		player->spd.x = -PLAYER_SPEED * dt;
+		if (player->getState() != PS_Climb) {
+			player->spd.x = -PLAYER_SPEED * dt;
+		}
 	}
 	if (GAMEPLAY_INPUT.key_right) {
-		player->spd.x = PLAYER_SPEED * dt;
+		if (player->getState() != PS_Climb) {
+			if (player->getState() == PS_Crouch) {
+				player->spd.x = CROUCH_SPEED * dt;
+			}
+			player->spd.x = PLAYER_SPEED * dt;
+		}
+	}
+	if (GAMEPLAY_INPUT.key_down) {
+		if (player->getState() == PS_Climb) {
+			player->spd.y = -PLAYER_SPEED * dt;
+		}
+	}
+
+	if (GAMEPLAY_INPUT.key_up) {
+		if (player->getState() == PS_Climb) {
+			player->spd.y = PLAYER_SPEED * dt;
+		}
 	}
 
 
@@ -468,7 +500,7 @@ void GameplayScene::update(float dt) {
 		GAMEPLAY_INPUT.key_space_p = true;
 	}
 
-	for each (Block* platform in platforms)
+	for each (Block* platform in terrain)
 	{
 		platform->HitDetect(player);
 		platform->HitDetect(knight);
@@ -484,7 +516,27 @@ void GameplayScene::update(float dt) {
 		player->HitDetectEnem(t);
 	}
 
-	
+	for each (Ladder* lad in ladders)
+	{
+		if (lad->HitDetect(player) && player->getState() != PS_Climb) {
+			if (GAMEPLAY_INPUT.key_up && !lad->PlayerOnTop()) {
+				player->Climb(lad);
+			}
+			else if(GAMEPLAY_INPUT.key_down && lad->PlayerOnTop()){
+				player->ClimbDown(lad);
+			}
+		}
+	}
+
+	if (GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p) {
+		if (player->getState() == PS_Stand) {
+			player->Crouch();
+		}
+		else if (player->getState() == PS_Crouch) {
+			player->Stand();
+		}
+		GAMEPLAY_INPUT.key_crouch_p = true;
+	}
 
 	player->Move();
 	player->moveLightToPlayer();
@@ -492,5 +544,14 @@ void GameplayScene::update(float dt) {
 	knight->Move();
 	if (knight->HitDetect(player)) {
 		player->hurt(2);
+	}
+
+	// Move Camera
+	if (player->getPositionX() >= (Director::getInstance()->getVisibleSize().width / 2) && player->getPositionX() <= STAGE_WIDTH - (Director::getInstance()->getVisibleSize().width/2)) {
+		view->setPositionX(player->getPositionX());
+	}
+
+	if (player->getPositionY() >= (Director::getInstance()->getVisibleSize().height / 3) && player->getPositionY() <= STAGE_HEIGHT - (Director::getInstance()->getVisibleSize().height * 2 / 3)) {
+		view->setPositionY(player->getPositionY() + (Director::getInstance()->getVisibleSize().height / 6));
 	}
 }

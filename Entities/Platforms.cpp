@@ -135,3 +135,7 @@ void Platform::Update(float dt)
 void Platform::Move()
 {
 }
+
+void Platform::Land()
+{
+}

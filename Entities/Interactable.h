@@ -3,7 +3,6 @@
 #include "2d/CCScene.h"
 #include "Entities/CoreEntities.h"
 #include "Enums.h"
-#include "PlayerInventory.h"
 
 USING_NS_CC;
 
@@ -39,6 +38,7 @@ public :
 	void SceneReturnCallBack(Ref* pSender);
 
 	CREATE_FUNC(cocos2d::Scene);
+	virtual void Land() override;
 
 private:
 
@@ -57,6 +57,7 @@ private:
 	// Active == Open/Close , True == Open 
 	bool locked = false;
 
-	
+
+	// Inherited via Entity
 
 };

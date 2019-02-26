@@ -3,26 +3,29 @@
 #include "cocos2d.h"
 #include "Entities/Player.h"
 #include "Entities/Enemies.h"
-#include"Entities/Player.h"
 #include"Entities/Block.h"
 #include"Entities/Torch.h"
 #include "Entities/Interactable.h"
 #include "Entities/Platforms.h"
-
+#include "Entities/Ladder.h"
 
 class GameplayScene : public cocos2d::Scene {
 private:
-	const float PLAYER_SPEED = 100;
 	Player * player;
 	Knight * knight;
 
-	
 	player_inventory * currInv;
 	
-	cocos2d::Vector<Block *> platforms;
-	cocos2d::Vector<Torch *> torches;
 	cocos2d::Vector<Interactable *> interactables;
 	cocos2d::Vector<Platform *> ActualPlatforms;
+	cocos2d::Camera * view;
+
+	cocos2d::Vector<Entity *> terrain;
+	cocos2d::Vector<Ladder *> ladders;
+	cocos2d::Vector<Torch *> torches;
+
+	int STAGE_WIDTH = 1000;
+	int STAGE_HEIGHT = 600;
 public:
 	struct {
 		bool key_up = false;
@@ -33,6 +36,8 @@ public:
 		bool key_space_p = false;
 		bool key_jump = false;
 		bool key_jump_p = false;
+		bool key_crouch = false;
+		bool key_crouch_p = false;
 		bool key_interact = false;
 
 

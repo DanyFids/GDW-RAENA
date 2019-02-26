@@ -30,6 +30,10 @@ void Interactable::SceneReturnCallBack(Ref * pSender)
 	Director::getInstance()->replaceScene(HelloWorld::createScene());
 }
 
+void Interactable::Land()
+{
+}
+
 //'External' FUNCTIONS
 
 Interactable * Interactable::create(int x, int y, int w, int h, InteractType type, KeyType key)

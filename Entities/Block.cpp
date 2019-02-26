@@ -26,10 +26,10 @@ Block * Block::create(int x, int y, int w, int h)
 
 bool Block::HitDetect(Entity * other)
 {
-	float o_head = other->getPositionY() + (other->getBoundingBox().size.height / 2);
-	float o_foot = other->getPositionY() - (other->getBoundingBox().size.height / 2);
-	float o_left = other->getPositionX() - (other->getBoundingBox().size.width / 2);
-	float o_right = other->getPositionX() + (other->getBoundingBox().size.width / 2);
+	float o_head = other->getPositionY() + (other->getContentSize().height / 2);
+	float o_foot = other->getPositionY() - (other->getContentSize().height / 2);
+	float o_left = other->getPositionX() - (other->getContentSize().width / 2);
+	float o_right = other->getPositionX() + (other->getContentSize().width / 2);
 
 	if (o_head + other->spd.y > this->getPositionY() && o_foot + other->spd.y < this->getPositionY() + this->getBoundingBox().size.height &&
 		o_left < getPositionX() + this->getBoundingBox().size.width && o_right > this->getPositionX()) {
@@ -38,7 +38,7 @@ bool Block::HitDetect(Entity * other)
 		}
 		else {
 			other->spd.y = this->getPositionY() + this->getBoundingBox().size.height - o_foot;
-			other->SetOnGround(true);
+			other->Land();
 		}
 	}
 
