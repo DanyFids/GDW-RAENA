@@ -9,6 +9,7 @@ public:
 	virtual bool HitDetect(Entity * other) override;
 	virtual void Update(float dt) override;
 	virtual void Move() override;
+	virtual void Land() override {}
 
 	CREATE_FUNC(Block);
 };

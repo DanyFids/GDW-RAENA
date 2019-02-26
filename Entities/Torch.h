@@ -7,7 +7,6 @@ private:
 	int _light_id = -1;
 	bool lit = false;
 
-	cocos2d::Vector<cocos2d::Animation * > animations;
 public:
 	static Torch * create(cocos2d::Vec2 pos, LightEffect * l);
 
@@ -15,8 +14,9 @@ public:
 	virtual void Move() override;
 	virtual bool HitDetect(Entity * other) override;
 	virtual void Update(float dt) override;
+	virtual void Land() override {}
 
-	virtual void AI(Player * p) override;
+	virtual void AI(Player * p, float dt) override;
 	virtual void Hit(Player * p) override;
 	virtual void Hurt(int d) override;
 
