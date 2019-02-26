@@ -40,7 +40,7 @@ bool GameplayScene::init() {
 
 	//platforms
 	platforms.pushBack(Block::create(0,0, 800, 200));
-	platforms.pushBack(Block::create(500,200, 300, 75));
+	platforms.pushBack(Block::create(500, 200, 300, 75));
 	platforms.pushBack(Block::create(280, 350, 180, 10));
 
 	for each (Block* plat in platforms)
