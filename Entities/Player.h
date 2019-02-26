@@ -16,6 +16,7 @@ private:
 
 	int player_light;
 	bool light_on = false;
+	int hp = 6;
 	bool attacking = false;
 	bool face_right = true;
 	float atk_timer = 0;
@@ -31,6 +32,7 @@ public:
 
 	void switchLight();
 	void moveLightToPlayer();
+	void hurt(int dmg);
 
 	// Inherited via Entity
 	virtual bool HitDetect(Entity * other) override;

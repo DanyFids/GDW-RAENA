@@ -35,6 +35,10 @@ void Player::moveLightToPlayer()
 	}
 }
 
+void Player::hurt(int dmg) {
+	hp -= dmg;
+}
+
 bool Player::HitDetect(Entity * other)
 {
 	return false;

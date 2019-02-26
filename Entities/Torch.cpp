@@ -34,7 +34,7 @@ void Torch::Update(float dt)
 {
 }
 
-void Torch::AI(Player * p)
+void Torch::AI(Player * p, float dt)
 {
 }
 

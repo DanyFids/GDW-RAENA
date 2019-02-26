@@ -1,6 +1,8 @@
 #pragma once
 
 #include "cocos2d.h"
+#include "Entities/Player.h"
+#include "Entities/Enemies.h"
 #include"Entities/Player.h"
 #include"Entities/Block.h"
 #include"Entities/Torch.h"
@@ -12,6 +14,8 @@ class GameplayScene : public cocos2d::Scene {
 private:
 	const float PLAYER_SPEED = 100;
 	Player * player;
+	Knight * knight;
+
 	
 	player_inventory * currInv;
 	

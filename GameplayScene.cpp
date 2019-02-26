@@ -28,6 +28,7 @@ bool GameplayScene::init() {
 	TheGamepad = Updatepad;
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
+	//Center of screen
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	EffectSprite *_bgColor = EffectSprite::create("BG.png");
@@ -50,6 +51,17 @@ bool GameplayScene::init() {
 		return false;
 	}
 
+	knight = Knight::create("test_dummy.png");
+
+	if (knight != nullptr) {
+		knight->setPosition(Vec2((visibleSize.width / 2) - knight->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - knight->getBoundingBox().size.height / 2 + origin.y));
+		knight->setPosition( 700, 300);
+		this->addChild(knight);
+	}
+	else {
+		return false;
+		
+	}
 	//platforms
 	platforms.pushBack(Block::create(0,0, 800, 200));
 	platforms.pushBack(Block::create(500,200, 300, 75));
@@ -258,6 +270,8 @@ bool overlap = false;
 void GameplayScene::update(float dt) {
 	player->Update(dt);
 	TheGamepad->Refresh();
+	knight->Update(dt);
+	knight->AI(player, dt);
 
 
 
@@ -456,6 +470,8 @@ void GameplayScene::update(float dt) {
 	for each (Block* platform in platforms)
 	{
 		platform->HitDetect(player);
+		platform->HitDetect(knight);
+		
 	}
 
 	for each (Platform* p in ActualPlatforms) {
@@ -470,4 +486,9 @@ void GameplayScene::update(float dt) {
 
 	player->Move();
 	player->moveLightToPlayer();
+
+	knight->Move();
+	if (knight->HitDetect(player)) {
+		player->hurt(2);
+	}
 }
