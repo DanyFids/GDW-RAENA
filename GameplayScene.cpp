@@ -6,10 +6,12 @@
 #include <string>
 #include "Textbox.h"
 #include "Prompt.h"
+#include "Enums.h"
 
+#include "Door.h"
 #include "GamePad.h"
 USING_NS_CC;
-
+			  
 Gamepad* TheGamepad;
 
 Scene* GameplayScene::createScene() {
@@ -68,13 +70,13 @@ bool GameplayScene::init() {
 	terrain.pushBack(Block::create(280, 350, 180, 10));
 
 
-	interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));//Some Switch thing
+	//interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));	//Some Switch thing
 
-	interactables.pushBack(Interactable::create(320, 200, 30, 70, DOOR)); //Normal Door
+	interactables.pushBack(Door::create(320, 200, 30, 70, DOOR)); //Normal Door
 
 	//interactables.pushBack(Interactable::create(550,270, 30, 70, S_DOOR)); // Scene Door
 
-	interactables.pushBack(Interactable::create(210, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
+	interactables.pushBack(Door::create(210, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
 	//interactables.pushBack(Interactable::create(50, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
 
 
@@ -321,7 +323,15 @@ void GameplayScene::update(float dt) {
 	if (GAMEPLAY_INPUT.key_interact) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
 		for each (Interactable* i in interactables) {
 			if (i->inRange(player) ) {
-				i->Effect(i->getType(),player,currInv,this);
+				InteractType curr_thing = i->getType();
+				switch (curr_thing) {
+				case DOOR:
+					i->Effect(i->getType(), player, currInv);
+					break;
+				case SWITCH:
+					break;
+				}
+				
 				i->setCooldown();
 				break;
 			}
