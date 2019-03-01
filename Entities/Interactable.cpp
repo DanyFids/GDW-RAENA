@@ -5,30 +5,30 @@ USING_NS_CC;
 
 //'External' FUNCTIONS
 
-int Interactable::getKeys(player_inventory* p_inv,KeyType k)
-{
-	if (k == GEN_KEY) {
-		return p_inv->general_keys;
-	}
+//int Interactable::getKeys(player_inventory* p_inv,KeyType k)
+//{
+//	if (k == GEN_KEY) {
+//		return p_inv->general_keys;
+//	}
+//
+//	return NONE;
+//}
+//
+//void Interactable::editKeys(player_inventory* p_inv,KeyType k, int i)
+//{
+//	if (k == GEN_KEY)
+//	{
+//		if (i > 0) {
+//			p_inv->general_keys += i;
+//		}
+//		else p_inv->general_keys -= i;
+//	}
+//}
 
-	return NONE;
-}
-
-void Interactable::editKeys(player_inventory* p_inv,KeyType k, int i)
-{
-	if (k == GEN_KEY)
-	{
-		if (i > 0) {
-			p_inv->general_keys += i;
-		}
-		else p_inv->general_keys -= i;
-	}
-}
-
-void Interactable::SceneReturnCallBack(Ref * pSender)
-{
-	Director::getInstance()->replaceScene(HelloWorld::createScene());
-}
+//void Interactable::SceneReturnCallBack(Ref * pSender)
+//{
+//	Director::getInstance()->replaceScene(HelloWorld::createScene());
+//}
 
 void Interactable::Land()
 {
@@ -36,95 +36,82 @@ void Interactable::Land()
 
 //'External' FUNCTIONS
 
-Interactable * Interactable::create(int x, int y, int w, int h, InteractType type, KeyType key)
-{
-	auto ret = new (std::nothrow) Interactable;
-
-	if (ret && ret->init()) {
-		ret->autorelease();
-
-		ret->objectType = type;
-		ret->requiredKey = key;
-
-		if (key != NONE) { ret->locked = true; } // If this door requires a key it starts as locked.
-
-
-		switch (type)
-		{
-		case SWITCH:
-			ret->CD = 0.6f;
-			ret->temp_CD = 0.6f;
-			break;
-		case DOOR:
-			ret->CD = 0.5f;
-			ret->temp_CD = 0.5f;
-			break;
-		case S_DOOR:
-			break;
-		}
-
-		ret->setAnchorPoint(cocos2d::Vec2(0, 0));
-		ret->setPositionX(x);
-		ret->setPositionY(y);
-		ret->setContentSize(cocos2d::Size(w, h));
-
-		auto rect = cocos2d::DrawNode::create();
-
-		switch (type)
-		{
-		case SWITCH:
-		case S_DOOR:
-			rect->drawSolidRect(cocos2d::Vec2(0, 0), cocos2d::Vec2(w, h), cocos2d::Color4F::BLUE);
-			ret->addChild(rect);
-		case DOOR:
-			cocos2d::Vector<cocos2d::SpriteFrame *> door_frames = { cocos2d::SpriteFrame::create("closed_door_side.png", cocos2d::Rect(0,0,6,64), false, {0,0}, {6,64})};
-			ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(door_frames, 1.0f));
-			ret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(ret->animations.at(0))));
-			ret->autorelease();
-		}
-		cocos2d::Texture2D::TexParams tp = { GL_NEAREST, GL_NEAREST, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE };
-		ret->setScale(2);
-		ret->getTexture()->setTexParameters(tp);
-		return ret;
-	}
-	CC_SAFE_RELEASE(ret);
-	return nullptr;
-}
-
-Interactable * Interactable::create(std::string filename, cocos2d::Vec2 p, InteractType type, KeyType key)
-{
-	auto ret = new (std::nothrow) Interactable;
-
-	if (ret && ret->initWithFile(filename)) {
-		ret->autorelease();
-
-		ret->objectType = type;
-		ret->requiredKey = key;
-
-		if (key != NONE) { ret->locked = true; } // If this door requires a key it starts as locked.
-
-		switch (type)
-		{
-		case SWITCH:
-			ret->CD = 0.6f;
-			ret->temp_CD = 0.6f;
-			break;
-		case DOOR:
-			ret->CD = 0.5f;
-			ret->temp_CD = 0.5f;
-			break;
-		case S_DOOR:
-			break;
-		}
-
-		ret->setAnchorPoint(cocos2d::Vec2(0, 0));
-		ret->setPosition(p);
-
-		return ret;
-	}
-	CC_SAFE_RELEASE(ret);
-	return nullptr;
-}
+//Interactable * Interactable::create(int x, int y, int w, int h, InteractType type, KeyType key)
+//{
+//	auto ret = new (std::nothrow) Interactable;
+//
+//	if (ret && ret->init()) {
+//		ret->autorelease();
+//
+//		ret->objectType = type;
+//		ret->requiredKey = key;
+//
+//		if (key != NONE) { ret->locked = true; } // If this door requires a key it starts as locked.
+//
+//
+//		switch (type)
+//		{
+//		case SWITCH:
+//			ret->CD = 0.6f;
+//			ret->temp_CD = 0.6f;
+//			break;
+//		case DOOR:
+//			ret->CD = 0.5f;
+//			ret->temp_CD = 0.5f;
+//			break;
+//		case S_DOOR:
+//			break;
+//		}
+//
+//		ret->setAnchorPoint(cocos2d::Vec2(0, 0));
+//		ret->setPositionX(x);
+//		ret->setPositionY(y);
+//		ret->setContentSize(cocos2d::Size(w, h));
+//
+//		auto rect = cocos2d::DrawNode::create();
+//		rect->drawSolidRect(cocos2d::Vec2(0, 0), cocos2d::Vec2(w, h), cocos2d::Color4F::BLUE);
+//		ret->addChild(rect);
+//
+//		return ret;
+//	}
+//	CC_SAFE_RELEASE(ret);
+//	return nullptr;
+//}
+//
+//Interactable * Interactable::create(std::string filename, cocos2d::Vec2 p, InteractType type, KeyType key)
+//{
+//	auto ret = new (std::nothrow) Interactable;
+//
+//	if (ret && ret->initWithFile(filename)) {
+//		ret->autorelease();
+//
+//		ret->objectType = type;
+//		ret->requiredKey = key;
+//
+//		if (key != NONE) { ret->locked = true; } // If this door requires a key it starts as locked.
+//
+//		switch (type)
+//		{
+//		case SWITCH:
+//			ret->CD = 0.6f;
+//			ret->temp_CD = 0.6f;
+//			break;
+//		case DOOR:
+//			ret->CD = 0.5f;
+//			ret->temp_CD = 0.5f;
+//			break;
+//		case S_DOOR:
+//			break;
+//		}
+//
+//		ret->setAnchorPoint(cocos2d::Vec2(0, 0));
+//		ret->setPosition(p);
+//
+//		return ret;
+//	}
+//	CC_SAFE_RELEASE(ret);
+//	return nullptr;
+//}
 
 bool Interactable::HitDetect(Entity * other)
 {
@@ -229,26 +216,20 @@ bool Interactable::inRange(Entity * other)
 	return false;
 }
 
-void Interactable::Update(float dt)
-{
-
-	if (this->CoolDownState == true)
-	{
-
-		if (this->objectType == SWITCH,DOOR) {
-
-			this->temp_CD -= dt;
-			if (this->temp_CD <= 0) {
-				this->temp_CD = CD;
-				this->CoolDownState = false;
-			}
-
-		}
-
-
-	}
-
-}
+//void Interactable::Update(float dt)
+//{
+//
+//	if (this->CoolDownState == true)
+//	{
+//		this->temp_CD -= dt;
+//		if (this->temp_CD <= 0) {
+//			this->temp_CD = CD;
+//			this->CoolDownState = false;
+//		}
+//
+//	}
+//
+//}
 
 void Interactable::Move()
 {
@@ -257,91 +238,91 @@ void Interactable::Move()
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////	EFFECTS
 // What does this specific Interactable Do? Define each Effect in it's own IF statement.
-void Interactable::Effect(InteractType t, Entity * player,player_inventory * p_inv, Scene * scn)
-{	
-	if (t == SWITCH && !(this->CoolDownState) ) {
-
-		this->CoolDownState = true;
-
-		if (this->Active == false) {
-
-			this->Active = true;
-			this->setPosition(this->getPosition() + cocos2d::Vec2(0, 5));
-		}
-		else {
-
-			this->Active = false;
-			this->setPosition(this->getPosition() - cocos2d::Vec2(0, 5));
-		}
-	}
-
-	if (t == DOOR) {
-
-		if (this->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
-			 
-			if (this->requiredKey == GEN_KEY) {
-				if (getKeys(p_inv,this->requiredKey) > 0) {
-					{
-						editKeys(p_inv,this->requiredKey, -1);
-						this->locked = false;
-					}
-			   }
-			}
-			//Include Each Keytype below
-
-		}
-
-		if (!(this->CoolDownState) && !(this->locked)) {
-
-			this->CoolDownState = true;
-
-			if (this->Active == false) {
-
-				this->Active = true;
-
-			}
-			else {
-				this->Active = false;
-			}
-		}
-	}
-
-	if (t == S_DOOR) {
-
-		if (this->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
-
-			if (this->requiredKey == GEN_KEY) {
-				if (getKeys(p_inv, this->requiredKey) > 0) {
-					{
-						editKeys(p_inv, this->requiredKey, -1);
-						this->locked = false;
-					}
-				}
-			}
-			//Include Each Keytype below
-
-		}
-
-		if (!(this->CoolDownState) && !(this->locked)) {
-
-			this->CoolDownState = true;
-
-			if (this->Active == false) {
-
-				this->Active = true;
-				CC_CALLBACK_1(Interactable::SceneReturnCallBack, scn);
-			}
-			else {
-				this->Active = false;
-			}
-		}
-	}
-}
+//void Interactable::Effect(InteractType t, Entity * player,player_inventory * p_inv, Scene * scn)
+//{	
+//	if (t == SWITCH && !(this->CoolDownState) ) {
+//
+//		this->CoolDownState = true;
+//
+//		if (this->Active == false) {
+//
+//			this->Active = true;
+//			this->setPosition(this->getPosition() + cocos2d::Vec2(0, 5));
+//		}
+//		else {
+//
+//			this->Active = false;
+//			this->setPosition(this->getPosition() - cocos2d::Vec2(0, 5));
+//		}
+//	}
+//
+//	if (t == DOOR) {
+//
+//		if (this->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
+//			 
+//			if (this->requiredKey == GEN_KEY) {
+//				if (getKeys(p_inv,this->requiredKey) > 0) {
+//					{
+//						editKeys(p_inv,this->requiredKey, -1);
+//						this->locked = false;
+//					}
+//			   }
+//			}
+//			//Include Each Keytype below
+//
+//		}
+//
+//		if (!(this->CoolDownState) && !(this->locked)) {
+//
+//			this->CoolDownState = true;
+//
+//			if (this->Active == false) {
+//
+//				this->Active = true;
+//
+//			}
+//			else {
+//				this->Active = false;
+//			}
+//		}
+//	}
+//
+//	if (t == S_DOOR) {
+//
+//		if (this->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
+//
+//			if (this->requiredKey == GEN_KEY) {
+//				if (getKeys(p_inv, this->requiredKey) > 0) {
+//					{
+//						editKeys(p_inv, this->requiredKey, -1);
+//						this->locked = false;
+//					}
+//				}
+//			}
+//			//Include Each Keytype below
+//
+//		}
+//
+//		if (!(this->CoolDownState) && !(this->locked)) {
+//
+//			this->CoolDownState = true;
+//
+//			if (this->Active == false) {
+//
+//				this->Active = true;
+//				CC_CALLBACK_1(Interactable::SceneReturnCallBack, scn);
+//			}
+//			else {
+//				this->Active = false;
+//			}
+//		}
+//	}
+//}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////	EFFECTS
 
 
-InteractType Interactable::getType()
-{
-	return this->objectType;
-}
+//InteractType Interactable::getType()
+//{
+//	return this->objectType;
+//}
