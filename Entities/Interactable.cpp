@@ -69,9 +69,22 @@ Interactable * Interactable::create(int x, int y, int w, int h, InteractType typ
 		ret->setContentSize(cocos2d::Size(w, h));
 
 		auto rect = cocos2d::DrawNode::create();
-		rect->drawSolidRect(cocos2d::Vec2(0, 0), cocos2d::Vec2(w, h), cocos2d::Color4F::BLUE);
-		ret->addChild(rect);
 
+		switch (type)
+		{
+		case SWITCH:
+		case S_DOOR:
+			rect->drawSolidRect(cocos2d::Vec2(0, 0), cocos2d::Vec2(w, h), cocos2d::Color4F::BLUE);
+			ret->addChild(rect);
+		case DOOR:
+			cocos2d::Vector<cocos2d::SpriteFrame *> door_frames = { cocos2d::SpriteFrame::create("closed_door_side.png", cocos2d::Rect(0,0,6,64), false, {0,0}, {6,64})};
+			ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(door_frames, 1.0f));
+			ret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(ret->animations.at(0))));
+			ret->autorelease();
+		}
+		cocos2d::Texture2D::TexParams tp = { GL_NEAREST, GL_NEAREST, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE };
+		ret->setScale(2);
+		ret->getTexture()->setTexParameters(tp);
 		return ret;
 	}
 	CC_SAFE_RELEASE(ret);

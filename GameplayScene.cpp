@@ -51,11 +51,11 @@ bool GameplayScene::init() {
 		return false;
 	}
 
-	knight = Knight::create("test_dummy.png");
+	knight = Knight::create("knightwalkyboi0000.png");
 
 	if (knight != nullptr) {
 		knight->setPosition(Vec2((visibleSize.width / 2) - knight->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - knight->getBoundingBox().size.height / 2 + origin.y));
-		knight->setPosition( 700, 300);
+		knight->setPosition( 700, 315);
 		this->addChild(knight);
 	}
 	else {
@@ -76,6 +76,7 @@ bool GameplayScene::init() {
 
 	interactables.pushBack(Interactable::create(210, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
 	//interactables.pushBack(Interactable::create(50, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
+	interactables.pushBack(Interactable::create(500, 275, 20, 40, S_DOOR));
 
 
 	std::string plat1_file = "Platform1.png";
@@ -334,6 +335,7 @@ void GameplayScene::update(float dt) {
 
 	if (GAMEPLAY_INPUT.key_left) {
 		if (player->getState() != PS_Climb) {
+			player->setFlipX(true);
 			player->spd.x = -PLAYER_SPEED * dt;
 		}
 	}
@@ -342,6 +344,7 @@ void GameplayScene::update(float dt) {
 			if (player->getState() == PS_Crouch) {
 				player->spd.x = CROUCH_SPEED * dt;
 			}
+			player->setFlipX(false);
 			player->spd.x = PLAYER_SPEED * dt;
 		}
 	}
