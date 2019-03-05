@@ -180,6 +180,7 @@ void GameplayScene::update(float dt) {
 	if (player->getPosition().x <= 20) {
 		player->setPosition(750, 300);
 	}
+	
 	knight->Update(dt);
 	knight->AI(player, dt);
 
@@ -200,6 +201,10 @@ void GameplayScene::update(float dt) {
 		GAMEPLAY_INPUT.key_jump_p = true;
 	}
 
+	if (knight->HitDetect(player)) {
+		player->hurt(2);
+	}
+
 	for each (Block* platform in platforms)
 	{
 		platform->HitDetect(player);
@@ -215,7 +220,4 @@ void GameplayScene::update(float dt) {
 	player->moveLightToPlayer();
 
 	knight->Move();
-	if (knight->HitDetect(player)) {
-		player->hurt(2);
-	}
 }

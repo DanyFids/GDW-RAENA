@@ -23,7 +23,6 @@ public:
 	void moveLightToKnight();
 	static const int ENEMY_SPEED = 10;
 	bool onGround();
-	void greatSword();
 
 	// Inherited via Enemy
 	void AI(Player* player, float dt);

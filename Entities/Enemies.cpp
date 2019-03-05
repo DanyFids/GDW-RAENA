@@ -164,16 +164,13 @@ void Knight::AI(Player* player, float dt) {
 
 }
 
-void Knight::greatSword() {
-
-}
 
 int Knight::getHp() {
 	return hp;
 }
 
 void Knight::Hurt(int dmg) {
-
+	hp--;
 }
 
 void Knight::Hit(Player * other) {
@@ -182,6 +179,61 @@ void Knight::Hit(Player * other) {
 
 bool Knight::HitDetect(Entity * other)
 {
+	float o_head = other->getPositionY() + (other->getBoundingBox().size.height / 2);
+	float o_foot = other->getPositionY() - (other->getBoundingBox().size.height / 2);
+	float o_left = other->getPositionX() - (other->getBoundingBox().size.width / 2);
+	float o_right = other->getPositionX() + (other->getBoundingBox().size.width / 2);
+
+	float t_head = this->getPositionY() + (this->getBoundingBox().size.height / 2);
+	float t_foot = this->getPositionY() - (this->getBoundingBox().size.height / 2);
+	float t_left = this->getPositionX() - (this->getBoundingBox().size.width / 2);
+	float t_right = this->getPositionX() + (this->getBoundingBox().size.width / 2);
+
+	if (o_head + other->spd.y > t_foot && o_foot + other->spd.y < t_head &&
+		o_left < t_right && o_right > t_left) {
+		if (other->spd.y > 0) {
+			//other->spd.y = t_foot - o_head;
+			other->spd.y = -1;
+			return true;
+		}
+		else {
+			//other->spd.y = t_head - o_foot;
+			other->spd.y = 5;
+			if (other->spd.x > 0) {
+				other->spd.x = -70;
+			}
+			else if (other->spd.x < 0){
+				other->spd.x = 70;
+			}
+			else {
+				if (face_right) {
+					other->spd.x = 70;
+				}
+				else {
+					other->spd.x = -70;
+				}
+			}
+			return true;
+		}
+	}
+
+	if (o_head > t_foot && o_foot < t_head &&
+		o_left + other->spd.x < t_right + spd.x && o_right + other->spd.x > t_left + spd.x) {
+		if (other->spd.x > 0) { 
+			//other->spd.x = (t_left + spd.x) - o_right;
+			other->spd.y = 3;
+			other->spd.x = -60;
+			return true;
+		}
+		else {
+			//other->spd.x = (t_right + spd.x) - o_left;
+			other->spd.y = 3;
+			other->spd.x = 60;
+			return true;
+		}
+	}
+
+
 	return false;
 }
 
