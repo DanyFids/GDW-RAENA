@@ -5,15 +5,18 @@ class Door : public	Interactable {
 
 public:
 
-	virtual bool HitDetect(Entity * other);
-	virtual bool inRange(Entity * other);
+	static Door* create(int x, int y, int w, int h, InteractType type, KeyType key = NONE); // Primitive,
+	static Door* create(std::string filename, cocos2d::Vec2 p, InteractType type, KeyType key = NONE); //Sprite
 
-	virtual void Update(float dt);
-	virtual void Move() {};
+	virtual bool HitDetect(Entity * other) override;
+	virtual bool inRange(Entity * other) override;
 
-	virtual void Effect(InteractType t, Entity * player, player_inventory * p_inv);
+	virtual void Update(float dt) override;
+	virtual void Move() override {} ;
 
-	virtual void setCooldown() {
+	virtual void Effect(InteractType t, Entity * player, player_inventory * p_inv) override;
+
+	virtual void setCooldown() override {
 		if (CoolDownState == false) { CoolDownState = true; }
 
 	}
@@ -26,5 +29,9 @@ public:
 	virtual InteractType getType() { return objectType; };
 
 private:
+	KeyType requiredKey; // If this is a locked door what key does it use?
 
+	//Door Variables;
+	// Active == Open/Close , True == Open 
+	bool locked = false;
 };

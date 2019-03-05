@@ -1,5 +1,59 @@
 #include "Door.h"
 
+Door * Door::create(int x, int y, int w, int h, InteractType type, KeyType key)
+{
+	auto ret = new (std::nothrow) Door;
+
+	if (ret && ret->init()) {
+		ret->autorelease();
+
+		ret->objectType = type;
+		ret->requiredKey = key;
+
+		if (key != NONE) { ret->locked = true; } // If this door requires a key it starts as locked.
+	
+		ret->CD = 0.5f;
+		ret->temp_CD = 0.5f;
+
+		ret->setAnchorPoint(cocos2d::Vec2(0, 0));
+		ret->setPositionX(x);
+		ret->setPositionY(y);
+		ret->setContentSize(cocos2d::Size(w, h));
+
+		auto rect = cocos2d::DrawNode::create();
+		rect->drawSolidRect(cocos2d::Vec2(0, 0), cocos2d::Vec2(w, h), cocos2d::Color4F::BLUE);
+		ret->addChild(rect);
+
+		return ret;
+	}
+	CC_SAFE_RELEASE(ret);
+	return nullptr;
+}
+
+Door * Door::create(std::string filename, cocos2d::Vec2 p, InteractType type, KeyType key)
+{
+	auto ret = new (std::nothrow) Door;
+
+	if (ret && ret->initWithFile(filename)) {
+		ret->autorelease();
+
+		ret->objectType = type;
+		ret->requiredKey = key;
+
+		if (key != NONE) { ret->locked = true; } // If this door requires a key it starts as locked.
+
+		ret->CD = 0.5f;
+		ret->temp_CD = 0.5f;
+
+		ret->setAnchorPoint(cocos2d::Vec2(0, 0));
+		ret->setPosition(p);
+
+		return ret;
+	}
+	CC_SAFE_RELEASE(ret);
+	return nullptr;
+}
+
 bool Door::HitDetect(Entity * other)
 {
 	//	 Entity's Bound.
@@ -97,6 +151,8 @@ void Door::Update(float dt)
 
 	}
 }
+
+
 
 void Door::Effect(InteractType t, Entity * player, player_inventory * p_inv)
 {
