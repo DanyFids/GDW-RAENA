@@ -8,7 +8,7 @@
 #include "Prompt.h"
 #include "Enums.h"
 
-#include "Door.h"
+#include "Entities/Door.h"
 #include "GamePad.h"
 USING_NS_CC;
 			  
