@@ -156,9 +156,18 @@ void Knight::AI(Player* player, float dt) {
 	else {
 		swing -= dt;
 		if (swing <= 0) {
-			swipe = false;
 			swing = CHOP_TIME;
+			swipe = false;
 		}
+
+		if (hitTimer <= 0) {
+			Hit(player);
+			hitTimer = HIT_TIME;
+		}
+		else {
+			hitTimer -= dt;
+		}
+		
 	}
 	/***************/
 
@@ -175,6 +184,20 @@ void Knight::Hurt(int dmg) {
 
 void Knight::Hit(Player * other) {
 
+	if (other->getPosition().x >= this->getPosition().x && this->getPosition().x >= (other->getPosition().x - 75)) {
+		if (other->getPosition().y <= this->getPosition().y + 40 || other->getPosition().y <= this->getPosition().y - 40) {
+			other->hurt(4);
+			other->spd.x = 5;
+			other->spd.y = 2;
+		}
+	}
+	else if (other->getPosition().x <= this->getPosition().x && this->getPosition().x <= (other->getPosition().x + 75)) {
+		if (other->getPosition().y <= this->getPosition().y + 40 || other->getPosition().y <= this->getPosition().y - 40) {
+			other->hurt(4);
+			other->spd.x = -5;
+			other->spd.y = 2;
+		}
+	}
 }
 
 bool Knight::HitDetect(Entity * other)
@@ -199,20 +222,6 @@ bool Knight::HitDetect(Entity * other)
 		else {
 			//other->spd.y = t_head - o_foot;
 			other->spd.y = 5;
-			if (other->spd.x > 0) {
-				other->spd.x = -70;
-			}
-			else if (other->spd.x < 0){
-				other->spd.x = 70;
-			}
-			else {
-				if (face_right) {
-					other->spd.x = 70;
-				}
-				else {
-					other->spd.x = -70;
-				}
-			}
 			return true;
 		}
 	}
@@ -222,13 +231,13 @@ bool Knight::HitDetect(Entity * other)
 		if (other->spd.x > 0) { 
 			//other->spd.x = (t_left + spd.x) - o_right;
 			other->spd.y = 3;
-			other->spd.x = -60;
+			other->spd.x = -3;
 			return true;
 		}
 		else {
 			//other->spd.x = (t_right + spd.x) - o_left;
 			other->spd.y = 3;
-			other->spd.x = 60;
+			other->spd.x = 3;
 			return true;
 		}
 	}

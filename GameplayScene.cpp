@@ -343,22 +343,7 @@ void GameplayScene::update(float dt) {
 		i->Update(dt);
 	}
 
-	if (knight->getLanded()) {
-		player->knockBack(true);
-		knockTimer = true;
-	}
-	if (knockTimer) {
-		timer -= dt;
-		if (timer <= 0) {
-			knockTimer = false;
-			knight->setLanded(false);
-			player->knockBack(false);
-		}
-	}
-	else {
-		timer = maxTime;
-	}
-	if (!player->getKnockback()) {
+	if (!player->isKnocked()) {
 		if (GAMEPLAY_INPUT.key_left) {
 			if (player->getState() != PS_Climb) {
 				player->spd.x = -PLAYER_SPEED * dt;
@@ -511,14 +496,9 @@ void GameplayScene::update(float dt) {
 			GAMEPLAY_INPUT.key_jump_p = true;
 		}
 
-
-		if (player->isHurt() && knight->HitDetect(player)) {
+		if (knight->HitDetect(player)) {
 			player->hurt(2);
-			player->knockBack(true);
 		}
-	}
-	else {
-	knockTimer = true;
 	}
 
 	for each (Interactable* i in interactables) {

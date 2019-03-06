@@ -13,8 +13,10 @@ private:
 	int turn;
 	const float TURNT_TIME = 3;
 	const float CHOP_TIME = 1;
+	const float HIT_TIME = 0.5;
 	float timer = TURNT_TIME;
 	float swing = CHOP_TIME;
+	float hitTimer = HIT_TIME;
 	int hp = 5;
 	int charge = 20;
 public:
