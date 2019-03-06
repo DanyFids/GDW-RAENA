@@ -9,7 +9,7 @@ class Prompt : public cocos2d::Sprite
 {
 private:
 	int PP;
-	GameplayScene* scene;
+	GameplayScene* scene = nullptr;
 
 public:
 	static Prompt * create(int What, GameplayScene * scn);
@@ -18,6 +18,8 @@ public:
 
 	void Load();
 	void Close();
+	void Hide();
+	void Show();
 	void Follow(Player* Target);
 
 };
