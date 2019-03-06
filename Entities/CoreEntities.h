@@ -11,6 +11,7 @@ public:
 	virtual void Move() = 0;
 	virtual bool HitDetect(Entity * other) = 0;
 	virtual void Update(float dt) = 0;
+	bool getonground();
 
 	void SetOnGround(bool b) {on_ground = b;}
 };

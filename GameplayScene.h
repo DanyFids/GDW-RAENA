@@ -5,6 +5,7 @@
 #include"Entities/Player.h"
 #include"Entities/Block.h"
 #include"Entities/Torch.h"
+#include "Pushable.h"
 
 
 class GameplayScene : public cocos2d::Scene {
@@ -14,6 +15,7 @@ private:
 
 	cocos2d::Vector<Block *> platforms;
 	cocos2d::Vector<Torch *> torches;
+	cocos2d::Vector<Pushable *> Pushables;
 
 public:
 	struct {

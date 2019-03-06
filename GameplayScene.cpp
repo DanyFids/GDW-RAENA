@@ -9,6 +9,8 @@
 #include "Constants.h"
 #include "GamePad.h"
 
+
+
 USING_NS_CC;
 
 Gamepad* TheGamepad;
@@ -58,6 +60,22 @@ bool GameplayScene::init() {
 	{
 		if (plat != nullptr) {
 			this->addChild(plat);
+		}
+		else {
+			return false;
+		}
+	}
+
+	//Pushable Box
+	//auto Pushbox1 = Pushable::create(800, 500, 100, 100);
+
+	Pushables.pushBack(Pushable::create(200, 221, 50, 50, Vec2(200,221),Vec2(400, 221)));
+	Pushables.pushBack(Pushable::create(100, 201, 50, 50, Vec2(200, 500), Vec2(400, 500)));
+
+	for each (Pushable* Push in Pushables)
+	{
+		if (Push != nullptr) {
+			this->addChild(Push, 10);
 		}
 		else {
 			return false;
@@ -182,7 +200,7 @@ bool GameplayScene::init() {
 	_effect->setLightCutoffRadius(250);
 	_effect->setLightHalfRadius(0.5);
 	_effect->setBrightness(0.7);
-	_effect->setAmbientLightColor(Color3B(25, 25, 25));
+	_effect->setAmbientLightColor(Color3B(255, 255, 255));
 
 	player->setEffect(_effect, "test_NM.png");
 	_bgColor->setEffect(_effect, "layerNorm.png");
@@ -217,6 +235,11 @@ Prompt* ActivePrompt;
 void GameplayScene::update(float dt) {
 	player->Update(dt);
 	TheGamepad->Refresh();
+
+	for each (Pushable* P in Pushables)
+	{
+		P->Update(dt);
+	}
 
 	if (GAMEPLAY_INPUT.key_left) {
 		player->spd.x = -PLAYER_SPEED * dt;
@@ -373,7 +396,23 @@ void GameplayScene::update(float dt) {
 	for each (Block* platform in platforms)
 	{
 		platform->HitDetect(player);
+
+		for each (Pushable* Push in Pushables)
+		{
+			Push->HitDetect(player);
+			//platform->HitDetect(Push);
+			//Push->HitDetect(player);
+		}
 	}
+
+	//for each (Pushable* Push in Pushables)
+	//{
+	//	for each (Block* platform in platforms)
+	//	{
+	//		Push->HitDetect(platform);
+	//	}
+	//	//Push->HitDetect(player);
+	//}
 
 	for each (Torch* t in torches) {
 		player->HitDetectEnem(t);
@@ -381,4 +420,10 @@ void GameplayScene::update(float dt) {
 
 	player->Move();
 	player->moveLightToPlayer();
+	
+	for each (Pushable* P in Pushables)
+	{
+		P->Move();
+	}
+	
 }
