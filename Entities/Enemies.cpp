@@ -243,7 +243,8 @@ void Knight::Update(float dt)
 	if (spd.y < T_VELOCITY) {
 		spd.y = T_VELOCITY;
 	}
-	
+
+	//spd.y = 0;
 	spd.x = 0;
 }
 
