@@ -12,6 +12,8 @@
 #include "Entities/Platforms.h"
 #include "Entities/Ladder.h"
 
+
+
 #include "GameOver.h"
 
 #include "AppDelegate.h"
@@ -68,7 +70,7 @@ public:
 	} GAMEPLAY_INPUT;
 
 	static cocos2d::Scene * createScene();
-	player_inventory * currInv;
+	//player_inventory * currInv;
 	virtual bool init();
 
 	//void menuCloseCallback(cocos2d::Ref* pSender);

@@ -260,7 +260,7 @@ void SceneDoor::Effect(Entity * player, player_inventory * p_inv)
 			
 			switch (goTo) {
 			case TUT_LVL1:
-				cocos2d::Director::getInstance()->replaceScene();
+				//cocos2d::Director::getInstance()->replaceScene();
 				break;
 
 			}

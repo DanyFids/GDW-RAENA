@@ -556,9 +556,13 @@ bool TestRoom1::init()
 
 		//Interactables /////////////////////////////////////////////////////////////////////////////////////////
 		//interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));	//Some Switch thing
-		interactables.pushBack(Door::create(320, 200, 30, 70, DOOR)); //Normal Door
+
+		//interactables.pushBack(Door::create(320, 200, 30, 70, DOOR)); //Normal Door
+
 		//interactables.pushBack(Interactable::create(550,270, 30, 70, S_DOOR)); // Scene Door
-		interactables.pushBack(Door::create(210, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
+
+		//interactables.pushBack(Door::create(210, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
+
 		//interactables.pushBack(Interactable::create(50, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
