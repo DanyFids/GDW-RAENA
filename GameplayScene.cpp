@@ -6,11 +6,13 @@
 #include <string>
 #include "Textbox.h"
 #include "Prompt.h"
+#include "Enums.h"
 
-
+#include "Entities/Door.h"
+#include "GamePad.h"
 USING_NS_CC;
-
-
+			  
+Gamepad* TheGamepad;
 
 Scene* GameplayScene::createScene() {
 	return GameplayScene::create();
@@ -23,7 +25,12 @@ bool GameplayScene::init() {
 		return false;
 	}
 
+	auto Updatepad = new (std::nothrow) Gamepad;
+	Updatepad->CheckConnection();
+	TheGamepad = Updatepad;
+
 	auto visibleSize = Director::getInstance()->getVisibleSize();
+	//Center of screen
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	EffectSprite *_bgColor = EffectSprite::create("BG.png");
@@ -46,26 +53,42 @@ bool GameplayScene::init() {
 		return false;
 	}
 
+	knight = Knight::create("test_dummy.png");
+
+	if (knight != nullptr) {
+		knight->setPosition(Vec2((visibleSize.width / 2) - knight->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - knight->getBoundingBox().size.height / 2 + origin.y));
+		knight->setPosition( 700, 300);
+		this->addChild(knight);
+	}
+	else {
+		return false;
+		
+	}
 	//platforms
-	platforms.pushBack(Block::create(0,0, 800, 200));
-	platforms.pushBack(Block::create(500,200, 300, 75));
-	platforms.pushBack(Block::create(280, 350, 180, 10));
+	terrain.pushBack(Block::create(0,0, 800, 200));
+	terrain.pushBack(Block::create(500,200, 300, 75));
+	terrain.pushBack(Block::create(280, 350, 180, 10));
 
 
-	interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));//Some Switch thing
+	//interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));	//Some Switch thing
 
-	interactables.pushBack(Interactable::create(320, 200, 30, 70, DOOR)); //Normal Door
+	interactables.pushBack(Door::create(320, 200, 30, 70)); //Normal Door
 
 	//interactables.pushBack(Interactable::create(550,270, 30, 70, S_DOOR)); // Scene Door
 
-	interactables.pushBack(Interactable::create(210, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
+	interactables.pushBack(Door::create(210, 200, 20, 80, GEN_KEY)); // KeyDoor with general Key.
 	//interactables.pushBack(Interactable::create(50, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
+
+	interactables.pushBack(SceneDoor::create("closed_door.png", cocos2d::Vec2(450, 200),TUT_LVL1));
 
 
 	std::string plat1_file = "Platform1.png";
 	ActualPlatforms.pushBack(Platform::create(plat1_file, cocos2d::Vec2(100,280)));
 
-	for each (Block* plat in platforms)
+	//ladders
+	ladders.pushBack(Ladder::create(248, 200, 32, 160));
+
+	for each (Entity* plat in terrain)
 	{
 		if (plat != nullptr) {
 			this->addChild(plat);
@@ -91,6 +114,11 @@ bool GameplayScene::init() {
 			p->getTexture()->setTexParameters(tp);*/
 
 			this->addChild(p);
+		}
+	}
+	for each (Ladder* lad in ladders) {
+		if (lad != nullptr) {
+			this->addChild(lad);
 		}
 		else {
 			return false;
@@ -145,6 +173,9 @@ bool GameplayScene::init() {
 		case EventKeyboard::KeyCode::KEY_2:
 			GAMEPLAY_INPUT.key_P2 = true;
 			break;
+		case EventKeyboard::KeyCode::KEY_X:
+			GAMEPLAY_INPUT.key_crouch = true;
+			break;
 		}
 	};
 
@@ -197,6 +228,10 @@ bool GameplayScene::init() {
 			GAMEPLAY_INPUT.key_P2 = false;
 			GAMEPLAY_INPUT.key_P2P = false;
 			break;
+		case EventKeyboard::KeyCode::KEY_X:
+			GAMEPLAY_INPUT.key_crouch = false;
+			GAMEPLAY_INPUT.key_crouch_p = false;
+			break;
 		}
 	};
 
@@ -241,8 +276,7 @@ bool GameplayScene::init() {
 
 	this->scheduleUpdate();
 
-
-	
+	view = this->getDefaultCamera();
 
 	return true;
 }
@@ -253,6 +287,9 @@ bool overlap = false;
 
 void GameplayScene::update(float dt) {
 	player->Update(dt);
+	TheGamepad->Refresh();
+	knight->Update(dt);
+	knight->AI(player, dt);
 
 
 
@@ -288,7 +325,20 @@ void GameplayScene::update(float dt) {
 	if (GAMEPLAY_INPUT.key_interact) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
 		for each (Interactable* i in interactables) {
 			if (i->inRange(player) ) {
-				i->Effect(i->getType(),player,currInv,this);
+				InteractType curr_thing = i->getType();
+				switch (curr_thing) {
+				case DOOR:
+					((Door*)i)->Effect(player, currInv);
+					i->setCooldown();
+					break;
+				case SWITCH:
+					break;
+				case S_DOOR:
+					((SceneDoor*)i)->Effect(player, currInv);
+					i->setCooldown();
+					break;
+				}
+				
 				i->setCooldown();
 				break;
 			}
@@ -300,16 +350,65 @@ void GameplayScene::update(float dt) {
 	}
 
 	if (GAMEPLAY_INPUT.key_left) {
-		player->spd.x = -PLAYER_SPEED * dt;
+		if (player->getState() != PS_Climb) {
+			player->spd.x = -PLAYER_SPEED * dt;
+		}
 	}
 	if (GAMEPLAY_INPUT.key_right) {
-		player->spd.x = PLAYER_SPEED * dt;
+		if (player->getState() != PS_Climb) {
+			if (player->getState() == PS_Crouch) {
+				player->spd.x = CROUCH_SPEED * dt;
+			}
+			player->spd.x = PLAYER_SPEED * dt;
+		}
+	}
+	if (GAMEPLAY_INPUT.key_down) {
+		if (player->getState() == PS_Climb) {
+			player->spd.y = -PLAYER_SPEED * dt;
+		}
 	}
 
-	if (GAMEPLAY_INPUT.key_space && ! GAMEPLAY_INPUT.key_space_p) {
-		player->Attack();
-		GAMEPLAY_INPUT.key_space_p = true;
+	if (GAMEPLAY_INPUT.key_up) {
+		if (player->getState() == PS_Climb) {
+			player->spd.y = PLAYER_SPEED * dt;
+		}
 	}
+
+
+	if (TheGamepad->CheckConnection() == true)
+	{
+		if (TheGamepad->leftStickX >= 0.2)
+		{
+			player->spd.x = TheGamepad->leftStickX * 100 * dt;
+		}
+		if (TheGamepad->leftStickX <= -0.2)
+		{
+			player->spd.x = TheGamepad->leftStickX * 100 * dt;
+		}
+
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
+		{
+			player->spd.x = PLAYER_SPEED * dt;
+		}
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT))
+		{
+			player->spd.x = -PLAYER_SPEED * dt;
+		}
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A))
+		{
+			player->Jump();
+		}
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_X))
+		{
+			player->Attack();
+		}
+	}
+	
+
+
+
+
+
 	if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
 	{
 		auto Textbox1 = Textbox::create(1, { 1 }, { "What up fuckbois" }, (this));
@@ -393,32 +492,78 @@ void GameplayScene::update(float dt) {
 		ActivePrompt->Follow(player);
 	}
 
+
+
 	if (GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) {
 		player->Jump();
 		GAMEPLAY_INPUT.key_jump_p = true;
 	}
+	
 
 	for each (Interactable* i in interactables) {
 		if (i->getType() == DOOR) {	//Add all interactable types that actually collide with the player here.
 			i->HitDetect(player);
+			i->HitDetect(knight);
 		}
 	}
 
-	for each (Block* platform in platforms)
+	if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p) {
+		player->Attack();
+		GAMEPLAY_INPUT.key_space_p = true;
+	}
+
+	for each (Block* platform in terrain)
 	{
 		platform->HitDetect(player);
+		platform->HitDetect(knight);
+		
 	}
 
 	for each (Platform* p in ActualPlatforms) {
 		p->HitDetect(player);
+		p->HitDetect(knight);
 	}
 
 	for each (Torch* t in torches) {
 		player->HitDetectEnem(t);
 	}
 
-	
+	for each (Ladder* lad in ladders)
+	{
+		if (lad->HitDetect(player) && player->getState() != PS_Climb) {
+			if (GAMEPLAY_INPUT.key_up && !lad->PlayerOnTop()) {
+				player->Climb(lad);
+			}
+			else if(GAMEPLAY_INPUT.key_down && lad->PlayerOnTop()){
+				player->ClimbDown(lad);
+			}
+		}
+	}
+
+	if (GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p) {
+		if (player->getState() == PS_Stand) {
+			player->Crouch();
+		}
+		else if (player->getState() == PS_Crouch) {
+			player->Stand();
+		}
+		GAMEPLAY_INPUT.key_crouch_p = true;
+	}
 
 	player->Move();
 	player->moveLightToPlayer();
+
+	knight->Move();
+	if (knight->HitDetect(player)) {
+		player->hurt(2);
+	}
+
+	// Move Camera
+	if (player->getPositionX() >= (Director::getInstance()->getVisibleSize().width / 2) && player->getPositionX() <= STAGE_WIDTH - (Director::getInstance()->getVisibleSize().width/2)) {
+		view->setPositionX(player->getPositionX());
+	}
+
+	if (player->getPositionY() >= (Director::getInstance()->getVisibleSize().height / 3) && player->getPositionY() <= STAGE_HEIGHT - (Director::getInstance()->getVisibleSize().height * 2 / 3)) {
+		view->setPositionY(player->getPositionY() + (Director::getInstance()->getVisibleSize().height / 6));
+	}
 }

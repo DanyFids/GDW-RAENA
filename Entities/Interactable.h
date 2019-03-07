@@ -1,44 +1,51 @@
 #pragma once
+
+#include "2d/CCScene.h"
 #include "Entities/CoreEntities.h"
 #include "Enums.h"
-#include "PlayerInventory.h"
 
-USING_NS_CC;
+//USING_NS_CC;
 
 class Interactable : public Entity {
 
 public :
 
-
-	static Interactable* create(int x,int y, int w, int h,InteractType type, KeyType key = NONE);
-	static Interactable* create(std::string filename, cocos2d::Vec2 p, InteractType type, KeyType key = NONE);
+	//static Interactable* create(int x,int y, int w, int h,InteractType type, KeyType key = NONE);
+	//static Interactable* create(std::string filename, cocos2d::Vec2 p, InteractType type, KeyType key = NONE);
 
 	const float SwitchCD = 0.6;
-
+	InteractType objectType; // What is this object? ex. A door? A switch?
 	//Inheirited
-	virtual bool HitDetect(Entity * other) override;
-	bool inRange(Entity * other);
 
-	virtual void Update(float dt) override;
+	virtual bool HitDetect(Entity * other) = 0;
+	virtual bool inRange(Entity * other) = 0;
+
+	virtual void Update(float dt) = 0;
 	virtual void Move() override;
 
-	void Effect(InteractType t,Entity * p,player_inventory * p_inv = nullptr, Scene * scn = nullptr);
+	virtual void Effect(Entity * player, player_inventory * p_inv);	 //For Doors
 
-	void setCooldown() {
-		if (CoolDownState == false) { CoolDownState = true; } 
+	virtual void setCooldown() {
+		if (CoolDownState == false) { CoolDownState = true; }
+
 	}
-	bool getCooldown() { return CoolDownState; }
 
-	InteractType getType();
+	virtual bool getCooldown() = 0;
 
-	int getKeys(player_inventory*,KeyType k);
-	void editKeys(player_inventory*, KeyType k, int i);
+	virtual InteractType getType() = 0;
 
-	void SceneReturnCallBack(Ref* pSender);
+	//int getKeys(player_inventory*,KeyType k);
+	//void editKeys(player_inventory*, KeyType k, int i);
 
-private:
+	//void SceneReturnCallBack(Ref* pSender);
 
-	Scene * currScene;
+	//CREATE_FUNC(cocos2d::Scene);
+	
+	virtual void Land() override;
+
+protected:
+
+	//Scene * currScene;
 
 	bool Active = false;
 	bool CoolDownState = false;
@@ -46,13 +53,13 @@ private:
 	float CD;
 	float temp_CD;
 
-	InteractType objectType; // What is this object? ex. A door? A switch? 
 	KeyType requiredKey; // If this is a locked door what key does it use?
 
 	//Door Variables;
 	// Active == Open/Close , True == Open 
 	bool locked = false;
 
-	
+
+	// Inherited via Entity
 
 };

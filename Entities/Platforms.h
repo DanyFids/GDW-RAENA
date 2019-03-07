@@ -16,6 +16,8 @@ public:
 	virtual bool HitDetect(Entity * other) override;
 	virtual void Update(float dt) override;
 	virtual void Move() override;
+	virtual void Land() override;
 private:
 	cocos2d::Vec2 origin;
+
 };

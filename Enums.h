@@ -13,3 +13,8 @@ enum KeyType {
 	GEN_KEY //General Key
 
 };
+
+enum levelEnum {
+	TUT_LVL1
+};
+
