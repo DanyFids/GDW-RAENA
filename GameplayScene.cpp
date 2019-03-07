@@ -8,7 +8,7 @@
 #include "Prompt.h"
 #include "Enums.h"
 
-#include "Door.h"
+#include "Entities/Door.h"
 #include "GamePad.h"
 USING_NS_CC;
 			  
@@ -72,12 +72,14 @@ bool GameplayScene::init() {
 
 	//interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));	//Some Switch thing
 
-	interactables.pushBack(Door::create(320, 200, 30, 70, DOOR)); //Normal Door
+	interactables.pushBack(Door::create(320, 200, 30, 70)); //Normal Door
 
 	//interactables.pushBack(Interactable::create(550,270, 30, 70, S_DOOR)); // Scene Door
 
-	interactables.pushBack(Door::create(210, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
+	interactables.pushBack(Door::create(210, 200, 20, 80, GEN_KEY)); // KeyDoor with general Key.
 	//interactables.pushBack(Interactable::create(50, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
+
+	interactables.pushBack(SceneDoor::create("closed_door.png", cocos2d::Vec2(450, 200),TUT_LVL1));
 
 
 	std::string plat1_file = "Platform1.png";
@@ -326,9 +328,14 @@ void GameplayScene::update(float dt) {
 				InteractType curr_thing = i->getType();
 				switch (curr_thing) {
 				case DOOR:
-					i->Effect(i->getType(), player, currInv);
+					((Door*)i)->Effect(player, currInv);
+					i->setCooldown();
 					break;
 				case SWITCH:
+					break;
+				case S_DOOR:
+					((SceneDoor*)i)->Effect(player, currInv);
+					i->setCooldown();
 					break;
 				}
 				
@@ -484,11 +491,6 @@ void GameplayScene::update(float dt) {
 	{
 		ActivePrompt->Follow(player);
 	}
-
-
-
-
-
 
 
 

@@ -1,13 +1,14 @@
 #include "Door.h"
 
-Door * Door::create(int x, int y, int w, int h, InteractType type, KeyType key)
+
+Door * Door::create(int x, int y, int w, int h, KeyType key)
 {
 	auto ret = new (std::nothrow) Door;
 
 	if (ret && ret->init()) {
 		ret->autorelease();
 
-		ret->objectType = type;
+		ret->objectType = DOOR;
 		ret->requiredKey = key;
 
 		if (key != NONE) { ret->locked = true; } // If this door requires a key it starts as locked.
@@ -30,14 +31,14 @@ Door * Door::create(int x, int y, int w, int h, InteractType type, KeyType key)
 	return nullptr;
 }
 
-Door * Door::create(std::string filename, cocos2d::Vec2 p, InteractType type, KeyType key)
+Door * Door::create(std::string filename, cocos2d::Vec2 p, KeyType key)
 {
 	auto ret = new (std::nothrow) Door;
 
 	if (ret && ret->initWithFile(filename)) {
 		ret->autorelease();
 
-		ret->objectType = type;
+		ret->objectType = DOOR;
 		ret->requiredKey = key;
 
 		if (key != NONE) { ret->locked = true; } // If this door requires a key it starts as locked.
@@ -84,7 +85,7 @@ bool Door::HitDetect(Entity * other)
 		if (o_TOP > MIN_Y && o_BOT < MAX_Y &&
 			o_RIGHT + other->spd.x > MIN_X && o_LEFT + other->spd.x < MAX_X) {
 
-			if (other->spd.x >= 0) {
+			if (other->spd.x >= 0.0f) {
 				other->spd.x = MIN_X - o_RIGHT;
 				return true;
 			}
@@ -154,7 +155,7 @@ void Door::Update(float dt)
 
 
 
-void Door::Effect(InteractType t, Entity * player, player_inventory * p_inv)
+void Door::Effect(Entity * player, player_inventory * p_inv)
 {
 	if (this->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
 
@@ -203,4 +204,72 @@ void Door::editKeys(player_inventory * p_inv, KeyType k, int i)
 		}
 		else p_inv->general_keys -= i;
 	}
+}
+
+//// ----------------------- S C E N E		D O O R	----------------------------------
+
+SceneDoor * SceneDoor::create(std::string filename, cocos2d::Vec2 p, levelEnum lvl, KeyType key)
+{
+	auto ret = new (std::nothrow) SceneDoor;
+
+	if (ret && ret->initWithFile(filename)) {
+		ret->autorelease();
+
+		ret->objectType = S_DOOR;
+		ret->requiredKey = key;
+		ret->goTo = lvl;
+		//ret->goTo = scn;
+
+		if (key != NONE) { ret->locked = true; } // If this door requires a key it starts as locked.
+
+		ret->CD = 0.5f;
+		ret->temp_CD = 0.5f;
+
+		ret->setAnchorPoint(cocos2d::Vec2(0, 0));
+		ret->setPosition(p);
+
+		return ret;
+	}
+	CC_SAFE_RELEASE(ret);
+	return nullptr;
+}
+
+void SceneDoor::Effect(Entity * player, player_inventory * p_inv)
+{
+	if (this->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
+
+		if (this->requiredKey == GEN_KEY) {
+			if (getKeys(p_inv, this->requiredKey) > 0) {
+				{
+					editKeys(p_inv, this->requiredKey, -1);
+					this->locked = false;
+				}
+			}
+		}
+		//Include Each Keytype below
+
+	}
+
+	if (!(this->CoolDownState) && !(this->locked)) {
+
+		this->CoolDownState = true;
+
+		if (this->Active == false) {
+
+			this->Active = true;
+			
+			switch (goTo) {
+			case TUT_LVL1:
+				cocos2d::Director::getInstance()->replaceScene();
+				break;
+
+			}
+			
+
+		}
+		else {
+			this->Active = false;
+		}
+	}
+
 }
