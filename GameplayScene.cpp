@@ -200,9 +200,14 @@ void GameplayScene::update(float dt) {
 				InteractType curr_thing = i->getType();
 				switch (curr_thing) {
 				case DOOR:
-					i->Effect(i->getType(), player, currInv);
+					((Door*)i)->Effect(player, currInv);
+					i->setCooldown();
 					break;
 				case SWITCH:
+					break;
+				case S_DOOR:
+					((SceneDoor*)i)->Effect(player, currInv);
+					i->setCooldown();
 					break;
 				}
 				
@@ -363,11 +368,6 @@ void GameplayScene::update(float dt) {
 	{
 		ActivePrompt->Follow(player);
 	}
-
-
-
-
-
 
 
 

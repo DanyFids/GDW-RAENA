@@ -14,6 +14,10 @@
 
 #include "GameOver.h"
 
+#include "AppDelegate.h"
+#include "HelloWorldScene.h"
+#include "MenuScene.h"
+
 class GameplayScene : public cocos2d::Scene {
 protected:
 	Player * player;
@@ -22,6 +26,7 @@ protected:
 	player_inventory * currInv;
 
 	cocos2d::ParallaxNode * PNode;
+	
 	
 	cocos2d::Vector<Interactable *> interactables;
 	cocos2d::Vector<Platform *> ActualPlatforms;
@@ -63,7 +68,7 @@ public:
 	} GAMEPLAY_INPUT;
 
 	static cocos2d::Scene * createScene();
-
+	player_inventory * currInv;
 	virtual bool init();
 
 	//void menuCloseCallback(cocos2d::Ref* pSender);

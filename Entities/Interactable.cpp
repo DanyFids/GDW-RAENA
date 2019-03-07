@@ -235,6 +235,10 @@ void Interactable::Move()
 {
 }
 
+void Interactable::Effect(Entity * player, player_inventory * p_inv)
+{
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////	EFFECTS
 // What does this specific Interactable Do? Define each Effect in it's own IF statement.
