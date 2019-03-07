@@ -30,131 +30,13 @@ bool GameplayScene::init() {
 	auto Updatepad = new (std::nothrow) Gamepad;
 	Updatepad->CheckConnection();
 	TheGamepad = Updatepad;
-
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	//Center of screen
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
-	//Parralax and back ground
-
-	auto paraNode = ParallaxNode::create();
-	PNode = paraNode;
-	EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
-	
-	_bgColor->setScale(1);
-
-	paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
-	
-	EffectSprite *_bgColor2 = EffectSprite::create("BGP2.png");
-	
-	_bgColor2->setScale(1);
-	paraNode->addChild(_bgColor2, -1, Vec2(1.4f, 1.5f), Vec2::ZERO);
-	
-	//paraNode->setPosition(Vec2(visibleSize.width, visibleSize.height));
-	this->addChild(paraNode);
 	
 	// Player ////////////////////////////
 	player = Player ::create("test_dummy.png", this);
 	player->setScale(SCALE);
 	player->getTexture()->setTexParameters(tp);
 
-	 currInv = new player_inventory(1);
-
-	if (player != nullptr) {
-		player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
-
-		this->addChild(player, 10);
-	}
-	else {
-		return false;
-	}
-
-	knight = Knight::create("test_dummy.png");
-
-	if (knight != nullptr) {
-		knight->setPosition(Vec2((visibleSize.width / 2) - knight->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - knight->getBoundingBox().size.height / 2 + origin.y));
-		knight->setPosition( 700, 300);
-		this->addChild(knight);
-	}
-	else {
-		return false;
-		
-	}
-	//platforms
-	terrain.pushBack(Block::create(0,0, 800, 200));
-	terrain.pushBack(Block::create(500,200, 300, 75));
-	terrain.pushBack(Block::create(280, 350, 180, 10));
-
-
-	//interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));	//Some Switch thing
-
-	interactables.pushBack(Door::create(320, 200, 30, 70, DOOR)); //Normal Door
-
-	//interactables.pushBack(Interactable::create(550,270, 30, 70, S_DOOR)); // Scene Door
-
-	interactables.pushBack(Door::create(210, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
-	//interactables.pushBack(Interactable::create(50, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
-
-
-	std::string plat1_file = "Platform1.png";
-	ActualPlatforms.pushBack(Platform::create(plat1_file, cocos2d::Vec2(100,280)));
-
-	//ladders
-	ladders.pushBack(Ladder::create(248, 200, 32, 160));
-
-	for each (Entity* plat in terrain)
-	{
-		if (plat != nullptr) {
-			this->addChild(plat);
-		}
-		else {
-			return false;
-		}
-	}
-
-
-	//Pushable Box
-	//auto Pushbox1 = Pushable::create(800, 500, 100, 100);
-
-	Pushables.pushBack(Pushable::create(200, 221, 50, 50, Vec2(200,221),Vec2(400, 221)));
-	Pushables.pushBack(Pushable::create(100, 201, 50, 50, Vec2(200, 500), Vec2(400, 500)));
-
-	for each (Pushable* Push in Pushables)
-	{
-		if (Push != nullptr) {
-			this->addChild(Push, 10);
-		}
-		else {
-			return false;
-		}
-	}
-
-	for each (Interactable* inter in interactables) {
-		if (inter != nullptr) {
-			this->addChild(inter);
-		}
-		else {
-			return false;
-		}
-	}
-
-	for each (Platform* p in ActualPlatforms) {
-		if (p != nullptr) {
-
-			/*p->setScale(SCALE);
-			p->getTexture()->setTexParameters(tp);*/
-
-			this->addChild(p);
-		}
-	}
-	for each (Ladder* lad in ladders) {
-		if (lad != nullptr) {
-			this->addChild(lad);
-		}
-		else {
-			return false;
-		}
-	}
+	currInv = new player_inventory(1);
 
 	auto KeyHandler = EventListenerKeyboard::create();
 
@@ -267,48 +149,6 @@ bool GameplayScene::init() {
 	};
 
 	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(KeyHandler, player);
-
-	// Lighting Tests
-	auto _effect = LightEffect::create();
-	_effect->retain();
-
-	Vec3 l_pos(150, 300, 50);
-
-	//_effect->addLight(l_pos);
-	//_effect->addLight(Vec3(400, 250, 50));
-	//_effect->addLight(Vec3(600, 250, 50));
-	//_effect->addLight(Vec3(200, 250, 50));
-	//_effect->addLight(Vec3(0, 250, 50));
-	//_effect->addLight(Vec3(800, 250, 50));
-	_effect->setLightCutoffRadius(250);
-	_effect->setLightHalfRadius(0.5);
-	_effect->setBrightness(0.7);
-	_effect->setAmbientLightColor(Color3B(0, 0, 0));
-
-	player->setEffect(_effect, "test_NM.png");
-	_bgColor->setEffect(_effect, "layerNorm.png");
-	_bgColor2->setEffect(_effect, "layerNorm.png");
-
-	player->switchLight();
-
-	//Set Torches;
-	torches.pushBack(Torch::create(cocos2d::Vec2(200, 230), _effect));
-	torches.pushBack(Torch::create(cocos2d::Vec2(350, 400), _effect));
-	torches.pushBack(Torch::create(cocos2d::Vec2(600, 310), _effect));
-
-	for each (Torch* t in torches)
-	{
-		if (t != nullptr) {
-			addChild(t, 2);
-		}
-		else {
-			return false;
-		}
-	}
-
-	this->scheduleUpdate();
-
-	view = this->getDefaultCamera();
 
 	return true;
 }
@@ -642,4 +482,151 @@ bool TutRoom1::init()
 		return true;
 	}
 	return false;
+}
+
+bool TestRoom1::init()
+{
+	if (GameplayScene::init()) {
+
+		//Paralax & Background //////////////////////////////////////////////////////////////////////////////
+		auto paraNode = ParallaxNode::create();
+		PNode = paraNode;
+		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
+
+		_bgColor->setScale(1);
+
+		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+
+		EffectSprite *_bgColor2 = EffectSprite::create("BGP2.png");
+
+		_bgColor2->setScale(1);
+		paraNode->addChild(_bgColor2, -1, Vec2(1.4f, 1.5f), Vec2::ZERO);
+
+		this->addChild(paraNode);
+
+		auto visibleSize = Director::getInstance()->getVisibleSize();
+		//Center of screen ///////////////////////////////////////////////////////////////////////
+		Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+		//Player Loc /////////////////////////////////////////////////////////////////////////
+		if (player != nullptr) {
+			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+
+			this->addChild(player, 10);
+		}
+		else {
+			return false;
+		}
+		//Knight //////////////////////////////////////////////////////////////////////////////////////
+		knight = Knight::create("test_dummy.png");
+
+		if (knight != nullptr) {
+			knight->setPosition(Vec2((visibleSize.width / 2) - knight->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - knight->getBoundingBox().size.height / 2 + origin.y));
+			knight->setPosition(700, 300);
+			this->addChild(knight);
+		}
+		else {
+			return false;
+		}
+		
+		//platforms ////////////////////////////////////////////////////////////////////////////////
+		terrain.pushBack(Block::create(0, 0, 800, 200));
+		terrain.pushBack(Block::create(500, 200, 300, 75));
+		terrain.pushBack(Block::create(280, 350, 180, 10));
+		for each (Entity* plat in terrain)
+		{
+			if (plat != nullptr) {
+				this->addChild(plat);
+			}
+			else {
+				return false;
+			}
+		}
+		//ladders
+		ladders.pushBack(Ladder::create(248, 200, 32, 160));
+		
+		for each (Ladder* lad in ladders) {
+			if (lad != nullptr) {
+				this->addChild(lad);
+			}
+			else {
+				return false;
+			}
+		}
+
+		//Interactables /////////////////////////////////////////////////////////////////////////////////////////
+		//interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));	//Some Switch thing
+		interactables.pushBack(Door::create(320, 200, 30, 70, DOOR)); //Normal Door
+		//interactables.pushBack(Interactable::create(550,270, 30, 70, S_DOOR)); // Scene Door
+		interactables.pushBack(Door::create(210, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
+		//interactables.pushBack(Interactable::create(50, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
+		for each (Interactable* inter in interactables) {
+			if (inter != nullptr) {
+				this->addChild(inter);
+			}
+			else {
+				return false;
+			}
+		}
+		//Actual Platforms ///////////////////////////////////////////////////////////////////////////////////////////
+		std::string plat1_file = "Platform1.png";
+		ActualPlatforms.pushBack(Platform::create(plat1_file, cocos2d::Vec2(100, 280)));
+
+		for each (Platform* p in ActualPlatforms) {
+			if (p != nullptr) {
+
+				/*p->setScale(SCALE);
+				p->getTexture()->setTexParameters(tp);*/
+
+				this->addChild(p);
+			}
+		}
+
+		// Lighting Tests
+		auto _effect = LightEffect::create();
+		_effect->retain();
+
+		Vec3 l_pos(150, 300, 50);
+
+		_effect->addLight(l_pos);
+		//_effect->addLight(Vec3(400, 250, 50));
+		//_effect->addLight(Vec3(600, 250, 50));
+		//_effect->addLight(Vec3(200, 250, 50));
+		//_effect->addLight(Vec3(0, 250, 50));
+		//_effect->addLight(Vec3(800, 250, 50));
+		_effect->setLightCutoffRadius(250);
+		_effect->setLightHalfRadius(0.5);
+		_effect->setBrightness(0.7);
+		_effect->setAmbientLightColor(Color3B(0, 0, 0));
+
+		player->setEffect(_effect, "test_NM.png");
+		_bgColor->setEffect(_effect, "test_NM.png");
+		_bgColor2->setEffect(_effect, "test_NM.png");
+
+		//Set Torches;
+		torches.pushBack(Torch::create(cocos2d::Vec2(200, 230), _effect));
+		torches.pushBack(Torch::create(cocos2d::Vec2(350, 400), _effect));
+		torches.pushBack(Torch::create(cocos2d::Vec2(600, 310), _effect));
+
+		for each (Torch* t in torches)
+		{
+			if (t != nullptr) {
+				addChild(t, 2);
+			}
+			else {
+				return false;
+			}
+		}
+		player->switchLight();
+		view = this->getDefaultCamera();
+
+		this->scheduleUpdate();
+		return true;
+	}
+
+	return false;
+}
+
+void TestRoom1::update(float dt) {
+	GameplayScene::update(dt);
 }

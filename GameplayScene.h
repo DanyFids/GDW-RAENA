@@ -15,7 +15,7 @@
 #include "GameOver.h"
 
 class GameplayScene : public cocos2d::Scene {
-private:
+protected:
 	Player * player;
 	Knight * knight;
 
@@ -75,6 +75,14 @@ public:
 
 class TutRoom1 : public GameplayScene {
 public:
-	virtual bool init();
+	virtual bool init() override;
+	void TutRoom1::update(float dt);
+	CREATE_FUNC(TutRoom1);
+};
 
+class TestRoom1 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void TestRoom1::update(float dt);
+	CREATE_FUNC(TestRoom1);
 };

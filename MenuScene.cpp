@@ -92,7 +92,7 @@ static void problemLoading(const char* filename)
 }
 
 void MenuScene::menuReturnCallback(Ref* pSender) {
-	Director::getInstance()->replaceScene(GameplayScene::create());
+	Director::getInstance()->replaceScene(TestRoom1::create());
 }
 
 void MenuScene::menuCloseCallback(Ref* pSender)
