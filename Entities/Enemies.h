@@ -10,6 +10,7 @@ private:
 	bool attacking = false;
 	bool paused = false;
 	bool swipe = false;
+	bool delay = false;
 	int turn;
 	const float TURNT_TIME = 3;
 	const float CHOP_TIME = 1;

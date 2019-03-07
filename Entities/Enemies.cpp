@@ -36,8 +36,17 @@ void Knight::AI(Player* player, float dt) {
 		*******************/
 
 		//Left
-		if (!face_right) {
-			if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 300)) {
+		if (!face_right && !delay) {
+
+			//attack left
+			if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 60)) {
+				if (player->getPosition().y <= this->getPosition().y + 80 || player->getPosition().y <= this->getPosition().y - 80) {
+					swipe = true;
+					attacking = true;
+				}
+			}
+
+			else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 300)) {
 				if (player->getPosition().y <= this->getPosition().y + 100 || player->getPosition().y <= this->getPosition().y - 100) {
 					this->spd.x -= charge * dt;
 					attacking = true;
@@ -57,19 +66,20 @@ void Knight::AI(Player* player, float dt) {
 				charge = 20;
 				attacking = false;
 			}
-
-			//attack left
-			if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 60)) {
-				if (player->getPosition().y <= this->getPosition().y + 80 || player->getPosition().y <= this->getPosition().y - 80) {
-					swipe = true;
-				}
-			}
 		}
 
 		//Right
-		else if (face_right)
+		else if (face_right && !delay)
 		{
-			if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 300)) {
+			//attack right
+			if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 60)) {
+				if (player->getPosition().y <= this->getPosition().y + 80 || player->getPosition().y <= this->getPosition().y - 80) {
+					swipe = true;
+					attacking = true;
+				}
+			}
+
+			else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 300)) {
 				if (player->getPosition().y <= this->getPosition().y + 100 || player->getPosition().y <= this->getPosition().y - 100) {
 					this->spd.x += charge * dt;
 					attacking = true;
@@ -89,12 +99,12 @@ void Knight::AI(Player* player, float dt) {
 				charge = 20;
 				attacking = false;
 			}
-
-			//attack right
-			if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 60)) {
-				if (player->getPosition().y <= this->getPosition().y + 80 || player->getPosition().y <= this->getPosition().y - 80) {
-					swipe = true;
-				}
+		}
+		else {
+			swing -= dt;
+			if (swing <= 0) {
+				swing = CHOP_TIME;
+				delay = false;
 			}
 		}
 
@@ -163,6 +173,7 @@ void Knight::AI(Player* player, float dt) {
 		if (hitTimer <= 0) {
 			Hit(player);
 			hitTimer = HIT_TIME;
+			delay = true;
 		}
 		else {
 			hitTimer -= dt;

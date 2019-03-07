@@ -45,11 +45,13 @@ void Player::moveLightToPlayer()
 }
 
 void Player::hurt(int dmg) {
-	hp -= dmg;
-	knock_timer = KNOCK_TIME;
-	state = PS_HURT;
-	stopAllActions();
-	runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
+	if (state != PS_HURT) {
+		hp -= dmg;
+		knock_timer = KNOCK_TIME;
+		state = PS_HURT;
+		stopAllActions();
+		runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
+	}
 }
 
 bool Player::HitDetect(Entity * other)
@@ -67,6 +69,10 @@ void Player::Update(float dt)
 
 	if (knock_timer > 0) {
 		knock_timer -= dt;
+		state = PS_HURT;
+		if (knock_timer <= 0) {
+			state = PS_Stand;
+		}
 	}
 
 	if (glide_timer > 0) {
@@ -118,7 +124,7 @@ void Player::Move()
 	if (!attacking) {
 		setPosition(getPosition() + spd);
 
-		if (spd.y != 0 && on_ground) {
+		if (spd.y != 0 && on_ground && state != PS_HURT) {
 			on_ground = false;
 			state == PS_Jump;
 			this->stopAllActions();
