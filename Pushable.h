@@ -17,4 +17,7 @@ public:
 	virtual void Move() override;
 
 	CREATE_FUNC(Pushable);
+
+	// Inherited via Entity
+	virtual void Land() override;
 };

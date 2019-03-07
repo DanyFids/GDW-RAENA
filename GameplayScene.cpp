@@ -35,11 +35,25 @@ bool GameplayScene::init() {
 	//Center of screen
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	EffectSprite *_bgColor = EffectSprite::create("BG.png");
-	_bgColor->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
-	_bgColor->setScale(1);
-	this->addChild(_bgColor, -10);
+	//Parralax and back ground
 
+	auto paraNode = ParallaxNode::create();
+	PNode = paraNode;
+	EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
+	
+	_bgColor->setScale(1);
+
+	paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+	
+	EffectSprite *_bgColor2 = EffectSprite::create("BGP2.png");
+	
+	_bgColor2->setScale(1);
+	paraNode->addChild(_bgColor2, -1, Vec2(1.4f, 1.5f), Vec2::ZERO);
+	
+	//paraNode->setPosition(Vec2(visibleSize.width, visibleSize.height));
+	this->addChild(paraNode);
+	
+	// Player ////////////////////////////
 	player = Player ::create("test_dummy.png", this);
 	player->setScale(SCALE);
 	player->getTexture()->setTexParameters(tp);
@@ -269,10 +283,11 @@ bool GameplayScene::init() {
 	_effect->setLightCutoffRadius(250);
 	_effect->setLightHalfRadius(0.5);
 	_effect->setBrightness(0.7);
-	_effect->setAmbientLightColor(Color3B(255, 255, 255));
+	_effect->setAmbientLightColor(Color3B(0, 0, 0));
 
 	player->setEffect(_effect, "test_NM.png");
 	_bgColor->setEffect(_effect, "layerNorm.png");
+	_bgColor2->setEffect(_effect, "layerNorm.png");
 
 	player->switchLight();
 
@@ -308,7 +323,7 @@ void GameplayScene::update(float dt) {
 	knight->Update(dt);
 	knight->AI(player, dt);
 
-
+	PNode->setPosition(view->getPosition());
 
 	for each (Interactable* i in interactables) { //Showing Prompts?
 		if (i->inRange(player)) {
@@ -616,4 +631,15 @@ void GameplayScene::update(float dt) {
 		view->setPositionY(player->getPositionY() + (Director::getInstance()->getVisibleSize().height / 6));
 	}
 
+}
+
+bool TutRoom1::init()
+{
+	if (GameplayScene::init()) {
+
+
+
+		return true;
+	}
+	return false;
 }

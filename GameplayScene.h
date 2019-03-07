@@ -8,11 +8,11 @@
 
 #include "Pushable.h"
 
-
 #include "Entities/Interactable.h"
 #include "Entities/Platforms.h"
 #include "Entities/Ladder.h"
 
+#include "GameOver.h"
 
 class GameplayScene : public cocos2d::Scene {
 private:
@@ -20,6 +20,8 @@ private:
 	Knight * knight;
 
 	player_inventory * currInv;
+
+	cocos2d::ParallaxNode * PNode;
 	
 	cocos2d::Vector<Interactable *> interactables;
 	cocos2d::Vector<Platform *> ActualPlatforms;
@@ -69,4 +71,10 @@ public:
 	void update(float dt) override;
 
 	CREATE_FUNC(GameplayScene);
+};
+
+class TutRoom1 : public GameplayScene {
+public:
+	virtual bool init();
+
 };

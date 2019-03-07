@@ -157,3 +157,7 @@ void Pushable::Move()
 		on_ground = false;
 	}*/
 }
+
+void Pushable::Land()
+{
+}
