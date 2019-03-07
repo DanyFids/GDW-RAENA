@@ -13,6 +13,7 @@
 #include "HelloWorldScene.h"
 #include "MenuScene.h"
 
+
 class GameplayScene : public cocos2d::Scene {
 private:
 	Player * player;
@@ -68,3 +69,20 @@ public:
 
 	CREATE_FUNC(GameplayScene);
 };
+
+
+class Tut_level_1 : public GameplayScene {
+public:
+	virtual bool init();
+	CREATE_FUNC(Tut_level_1);
+};
+
+bool Tut_level_1::init()
+{
+	if (GameplayScene::init()) {
+
+		return true;
+	}
+
+	return false;
+}

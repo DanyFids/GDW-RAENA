@@ -1,5 +1,6 @@
 #pragma once
 #include "Classes/Entities/Interactable.h"
+#include "GameplayScene.h"
 
 class Door : public	Interactable {
 
