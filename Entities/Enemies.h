@@ -10,11 +10,14 @@ private:
 	bool attacking = false;
 	bool paused = false;
 	bool swipe = false;
+	bool delay = false;
 	int turn;
 	const float TURNT_TIME = 3;
 	const float CHOP_TIME = 1;
+	const float HIT_TIME = 0.5;
 	float timer = TURNT_TIME;
 	float swing = CHOP_TIME;
+	float hitTimer = HIT_TIME;
 	int hp = 5;
 	int charge = 20;
 public:
@@ -23,7 +26,6 @@ public:
 	void moveLightToKnight();
 	static const int ENEMY_SPEED = 10;
 	bool onGround();
-	void greatSword();
 
 	// Inherited via Enemy
 	void AI(Player* player, float dt);

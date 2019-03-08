@@ -159,6 +159,7 @@ bool overlap = false;
 
 void GameplayScene::update(float dt) {
 	player->Update(dt);
+
 	TheGamepad->Refresh();
 	knight->Update(dt);
 	knight->AI(player, dt);
@@ -221,6 +222,11 @@ void GameplayScene::update(float dt) {
 		i->Update(dt);
 	}
 
+	if (!player->isKnocked()) {
+		if (GAMEPLAY_INPUT.key_left) {
+			if (player->getState() != PS_Climb) {
+				player->spd.x = -PLAYER_SPEED * dt;
+			}
 	for each (Pushable* P in Pushables)
 	{
 		P->Update(dt);
@@ -230,152 +236,157 @@ void GameplayScene::update(float dt) {
 		if (player->getState() != PS_Climb) {
 			player->spd.x = -PLAYER_SPEED * dt;
 		}
-	}
-	if (GAMEPLAY_INPUT.key_right) {
-		if (player->getState() != PS_Climb) {
-			if (player->getState() == PS_Crouch) {
-				player->spd.x = CROUCH_SPEED * dt;
+		if (GAMEPLAY_INPUT.key_right) {
+			if (player->getState() != PS_Climb) {
+				if (player->getState() == PS_Crouch) {
+					player->spd.x = CROUCH_SPEED * dt;
+				}
+				player->spd.x = PLAYER_SPEED * dt;
 			}
-			player->spd.x = PLAYER_SPEED * dt;
 		}
-	}
-	if (GAMEPLAY_INPUT.key_down) {
-		if (player->getState() == PS_Climb) {
-			player->spd.y = -PLAYER_SPEED * dt;
-		}
-	}
-
-	if (GAMEPLAY_INPUT.key_up) {
-		if (player->getState() == PS_Climb) {
-			player->spd.y = PLAYER_SPEED * dt;
-		}
-	}
-
-
-	if (TheGamepad->CheckConnection() == true)
-	{
-		if (TheGamepad->leftStickX >= 0.2)
-		{
-			player->spd.x = TheGamepad->leftStickX * 100 * dt;
-		}
-		if (TheGamepad->leftStickX <= -0.2)
-		{
-			player->spd.x = TheGamepad->leftStickX * 100 * dt;
+		if (GAMEPLAY_INPUT.key_down) {
+			if (player->getState() == PS_Climb) {
+				player->spd.y = -PLAYER_SPEED * dt;
+			}
 		}
 
-		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
-		{
-			player->spd.x = PLAYER_SPEED * dt;
+		if (GAMEPLAY_INPUT.key_up) {
+			if (player->getState() == PS_Climb) {
+				player->spd.y = PLAYER_SPEED * dt;
+			}
 		}
-		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT))
+
+
+		if (TheGamepad->CheckConnection() == true)
 		{
-			player->spd.x = -PLAYER_SPEED * dt;
+			if (TheGamepad->leftStickX >= 0.2)
+			{
+				player->spd.x = TheGamepad->leftStickX * 100 * dt;
+			}
+			if (TheGamepad->leftStickX <= -0.2)
+			{
+				player->spd.x = TheGamepad->leftStickX * 100 * dt;
+			}
+
+			if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
+			{
+				player->spd.x = PLAYER_SPEED * dt;
+			}
+			if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT))
+			{
+				player->spd.x = -PLAYER_SPEED * dt;
+			}
+			if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A))
+			{
+				player->Jump();
+			}
+			if (TheGamepad->IsPressed(XINPUT_GAMEPAD_X))
+			{
+				player->Attack();
+			}
 		}
-		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A))
+
+
+
+
+
+
+		if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
 		{
+			auto Textbox1 = Textbox::create(1, { 1 }, { "What up fuckbois" }, (this));
+			addChild(Textbox1, 10);
+			Textbox1->Load();
+			if (ActiveTextbox)
+			{
+				ActiveTextbox->Close();
+			}
+
+
+			ActiveTextbox = Textbox1;
+
+			GAMEPLAY_INPUT.key_oneP = true;
+
+
+		}
+
+
+
+		if (GAMEPLAY_INPUT.key_two && !GAMEPLAY_INPUT.key_twoP)
+		{
+			auto Textbox2 = Textbox::create(2, { 1,1 }, { "Yeet", "Get Dabbed on" }, (this));
+			addChild(Textbox2, 10);
+			Textbox2->Load();
+			if (ActiveTextbox)
+			{
+				ActiveTextbox->Close();
+			}
+			ActiveTextbox = Textbox2;
+
+			GAMEPLAY_INPUT.key_twoP = true;
+
+		}
+
+		if (GAMEPLAY_INPUT.key_P1 && !GAMEPLAY_INPUT.key_P1P)
+		{
+			auto Prompt1 = Prompt::create(1, (this));
+			addChild(Prompt1, 10);
+			Prompt1->Load();
+			if (ActivePrompt)
+			{
+				ActivePrompt->Close();
+			}
+			ActivePrompt = Prompt1;
+
+			GAMEPLAY_INPUT.key_P1P = true;
+		}
+		if (GAMEPLAY_INPUT.key_P2 && !GAMEPLAY_INPUT.key_P2P)
+		{
+			auto Prompt2 = Prompt::create(2, (this));
+			addChild(Prompt2, 10);
+			Prompt2->Load();
+			if (ActivePrompt)
+			{
+				ActivePrompt->Close();
+			}
+			ActivePrompt = Prompt2;
+
+			GAMEPLAY_INPUT.key_P2P = true;
+		}
+
+		if (GAMEPLAY_INPUT.key_F && !GAMEPLAY_INPUT.key_FP)
+		{
+
+			//ActiveTextbox->Load();
+			ActiveTextbox->Close();
+			int ActiveCurrPage = ActiveTextbox->getCurrPage();
+			int ActivePages = ActiveTextbox->getPages();
+			if (!(ActiveCurrPage == ActivePages - 1))
+			{
+				ActiveTextbox->Flippage();
+				ActiveTextbox->Load();
+			}
+
+			GAMEPLAY_INPUT.key_FP = true;
+		}
+
+		if (ActivePrompt)
+		{
+			ActivePrompt->Follow(player);
+		}
+
+
+
+
+
+		if (GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) {
 			player->Jump();
+			GAMEPLAY_INPUT.key_jump_p = true;
 		}
-		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_X))
-		{
-			player->Attack();
+
+		if (knight->HitDetect(player)) {
+			player->hurt(2);
 		}
 	}
-	
-
-
-
-
-
-	if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
-	{
-		auto Textbox1 = Textbox::create(1, { 1 }, { "What up fuckbois" }, (this));
-		addChild(Textbox1, 10);
-		Textbox1->Load();
-		if (ActiveTextbox)
-		{
-			ActiveTextbox->Close();
-		}
-		
-
-		ActiveTextbox = Textbox1;
-		
-		GAMEPLAY_INPUT.key_oneP = true;
-
-		
-	}
-	
-	
-
-	if (GAMEPLAY_INPUT.key_two && !GAMEPLAY_INPUT.key_twoP)
-	{
-		auto Textbox2 = Textbox::create(2, { 1,1 }, { "Yeet", "Get Dabbed on" }, (this));
-		addChild(Textbox2, 10);
-		Textbox2->Load();
-		if (ActiveTextbox)
-		{
-			ActiveTextbox->Close();
-		}
-		ActiveTextbox = Textbox2;
-
-		GAMEPLAY_INPUT.key_twoP = true;
-	
-	}
-
-	if (GAMEPLAY_INPUT.key_P1 && !GAMEPLAY_INPUT.key_P1P)
-	{
-		auto Prompt1 = Prompt::create(1, (this));
-		addChild(Prompt1, 10);
-		Prompt1->Load();
-		if (ActivePrompt)
-		{
-			ActivePrompt->Close();
-		}
-		ActivePrompt = Prompt1;
-
-		GAMEPLAY_INPUT.key_P1P = true;
-	}
-	if (GAMEPLAY_INPUT.key_P2 && !GAMEPLAY_INPUT.key_P2P)
-	{
-		auto Prompt2 = Prompt::create(2, (this));
-		addChild(Prompt2, 10);
-		Prompt2->Load();
-		if (ActivePrompt)
-		{
-			ActivePrompt->Close();
-		}
-		ActivePrompt = Prompt2;
-
-		GAMEPLAY_INPUT.key_P2P = true;
-	}
-
-	if (GAMEPLAY_INPUT.key_F && !GAMEPLAY_INPUT.key_FP)
-	{
-		
-		//ActiveTextbox->Load();
-		ActiveTextbox->Close();
-		int ActiveCurrPage = ActiveTextbox->getCurrPage();
-		int ActivePages = ActiveTextbox->getPages();
-		if (!(ActiveCurrPage == ActivePages - 1))
-		{
-			ActiveTextbox->Flippage();
-			ActiveTextbox->Load();
-		}
-		
-		GAMEPLAY_INPUT.key_FP = true;
-	}
-
-	if (ActivePrompt)
-	{
-		ActivePrompt->Follow(player);
-	}
-
-
-
-	if (GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) {
-		player->Jump();
-		GAMEPLAY_INPUT.key_jump_p = true;
-	}
-	
 
 	for each (Interactable* i in interactables) {
 		if (i->getType() == DOOR) {	//Add all interactable types that actually collide with the player here.
@@ -458,6 +469,7 @@ void GameplayScene::update(float dt) {
 
 
 	knight->Move();
+
 	if (knight->HitDetect(player)) {
 		player->hurt(2);
 	}

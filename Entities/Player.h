@@ -15,15 +15,17 @@ enum PlayerState {
 	PS_Attack,
 	PS_Climb,
 	PS_Glide,
-	PS_Crouch
+	PS_Crouch,
+	PS_HURT
 };
 
 class Player : public Entity {
 private:
 	const float ATK_TIME = 0.3f;
 	const float GLIDE_TIME = 2;
-	const int DMG = 1;
+	const float KNOCK_TIME = 0.5f;
 
+	const int DMG = 1;
 	int player_light;
 	bool light_on = false;
 	int hp = 6;
@@ -32,6 +34,7 @@ private:
 	bool glide_used = false;
 	float atk_timer = 0;
 	float glide_timer=0;
+	float knock_timer=0;
 
 	PlayerState state = PS_Stand;
 
@@ -81,4 +84,8 @@ public:
 	void Crouch();
 	void Stand();
 	void Glide();
+
+	bool isKnocked() {
+		return knock_timer > 0;
+	}
 };
