@@ -30,7 +30,7 @@ public:
 
 private:
 	KeyType requiredKey; // If this is a locked door what key does it use?
-
+	bool open = false;
 	//Door Variables;
 	// Active == Open/Close , True == Open 
 	bool locked = false;

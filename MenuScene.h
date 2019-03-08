@@ -3,13 +3,13 @@
 
 
 class MenuScene : public cocos2d::Scene {
-private:
 public:
 	static Scene* MenuScene::createScene();
 	virtual bool init();
 	// Closes function
 	void menuReturnCallback(cocos2d::Ref* pSender);
 	void menuCloseCallback(cocos2d::Ref* pSender);
+	void menuInventory(cocos2d::Ref* pSender);
 
 	CREATE_FUNC(MenuScene);
 };

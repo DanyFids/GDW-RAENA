@@ -64,6 +64,17 @@ bool GameplayScene::init() {
 		return false;
 		
 	}
+
+	moth = Moth::create("mothboi.png");
+	if (moth != nullptr) {
+		moth->setPosition(Vec2((visibleSize.width / 2) - moth->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - knight->getBoundingBox().size.height / 2 + origin.y));
+		moth->setPosition(400, 450);
+		this->addChild(moth);
+	}
+	else {
+		return false;
+
+	}
 	//platforms
 	terrain.pushBack(Block::create(0,0, 800, 200));
 	terrain.pushBack(Block::create(500,200, 300, 75));
@@ -72,13 +83,12 @@ bool GameplayScene::init() {
 
 	//interactables.pushBack(Interactable::create(100, 200, 50, 50,SWITCH));	//Some Switch thing
 
-	interactables.pushBack(Door::create(320, 200, 30, 70, DOOR)); //Normal Door
+	interactables.pushBack(Door::create("closed_door_side.png", Vec2(320, 200), DOOR)); //Normal Door
 
 	//interactables.pushBack(Interactable::create(550,270, 30, 70, S_DOOR)); // Scene Door
 
-	interactables.pushBack(Door::create(210, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
+	interactables.pushBack(Door::create("closed_door_side.png", Vec2(210, 200), DOOR, GEN_KEY)); // KeyDoor with general Key.
 	//interactables.pushBack(Interactable::create(50, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
-	interactables.pushBack(Interactable::create(500, 275, 20, 40, S_DOOR));
 
 
 	std::string plat1_file = "Platform1.png";
@@ -289,6 +299,8 @@ void GameplayScene::update(float dt) {
 	TheGamepad->Refresh();
 	knight->Update(dt);
 	knight->AI(player, dt);
+	moth->Update(dt);
+	moth->AI(player, dt);
 
 
 
@@ -555,6 +567,7 @@ void GameplayScene::update(float dt) {
 	player->moveLightToPlayer();
 
 	knight->Move();
+	moth->Move();
 	if (knight->HitDetect(player)) {
 		player->hurt(2);
 	}

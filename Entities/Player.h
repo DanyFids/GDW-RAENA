@@ -20,6 +20,7 @@ enum PlayerState {
 
 class Player : public Entity {
 private:
+	bool face_right = true;
 	const float ATK_TIME = 0.3f;
 	const float GLIDE_TIME = 2;
 	const int DMG = 1;
@@ -28,7 +29,6 @@ private:
 	bool light_on = false;
 	int hp = 6;
 	bool attacking = false;
-	bool face_right = true;
 	bool glide_used = false;
 	float atk_timer = 0;
 	float glide_timer=0;

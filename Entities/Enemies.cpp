@@ -1,7 +1,10 @@
 #include "Enemies.h"
 #include "Effects/LightEffect.h"
 #include "Constants.h"
+
 auto ret = new (std::nothrow) Knight;
+auto mothret = new (std::nothrow) Moth;
+
 Knight * Knight::create(const std::string& filename)
 {
 	if (ret && ret->initWithFile(filename)) {
@@ -212,4 +215,58 @@ void Knight::Move()
 		on_ground = false;
 	}
 
+}
+
+Moth * Moth::create(const std::string & filename)
+{
+	if (mothret && mothret->initWithFile(filename)) {
+		cocos2d::Vector<cocos2d::SpriteFrame *> fly_frames = { cocos2d::SpriteFrame::create("mothboi.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}) };
+		mothret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(fly_frames, 0.3f));
+
+		mothret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(mothret->animations.at(0))));
+		mothret->autorelease();
+		return mothret;
+	}
+	CC_SAFE_RELEASE(mothret);
+	return nullptr;
+}
+
+void Moth::AI(Player * player, float dt)
+{
+	
+}
+
+void Moth::Hurt(int dmg)
+{
+}
+
+void Moth::Hit(Player * p)
+{
+}
+
+int Moth::getHp()
+{
+	return 0;
+}
+
+bool Moth::HitDetect(Entity * other)
+{
+	return false;
+}
+
+void Moth::Update(float dt)
+{
+	if (spd.y < T_VELOCITY) {
+		spd.y = T_VELOCITY;
+	}
+	spd.x = 0;
+}
+
+void Moth::Move()
+{
+	setPosition(getPosition() + spd);
+
+	if (spd.y != 0 && on_ground) {
+		on_ground = false;
+	}
 }

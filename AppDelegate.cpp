@@ -25,6 +25,13 @@
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
 #include "MenuScene.h"
+#include "TutorialScene.h"
+#include "GameplayScene.h"
+#include "InventoryScene.h"
+
+MenuScene * menuscene;
+TutorialScene * tutorialscene;
+GameplayScene * level1scene;
 
 #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -119,10 +126,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-    auto scene = MenuScene::createScene();
+    auto menu = MenuScene::createScene();
 
     // run
-    director->runWithScene(scene);
+	director->runWithScene(menu);
+	
 
     return true;
 }

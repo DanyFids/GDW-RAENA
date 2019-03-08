@@ -20,9 +20,9 @@ Door * Door::create(int x, int y, int w, int h, InteractType type, KeyType key)
 		ret->setPositionY(y);
 		ret->setContentSize(cocos2d::Size(w, h));
 
-		auto rect = cocos2d::DrawNode::create();
-		rect->drawSolidRect(cocos2d::Vec2(0, 0), cocos2d::Vec2(w, h), cocos2d::Color4F::BLUE);
-		ret->addChild(rect);
+		//auto rect = cocos2d::DrawNode::create();
+		//rect->drawSolidRect(cocos2d::Vec2(0, 0), cocos2d::Vec2(w, h), cocos2d::Color4F::BLUE);
+		//ret->addChild(rect);
 
 		return ret;
 	}
@@ -36,7 +36,10 @@ Door * Door::create(std::string filename, cocos2d::Vec2 p, InteractType type, Ke
 
 	if (ret && ret->initWithFile(filename)) {
 		ret->autorelease();
-
+		cocos2d::Vector<cocos2d::SpriteFrame *> open_frames = { cocos2d::SpriteFrame::create("closed_door_side.png", cocos2d::Rect(0,0,42,64), false, {0,0}, {42,64}) };
+		cocos2d::Vector<cocos2d::SpriteFrame *> closed_frames = { cocos2d::SpriteFrame::create("open_door.png", cocos2d::Rect(0,0,42,64), false, {0,0}, {42,64}) };
+		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(open_frames, 0.1f));
+		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(closed_frames, 0.1f));
 		ret->objectType = type;
 		ret->requiredKey = key;
 
@@ -47,7 +50,8 @@ Door * Door::create(std::string filename, cocos2d::Vec2 p, InteractType type, Ke
 
 		ret->setAnchorPoint(cocos2d::Vec2(0, 0));
 		ret->setPosition(p);
-
+		ret->setScale(2);
+		
 		return ret;
 	}
 	CC_SAFE_RELEASE(ret);
@@ -67,17 +71,17 @@ bool Door::HitDetect(Entity * other)
 
 	//Interactable's Position Bounds
 																								  //Use this when we convert to sprites
-	//float MAX_Y = this->getPositionY() + (this->getBoundingBox().size.height / 2);
-	//float MIN_Y = this->getPositionY() - (this->getBoundingBox().size.height / 2);
+	float MAX_Y = this->getPositionY() + (this->getBoundingBox().size.height / 2);
+	float MIN_Y = this->getPositionY() - (this->getBoundingBox().size.height / 2);
+	
+	float MAX_X = this->getPositionX() + (this->getBoundingBox().size.width  / 2);
+	float MIN_X = this->getPositionX() - (this->getBoundingBox().size.width  / 2);	 
+
+	//float MAX_Y = this->getPositionY() + (this->getBoundingBox().size.height);				// For simple shapes
+	//float MIN_Y = this->getPositionY();
 	//
-	//float MAX_X = this->getPositionX() + (this->getBoundingBox().size.width  / 2);
-	//float MIN_X = this->getPositionX() - (this->getBoundingBox().size.width  / 2);	 
-
-	float MAX_Y = this->getPositionY() + (this->getBoundingBox().size.height);				// For simple shapes
-	float MIN_Y = this->getPositionY();
-
-	float MAX_X = this->getPositionX() + (this->getBoundingBox().size.width);
-	float MIN_X = this->getPositionX();
+	//float MAX_X = this->getPositionX() + (this->getBoundingBox().size.width);
+	//float MIN_X = this->getPositionX();
 
 	if (!(this->Active)) { // CLOSED
 				//o_TOP >= MIN_Y && o_BOT <= MAX_Y && o_RIGHT >= MIN_X && o_LEFT <= MAX_X
@@ -177,10 +181,12 @@ void Door::Effect(InteractType t, Entity * player, player_inventory * p_inv)
 		if (this->Active == false) {
 
 			this->Active = true;
+			open = true;
 
 		}
 		else {
 			this->Active = false;
+			open = false;
 		}
 	}
 }

@@ -20,14 +20,6 @@ Fireball * Fireball::create(cocos2d::Vec2 pos, LightEffect * l)
 																cocos2d::SpriteFrame::create("fireball0006.png", cocos2d::Rect(0,0,33,18), false, {0,0}, {33,18}) };
 		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(fire_frames, 0.05f));
 		ret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(ret->animations.at(0))));
-		pos.y += 13;
-		//if(facing_right){
-		pos.x += 12;
-		ret->setFlipX(true);
-		//}
-		//else{
-		//pos.x -= 12;
-		//ret->setFlipX(false);
 		ret->autorelease();
 		ret->setPosition(pos);
 		return ret;

@@ -13,6 +13,7 @@ class GameplayScene : public cocos2d::Scene {
 private:
 	Player * player;
 	Knight * knight;
+	Moth * moth;
 
 	player_inventory * currInv;
 	
