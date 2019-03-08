@@ -227,6 +227,9 @@ void GameplayScene::update(float dt) {
 			if (player->getState() != PS_Climb) {
 				player->spd.x = -PLAYER_SPEED * dt;
 			}
+		}
+	}
+
 	for each (Pushable* P in Pushables)
 	{
 		P->Update(dt);
@@ -236,6 +239,7 @@ void GameplayScene::update(float dt) {
 		if (player->getState() != PS_Climb) {
 			player->spd.x = -PLAYER_SPEED * dt;
 		}
+	}
 		if (GAMEPLAY_INPUT.key_right) {
 			if (player->getState() != PS_Climb) {
 				if (player->getState() == PS_Crouch) {
@@ -244,6 +248,7 @@ void GameplayScene::update(float dt) {
 				player->spd.x = PLAYER_SPEED * dt;
 			}
 		}
+
 		if (GAMEPLAY_INPUT.key_down) {
 			if (player->getState() == PS_Climb) {
 				player->spd.y = -PLAYER_SPEED * dt;
@@ -339,6 +344,7 @@ void GameplayScene::update(float dt) {
 
 			GAMEPLAY_INPUT.key_P1P = true;
 		}
+
 		if (GAMEPLAY_INPUT.key_P2 && !GAMEPLAY_INPUT.key_P2P)
 		{
 			auto Prompt2 = Prompt::create(2, (this));
@@ -386,7 +392,8 @@ void GameplayScene::update(float dt) {
 		if (knight->HitDetect(player)) {
 			player->hurt(2);
 		}
-	}
+	
+	
 
 	for each (Interactable* i in interactables) {
 		if (i->getType() == DOOR) {	//Add all interactable types that actually collide with the player here.
