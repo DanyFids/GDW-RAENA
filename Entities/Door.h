@@ -49,7 +49,7 @@ public:
 
 	virtual bool HitDetect(Entity * other) override { return false; };
 
-	virtual void Effect(Entity * player, player_inventory * p_inv);
+	virtual void Effect(Entity * player, player_inventory * p_inv, cocos2d::Scene* currScene);
 
 	virtual bool getCooldown() { return CoolDownState; }
 

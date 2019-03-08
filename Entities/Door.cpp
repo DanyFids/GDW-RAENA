@@ -1,4 +1,6 @@
 #include "Door.h"
+#include "GameplayScene.h"
+#include "classes/LevelManager/LevelManager.h"
 
 
 Door * Door::create(int x, int y, int w, int h, KeyType key)
@@ -234,7 +236,7 @@ SceneDoor * SceneDoor::create(std::string filename, cocos2d::Vec2 p, levelEnum l
 	return nullptr;
 }
 
-void SceneDoor::Effect(Entity * player, player_inventory * p_inv)
+void SceneDoor::Effect(Entity * player, player_inventory * p_inv, cocos2d::Scene* currScene)
 {
 	if (this->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
 
@@ -260,7 +262,8 @@ void SceneDoor::Effect(Entity * player, player_inventory * p_inv)
 			
 			switch (goTo) {
 			case TUT_LVL1:
-				//cocos2d::Director::getInstance()->replaceScene();
+				//cocos2d::Director::getInstance()->pushScene(currScene);
+				//cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(TUT_LVL1));
 				break;
 
 			}

@@ -16,6 +16,9 @@ USING_NS_CC;
 			  
 Gamepad* TheGamepad;
 
+
+
+
 Scene* GameplayScene::createScene() {
 	return GameplayScene::create();
 }
@@ -207,7 +210,7 @@ void GameplayScene::update(float dt) {
 				case SWITCH:
 					break;
 				case S_DOOR:
-					((SceneDoor*)i)->Effect(player, currInv);
+					((SceneDoor*)i)->Effect(player, currInv, this);
 					i->setCooldown();
 					break;
 				}
@@ -227,6 +230,9 @@ void GameplayScene::update(float dt) {
 			if (player->getState() != PS_Climb) {
 				player->spd.x = -PLAYER_SPEED * dt;
 			}
+		}
+	}
+
 	for each (Pushable* P in Pushables)
 	{
 		P->Update(dt);
@@ -236,6 +242,7 @@ void GameplayScene::update(float dt) {
 		if (player->getState() != PS_Climb) {
 			player->spd.x = -PLAYER_SPEED * dt;
 		}
+	}
 		if (GAMEPLAY_INPUT.key_right) {
 			if (player->getState() != PS_Climb) {
 				if (player->getState() == PS_Crouch) {
@@ -244,6 +251,7 @@ void GameplayScene::update(float dt) {
 				player->spd.x = PLAYER_SPEED * dt;
 			}
 		}
+
 		if (GAMEPLAY_INPUT.key_down) {
 			if (player->getState() == PS_Climb) {
 				player->spd.y = -PLAYER_SPEED * dt;
@@ -285,10 +293,6 @@ void GameplayScene::update(float dt) {
 				player->Attack();
 			}
 		}
-
-
-
-
 
 
 		if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
@@ -339,6 +343,7 @@ void GameplayScene::update(float dt) {
 
 			GAMEPLAY_INPUT.key_P1P = true;
 		}
+
 		if (GAMEPLAY_INPUT.key_P2 && !GAMEPLAY_INPUT.key_P2P)
 		{
 			auto Prompt2 = Prompt::create(2, (this));
@@ -386,7 +391,8 @@ void GameplayScene::update(float dt) {
 		if (knight->HitDetect(player)) {
 			player->hurt(2);
 		}
-	}
+	
+	
 
 	for each (Interactable* i in interactables) {
 		if (i->getType() == DOOR) {	//Add all interactable types that actually collide with the player here.
@@ -494,6 +500,11 @@ bool TutRoom1::init()
 		return true;
 	}
 	return false;
+}
+
+void TutRoom1::update(float dt)
+{
+	GameplayScene::update(dt);
 }
 
 bool TestRoom1::init()
@@ -643,6 +654,10 @@ bool TestRoom1::init()
 	return false;
 }
 
-void TestRoom1::update(float dt) {
+void TestRoom1::update(float dt)
+{
 	GameplayScene::update(dt);
 }
+
+
+

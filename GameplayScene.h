@@ -16,9 +16,9 @@
 
 #include "GameOver.h"
 
-#include "AppDelegate.h"
-#include "HelloWorldScene.h"
-#include "MenuScene.h"
+
+//#include "HelloWorldScene.h"
+//#include "MenuScene.h"
 
 class GameplayScene : public cocos2d::Scene {
 protected:

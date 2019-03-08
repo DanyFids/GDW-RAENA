@@ -25,6 +25,7 @@
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
 #include "MenuScene.h"
+//#include "GameplayScene.h"
 
 #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -121,6 +122,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // create a scene. it's an autorelease object
 	auto scene = MenuScene::createScene();
+
+	//auto TutorialRoom1 = TutRoom1::createScene();
+	//director->getInstance()->pushScene(TransitionFade::create(1,TutorialRoom1));
 
     // run
     director->runWithScene(scene);
