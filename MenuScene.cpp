@@ -1,6 +1,7 @@
 #include "cocos2d.h"
 #include "MenuScene.h"
 #include "GameplayScene.h"
+#include "LevelManager/LevelManager.h"
 
 USING_NS_CC;
 
@@ -92,7 +93,7 @@ static void problemLoading(const char* filename)
 }
 
 void MenuScene::menuReturnCallback(Ref* pSender) {
-	Director::getInstance()->replaceScene(TestRoom1::create());
+	Director::getInstance()->replaceScene(LevelManager::GetLevel(TUT_LVL1));
 }
 
 void MenuScene::menuCloseCallback(Ref* pSender)

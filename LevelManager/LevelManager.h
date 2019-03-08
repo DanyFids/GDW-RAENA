@@ -9,4 +9,5 @@ private:
 	static cocos2d::Vector<GameplayScene *> levels;
 public:
 	static GameplayScene* GetLevel(levelEnum id);
+	static void AddLevels(cocos2d::Vector<GameplayScene *> l);
 };

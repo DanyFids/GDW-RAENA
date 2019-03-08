@@ -25,7 +25,8 @@
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
 #include "MenuScene.h"
-//#include "GameplayScene.h"
+#include "GameplayScene.h"
+#include "LevelManager/LevelManager.h"
 
 #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -128,6 +129,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // run
     director->runWithScene(scene);
+
+	cocos2d::Vector<GameplayScene*> levels = {
+		TestRoom1::create()
+	};
+
+	LevelManager::AddLevels(levels);
 
     return true;
 }
