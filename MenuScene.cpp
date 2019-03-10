@@ -25,16 +25,16 @@ bool MenuScene::init()
 	cocos2d::Texture2D::TexParams tp = { GL_NEAREST, GL_NEAREST, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE };
 
 	auto BG = Sprite::create();
-	BG->initWithFile("title1.png");
+	BG->initWithFile("Raena.png");
 	BG->getTexture()->setTexParameters(tp);
-	BG->initWithFile("title2.png");
+	BG->initWithFile("Raena2.png");
 	BG->getTexture()->setTexParameters(tp);
-	BG->initWithFile("title3.png");
+	BG->initWithFile("Raena3.png");
 	BG->getTexture()->setTexParameters(tp);
 	cocos2d::Vector<cocos2d::SpriteFrame *> title_frames = {
-		cocos2d::SpriteFrame::create("title1.png", {0,0, 94, 39}, false, {0,0},{94, 39}),
-		cocos2d::SpriteFrame::create("title2.png", {0,0, 94, 39}, false, {0,0},{94, 39}),
-		cocos2d::SpriteFrame::create("title3.png", {0,0, 94, 39}, false, {0,0},{94, 39}),
+		cocos2d::SpriteFrame::create("Raena.png", {0,0, 94, 39}, false, {0,0},{94, 39}),
+		cocos2d::SpriteFrame::create("Raena2.png", {0,0, 94, 39}, false, {0,0},{94, 39}),
+		cocos2d::SpriteFrame::create("Raena3.png", {0,0, 94, 39}, false, {0,0},{94, 39}),
 	};
 
 	auto anim = cocos2d::Animation::createWithSpriteFrames(title_frames, 0.2);

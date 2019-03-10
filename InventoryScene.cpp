@@ -23,9 +23,9 @@ bool InventoryScene::init()
 		return false;
 	}
 	
-	pickUpItem(0, "Key", "Key.png");
-	pickUpItem(1, "Bandages", "Bandages.png");
-	pickUpItem(2, "Rose", "Rose.png");
+	//pickUpItem(0, "Key", "Key.png");
+	//pickUpItem(1, "Bandages", "Bandages.png");
+	//pickUpItem(2, "Rose", "Rose.png");
 
 	title = Label::createWithTTF("INVENTORY", "fonts/horrendo.ttf", 36);
 	invLabel = Label::createWithTTF("There is nothing in your inventory.", "fonts/horrendo.ttf", 24);
@@ -83,9 +83,9 @@ bool InventoryScene::init()
 
 void InventoryScene::update(float dt)
 {
+	timer -= dt;
+	exitTimer -= dt;
 	if (currInvNum != 0) {
-		timer -= dt;
-		exitTimer -= dt;
 		if (timer == 0)
 		{
 			timer = 10;
@@ -134,6 +134,16 @@ void InventoryScene::update(float dt)
 			else if (pointer + 1 != currInvNum && currInvNum >= 3)
 			{
 				prevPic->setTexture(inventory[pointer + 1].itemPic);
+			}
+		}
+	}
+	else
+	{
+		if (GetAsyncKeyState(VK_RETURN) != 0)
+		{
+			if (exitTimer == 0)
+			{
+				Director::getInstance()->popScene();
 			}
 		}
 	}
