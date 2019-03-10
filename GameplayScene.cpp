@@ -10,6 +10,7 @@
 
 #include "Door.h"
 #include "GamePad.h"
+#include "InventoryScene.h"
 USING_NS_CC;
 			  
 Gamepad* TheGamepad;
@@ -185,6 +186,8 @@ bool GameplayScene::init() {
 		case EventKeyboard::KeyCode::KEY_X:
 			GAMEPLAY_INPUT.key_crouch = true;
 			break;
+		case EventKeyboard::KeyCode::KEY_ENTER:
+			Director::getInstance()->pushScene(InventoryScene::create());
 		}
 	};
 

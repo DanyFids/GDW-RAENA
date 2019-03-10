@@ -9,7 +9,6 @@ public:
 	// Closes function
 	void menuReturnCallback(cocos2d::Ref* pSender);
 	void menuCloseCallback(cocos2d::Ref* pSender);
-	void menuInventory(cocos2d::Ref* pSender);
 
 	CREATE_FUNC(MenuScene);
 };

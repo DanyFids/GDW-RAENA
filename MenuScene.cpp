@@ -51,11 +51,6 @@ bool MenuScene::init()
 		"PlayClicked.png",
 		CC_CALLBACK_1(MenuScene::menuReturnCallback, this));
 
-	auto menuInv = MenuItemImage::create(
-		"Play.png",
-		"PlayClicked.png",
-		CC_CALLBACK_1(MenuScene::menuInventory, this));
-
 	auto quit = MenuItemImage::create(
 		"Quit.png",
 		"QuitClicked.png",
@@ -89,33 +84,15 @@ bool MenuScene::init()
 		quit->setPosition(Vec2(x, y));
 	}
 
-	if (menuInv == nullptr ||
-		menuInv->getContentSize().width <= 0 ||
-		menuInv->getContentSize().height <= 0)
-	{
-		problemLoading(" 'Highscores Unselected.png' and the other one");
-	}
-	else
-	{
-		// Decide where the button goes
-		float x = visibleSize.width / 2 + menuInv->getContentSize().width / 2;//origin.x + visibleSize.width - closeItem->getContentSize().width / 2;
-		float y = visibleSize.height / 2 - menuInv->getContentSize().height / 2 - visibleSize.height / 4 + 40;//origin.y + closeItem->getContentSize().height / 2;
-		menuInv->setPosition(Vec2(x, y));
-	}
-
 	// create menu, it's an autorelease object
 	play->setScale(2);
 	quit->setScale(2);
-	menuInv->setScale(2);
 	auto menu = Menu::create(play, NULL);
 	auto menu2 = Menu::create(quit, NULL);
-	auto menu3 = Menu::create(menuInv, NULL);
 	menu->setPosition(Vec2::ZERO);
 	menu2->setPosition(Vec2::ZERO);
-	menu3->setPosition(Vec2::ZERO);
 	this->addChild(menu, 1);
 	this->addChild(menu2, 1);
-	this->addChild(menu3, 1);
 
 	addChild(BG);
 
@@ -130,10 +107,6 @@ static void problemLoading(const char* filename)
 
 void MenuScene::menuReturnCallback(Ref* pSender) {
 	Director::getInstance()->replaceScene(GameplayScene::create());
-}
-
-void MenuScene::menuInventory(Ref* pSender) {
-	Director::getInstance()->replaceScene(InventoryScene::create());
 }
 
 void MenuScene::menuCloseCallback(Ref* pSender)
