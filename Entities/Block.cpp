@@ -52,6 +52,23 @@ bool Block::HitDetect(Entity * other)
 		}
 	}
 	
+	if (o_head + other->spd.y > this->getPositionY() && o_foot + other->spd.y < this->getPositionY() + this->getBoundingBox().size.height &&
+		o_left + other->spd.x < getPositionX() + this->getBoundingBox().size.width && o_right + other->spd.x > this->getPositionX()) {
+		if (other->spd.x > 0) {
+			other->spd.x = this->getPositionX() - o_right;
+		}
+		else {
+			other->spd.x = this->getPositionX() + this->getBoundingBox().size.width - o_left;
+		}
+
+		if (other->spd.y > 0) {
+			other->spd.y = this->getPositionY() - o_head;
+		}
+		else {
+			other->spd.y = this->getPositionY() + this->getBoundingBox().size.height - o_foot;
+			other->Land();
+		}
+	}
 
 	return false;
 }

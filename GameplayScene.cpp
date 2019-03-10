@@ -289,8 +289,6 @@ void GameplayScene::update(float dt) {
 	knight->Update(dt);
 	knight->AI(player, dt);
 
-
-
 	for each (Interactable* i in interactables) { //Showing Prompts?
 		if (i->inRange(player)) {
 			if (promptInit == false) {
@@ -396,11 +394,6 @@ void GameplayScene::update(float dt) {
 			player->Attack();
 		}
 	}
-	
-
-
-
-
 
 	if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
 	{
@@ -416,11 +409,7 @@ void GameplayScene::update(float dt) {
 		ActiveTextbox = Textbox1;
 		
 		GAMEPLAY_INPUT.key_oneP = true;
-
-		
 	}
-	
-	
 
 	if (GAMEPLAY_INPUT.key_two && !GAMEPLAY_INPUT.key_twoP)
 	{
@@ -485,22 +474,19 @@ void GameplayScene::update(float dt) {
 		ActivePrompt->Follow(player);
 	}
 
-
-
-
-
-
-
-
 	if (GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) {
 		player->Jump();
 		GAMEPLAY_INPUT.key_jump_p = true;
 	}
 	
+	player->ResetObstruction();
 
 	for each (Interactable* i in interactables) {
 		if (i->getType() == DOOR) {	//Add all interactable types that actually collide with the player here.
 			i->HitDetect(player);
+			if (!i->getActive()) {
+				player->DetectObstruction(i);
+			}
 			i->HitDetect(knight);
 		}
 	}
@@ -514,12 +500,13 @@ void GameplayScene::update(float dt) {
 	{
 		platform->HitDetect(player);
 		platform->HitDetect(knight);
-		
+		player->DetectObstruction(platform);
 	}
 
 	for each (Platform* p in ActualPlatforms) {
 		p->HitDetect(player);
 		p->HitDetect(knight);
+		player->DetectObstruction(p);
 	}
 
 	for each (Torch* t in torches) {

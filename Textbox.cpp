@@ -18,11 +18,7 @@ Textbox * Textbox::create(int P, std::vector<int> C, std::vector<std::string> T,
 
 void Textbox::Flippage()
 {
-	
-	
-	this->CurrPage++;
-	
-	
+	this->CurrPage++;	
 }
 
 void Textbox::Load()

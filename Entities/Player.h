@@ -30,6 +30,11 @@ private:
 	bool attacking = false;
 	bool face_right = true;
 	bool glide_used = false;
+
+	//animation conversion booleans for change between 
+	bool can_vert = true;
+	bool can_horz = true;
+
 	float atk_timer = 0;
 	float glide_timer=0;
 
@@ -81,4 +86,10 @@ public:
 	void Crouch();
 	void Stand();
 	void Glide();
+
+	void ResetObstruction() {
+		can_vert = true;
+		can_horz = true;
+	}
+	void DetectObstruction(Entity * other);
 };
