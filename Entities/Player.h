@@ -81,4 +81,6 @@ public:
 	void Crouch();
 	void Stand();
 	void Glide();
+	
+	
 };
