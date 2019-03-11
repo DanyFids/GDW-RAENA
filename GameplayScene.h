@@ -34,7 +34,8 @@ protected:
 	cocos2d::Vector<Interactable *> interactables;
 	cocos2d::Vector<Platform *> ActualPlatforms;
 	
-	
+	bool cutScene = false;
+	bool cutSceneC = false;
 
 	cocos2d::Vector<Entity *> terrain;
 	cocos2d::Vector<Ladder *> ladders;
