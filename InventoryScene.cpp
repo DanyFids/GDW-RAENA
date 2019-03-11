@@ -23,9 +23,9 @@ bool InventoryScene::init()
 		return false;
 	}
 	
-	//pickUpItem(0, "Key", "Key.png");
-	//pickUpItem(1, "Bandages", "Bandages.png");
-	//pickUpItem(2, "Rose", "Rose.png");
+	pickUpItem(0, "Key", "Key.png");
+	pickUpItem(1, "Bandages", "Bandages.png");
+	pickUpItem(2, "Rose", "Rose.png");
 
 	title = Label::createWithTTF("INVENTORY", "fonts/horrendo.ttf", 36);
 	invLabel = Label::createWithTTF("There is nothing in your inventory.", "fonts/horrendo.ttf", 24);
@@ -109,6 +109,7 @@ void InventoryScene::update(float dt)
 			{
 				if (exitTimer == 0)
 				{
+					exitTimer = 20;
 					Director::getInstance()->popScene();
 				}
 			}
