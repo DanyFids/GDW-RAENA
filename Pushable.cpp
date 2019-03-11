@@ -46,7 +46,7 @@ bool Pushable::HitDetect(Entity * other)
 		}
 		else {
 			other->spd.y = t_head - o_foot;
-			other->SetOnGround(true);
+			other->Land();
 		}
 	}
 

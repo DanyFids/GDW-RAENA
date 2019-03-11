@@ -2,9 +2,14 @@
 
 enum InteractType {
 	SWITCH,
+	PUZZLE,
 	DOOR,
 	S_DOOR,
 	LOAD_ZONE
+};
+
+enum PuzzleType {
+	Princess1,
 };
 
 enum KeyType {
@@ -26,6 +31,9 @@ enum levelEnum {
 };
 
 enum itemEnum {
+	I_NONE,
 
+	ROSE,
+	BANDAGE,
 };
 

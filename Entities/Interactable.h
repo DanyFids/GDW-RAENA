@@ -34,7 +34,7 @@ public :
 
 	virtual InteractType getType() = 0;
 
-	bool getActive() {
+	virtual bool getActive() {
 		return Active;
 	}
 

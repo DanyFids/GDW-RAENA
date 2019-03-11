@@ -125,7 +125,7 @@ void Player::Move()
 	if (!attacking) {
 		setPosition(getPosition() + spd);
 
-		if (spd.y != 0 && on_ground && state != PS_HURT) {
+		if (spd.y != 0 && on_ground && state != PS_HURT && can_vert) {
 			on_ground = false;
 			state == PS_Jump;
 			this->stopAllActions();
@@ -144,6 +144,9 @@ void Player::Move()
 void Player::Jump()
 {
 	if (state == PS_Crouch) {
+		if (!can_vert) {
+			return;
+		}
 		Stand();
 	}
 	if ((on_ground || state == PS_Climb) && !attacking) {

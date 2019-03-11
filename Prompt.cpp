@@ -13,7 +13,7 @@ void Prompt::Load()
 {
 	if (this->PP == 1)
 	{
-		auto TheBox = cocos2d::Sprite::create("A Prompt.png");
+		auto TheBox = cocos2d::Sprite::create("Y Prompt.png");
 		TheBox->setPosition(cocos2d::Vec2(150, 0));
 		TheBox->setScale(2.0);
 		//TheBox->setScaleX(6.0);

@@ -44,6 +44,10 @@ bool GameplayScene::init() {
 	player->setScale(SCALE);
 	player->getTexture()->setTexParameters(tp);
 
+	
+	this->addChild(player,10);
+
+
 	currInv = new player_inventory(1);
 
 	auto KeyHandler = EventListenerKeyboard::create();
@@ -452,7 +456,7 @@ void GameplayScene::update(float dt) {
 		for each (Pushable* Push in Pushables)
 		{
 			Push->HitDetect(player);
-		player->DetectObstruction(p);
+			player->DetectObstruction(Push);
 		}
 	}
 
@@ -461,6 +465,7 @@ void GameplayScene::update(float dt) {
 	{
 		for each (Platform* p in ActualPlatforms) {
 			p->HitDetect(player);
+			player->DetectObstruction(p);
 
 			if (knight != nullptr)
 			{
@@ -749,7 +754,7 @@ bool A1_R1::init()
 		if (player != nullptr) {
 			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
 
-			this->addChild(player, 10);
+			//this->addChild(player, 10);
 		}
 		else {
 			return false;
@@ -834,6 +839,8 @@ bool A1_R2::init()
 
 	STAGE_HEIGHT = 900;
 
+	removeAllChildren();
+
 	if (GameplayScene::init()) {
 
 
@@ -871,7 +878,7 @@ bool A1_R2::init()
 		if (player != nullptr) {
 			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
 
-			this->addChild(player, 10);
+			//this->addChild(player, 10);
 		}
 		else {
 			return false;
@@ -993,7 +1000,7 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 		if (player != nullptr) {
 			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
 
-			this->addChild(player, 10);
+			//this->addChild(player, 10);
 		}
 		else {
 			return false;
@@ -1136,7 +1143,7 @@ bool A1_R4::init()
 		if (player != nullptr) {
 			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
 
-			this->addChild(player, 10);
+			//this->addChild(player, 10);
 		}
 		else {
 			return false;
@@ -1265,7 +1272,7 @@ bool A1_R5::init()
 		if (player != nullptr) {
 			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
 
-			this->addChild(player, 10);
+			//this->addChild(player, 10);
 		}
 		else {
 			return false;
@@ -1279,8 +1286,9 @@ bool A1_R5::init()
 		terrain.pushBack(Block::create(150, 100, 75, 40)); //Ground 2
 		terrain.pushBack(Block::create(640, 100, 60, 40)); //Ground 2
 
-		terrain.pushBack(Block::create(700, 100, 300, 75)); //Ground 3
 		terrain.pushBack(Block::create(700, 210, 225, 200)); //floating 3
+		terrain.pushBack(Block::create(700, 100, 300, 75)); //Ground 3
+		
 
 		terrain.pushBack(Block::create(1400, 100, 300, 450)); //Ground 3
 
