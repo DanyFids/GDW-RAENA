@@ -5,6 +5,7 @@
 #include "2d/CCScene.h"
 #include "2d/CCLabel.h"
 #include "2d/CCSprite.h"
+#include "Textbox.h"
 
 struct inventoryItem
 {
@@ -31,5 +32,9 @@ public:
 	int pointer = 0;
 	int timer = 10;
 	int exitTimer = 20;
+	bool canCombine = false;
+	void combine(std::string cOne, std::string cTwo);
+	void invReturnCallback(cocos2d::Ref* pSender);
+	void invCloseCallback(cocos2d::Ref* pSender);
 	CREATE_FUNC(InventoryScene);
 };
