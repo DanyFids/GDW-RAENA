@@ -289,21 +289,44 @@ void GameplayScene::update(float dt) {
 	{
 		if (TheGamepad->leftStickX >= 0.2)
 		{
-			player->spd.x = TheGamepad->leftStickX * 100 * dt;
+			//player->spd.x = TheGamepad->leftStickX * 100 * dt;
+			if (player->getState() != PS_Climb) {
+				if (player->getState() == PS_Crouch) {
+					player->spd.x = CROUCH_SPEED * dt;
+				}
+				player->setFlipX(false);
+				player->spd.x = PLAYER_SPEED * dt;
+			}
 		}
 		if (TheGamepad->leftStickX <= -0.2)
 		{
-			player->spd.x = TheGamepad->leftStickX * 100 * dt;
+			if (player->getState() != PS_Climb) {
+				player->setFlipX(true);
+				player->spd.x = -PLAYER_SPEED * dt;
+			}
+		}
+		if (TheGamepad->leftStickY <= -0.2)
+		{
+			if (player->getState() == PS_Climb) {
+				player->spd.y = -PLAYER_SPEED * dt;
+			}
 		}
 
-		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
+		if (TheGamepad->leftStickY >= 0.2)
+		{
+			if (player->getState() == PS_Climb) {
+				player->spd.y = PLAYER_SPEED * dt;
+			}
+		}
+
+		/*if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
 		{
 			player->spd.x = PLAYER_SPEED * dt;
 		}
 		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT))
 		{
 			player->spd.x = -PLAYER_SPEED * dt;
-		}
+		}*/
 		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A ) && !Bpress1)
 		{	
 			Bpress1 = true;
