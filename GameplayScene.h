@@ -34,6 +34,8 @@ protected:
 	cocos2d::Vector<Interactable *> interactables;
 	cocos2d::Vector<Platform *> ActualPlatforms;
 	
+	bool cutScene = false;
+	bool cutSceneC = false;
 	bool Bpress1 = false;
 	bool Bpress2 = false;
 

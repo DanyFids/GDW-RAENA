@@ -56,111 +56,70 @@ bool GameplayScene::init() {
 	*	Key Down Event Handler
 	*
 	*/
-	KeyHandler->onKeyPressed = [this](EventKeyboard::KeyCode key, Event * event) {
-		switch (key) {
-		case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
-		case EventKeyboard::KeyCode::KEY_A:
-			GAMEPLAY_INPUT.key_left = true;
-			break;
-		case EventKeyboard::KeyCode::KEY_UP_ARROW:
-		case EventKeyboard::KeyCode::KEY_W:
-			GAMEPLAY_INPUT.key_up = true;
-			break;
-		case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
-		case EventKeyboard::KeyCode::KEY_D:
-			GAMEPLAY_INPUT.key_right = true;
-			break;
-		case EventKeyboard::KeyCode::KEY_DOWN_ARROW:
-		case EventKeyboard::KeyCode::KEY_S:
-			GAMEPLAY_INPUT.key_down = true;
-			break;
-		case EventKeyboard::KeyCode::KEY_SPACE:
-			GAMEPLAY_INPUT.key_space = true;
-			break;
-		case EventKeyboard::KeyCode::KEY_C:
-			GAMEPLAY_INPUT.key_jump = true;
-			break;
-		case EventKeyboard::KeyCode::KEY_E:
-			GAMEPLAY_INPUT.key_interact = true;
-			break;
-		case EventKeyboard::KeyCode::KEY_M:
-			GAMEPLAY_INPUT.key_one = true;
-			break;
-		case EventKeyboard::KeyCode::KEY_F:
-			GAMEPLAY_INPUT.key_F = true;
-			break;
-		case EventKeyboard::KeyCode::KEY_L:
-			GAMEPLAY_INPUT.key_two = true;
-			break;
-		case EventKeyboard::KeyCode::KEY_1:
-			GAMEPLAY_INPUT.key_P1 = true;
-			break;
-		case EventKeyboard::KeyCode::KEY_2:
-			GAMEPLAY_INPUT.key_P2 = true;
-			break;
-		case EventKeyboard::KeyCode::KEY_X:
-			GAMEPLAY_INPUT.key_crouch = true;
-			break;
-		case EventKeyboard::KeyCode::KEY_ENTER:
-			Director::getInstance()->pushScene(InventoryScene::create());
-		}
-	};
+		KeyHandler->onKeyPressed = [this](EventKeyboard::KeyCode key, Event * event) {
+			if (!cutScene) {
+				switch (key) {
+				case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
+					GAMEPLAY_INPUT.key_left = true;
+					break;
+				case EventKeyboard::KeyCode::KEY_UP_ARROW:
+					GAMEPLAY_INPUT.key_up = true;
+					break;
+				case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
+					GAMEPLAY_INPUT.key_right = true;
+					break;
+				case EventKeyboard::KeyCode::KEY_DOWN_ARROW:
+					GAMEPLAY_INPUT.key_down = true;
+					break;
+				case EventKeyboard::KeyCode::KEY_SPACE:
+					GAMEPLAY_INPUT.key_space = true;
+					break;
+				case EventKeyboard::KeyCode::KEY_C:
+					GAMEPLAY_INPUT.key_jump = true;
+					break;
+				case EventKeyboard::KeyCode::KEY_E:
+					GAMEPLAY_INPUT.key_interact = true;
+					break;
+				case EventKeyboard::KeyCode::KEY_X:
+					GAMEPLAY_INPUT.key_crouch = true;
+					break;
+				case EventKeyboard::KeyCode::KEY_ENTER:
+					Director::getInstance()->pushScene(InventoryScene::create());
+				}
+			}
+		};
 
-	KeyHandler->onKeyReleased = [this](EventKeyboard::KeyCode key, Event * event) {
-		switch (key) {
-		case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
-		case EventKeyboard::KeyCode::KEY_A:
-			GAMEPLAY_INPUT.key_left = false;
-			break;
-		case EventKeyboard::KeyCode::KEY_UP_ARROW:
-		case EventKeyboard::KeyCode::KEY_W:
-			GAMEPLAY_INPUT.key_up = false;
-			break;
-		case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
-		case EventKeyboard::KeyCode::KEY_D:
-			GAMEPLAY_INPUT.key_right = false;
-			break;
-		case EventKeyboard::KeyCode::KEY_DOWN_ARROW:
-		case EventKeyboard::KeyCode::KEY_S:
-			GAMEPLAY_INPUT.key_down = false;
-			break;
-		case EventKeyboard::KeyCode::KEY_SPACE:
-			GAMEPLAY_INPUT.key_space = false;
-			GAMEPLAY_INPUT.key_space_p = false;
-			break;
-		case EventKeyboard::KeyCode::KEY_C:
-			GAMEPLAY_INPUT.key_jump = false;
-			GAMEPLAY_INPUT.key_jump_p = false;
-			break;
-		case EventKeyboard::KeyCode::KEY_E:
-			GAMEPLAY_INPUT.key_interact = false;
-			break;
-		case EventKeyboard::KeyCode::KEY_M:
-			GAMEPLAY_INPUT.key_one = false;
-			GAMEPLAY_INPUT.key_oneP = false;
-			break;
-		case EventKeyboard::KeyCode::KEY_F:
-			GAMEPLAY_INPUT.key_F = false;
-			GAMEPLAY_INPUT.key_FP = false;
-			break;
-		case EventKeyboard::KeyCode::KEY_L:
-			GAMEPLAY_INPUT.key_two = false;
-			GAMEPLAY_INPUT.key_twoP = false;
-			break;
-		case EventKeyboard::KeyCode::KEY_1:
-			GAMEPLAY_INPUT.key_P1 = false;
-			GAMEPLAY_INPUT.key_P1P = false;
-			break;
-		case EventKeyboard::KeyCode::KEY_2:
-			GAMEPLAY_INPUT.key_P2 = false;
-			GAMEPLAY_INPUT.key_P2P = false;
-			break;
-		case EventKeyboard::KeyCode::KEY_X:
-			GAMEPLAY_INPUT.key_crouch = false;
-			GAMEPLAY_INPUT.key_crouch_p = false;
-			break;
-		}
-	};
+		KeyHandler->onKeyReleased = [this](EventKeyboard::KeyCode key, Event * event) {
+			switch (key) {
+			case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
+				GAMEPLAY_INPUT.key_left = false;
+				break;
+			case EventKeyboard::KeyCode::KEY_UP_ARROW:
+				GAMEPLAY_INPUT.key_up = false;
+				break;
+			case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
+				GAMEPLAY_INPUT.key_right = false;
+				break;
+			case EventKeyboard::KeyCode::KEY_DOWN_ARROW:
+				GAMEPLAY_INPUT.key_down = false;
+				break;
+			case EventKeyboard::KeyCode::KEY_SPACE:
+				GAMEPLAY_INPUT.key_space = false;
+				GAMEPLAY_INPUT.key_space_p = false;
+				break;
+			case EventKeyboard::KeyCode::KEY_C:
+				GAMEPLAY_INPUT.key_jump = false;
+				GAMEPLAY_INPUT.key_jump_p = false;
+				break;
+			case EventKeyboard::KeyCode::KEY_E:
+				GAMEPLAY_INPUT.key_interact = false;
+				break;
+			case EventKeyboard::KeyCode::KEY_X:
+				GAMEPLAY_INPUT.key_crouch = false;
+				GAMEPLAY_INPUT.key_crouch_p = false;
+				break;
+			}
+		};
 
 	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(KeyHandler, player);
 
@@ -288,8 +247,8 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	
-	if (TheGamepad->CheckConnection() == true)
+
+	if (TheGamepad->CheckConnection() == true && !cutScene)
 	{
 		if (TheGamepad->leftStickX >= 0.2)
 		{
@@ -579,12 +538,16 @@ void GameplayScene::update(float dt) {
 	}
 
 	// Move Camera
-	if (player->getPositionX() >= (Director::getInstance()->getVisibleSize().width / 2) && player->getPositionX() <= STAGE_WIDTH - (Director::getInstance()->getVisibleSize().width/2)) {
-		view->setPositionX(player->getPositionX());
-	}
+	if (!cutScene) {
+		if (!cutSceneC) {
+			if (player->getPositionX() >= (Director::getInstance()->getVisibleSize().width / 2) && player->getPositionX() <= STAGE_WIDTH - (Director::getInstance()->getVisibleSize().width / 2)) {
+				view->setPositionX(player->getPositionX());
+			}
 
-	if (player->getPositionY() >= (Director::getInstance()->getVisibleSize().height / 3) && player->getPositionY() <= STAGE_HEIGHT - (Director::getInstance()->getVisibleSize().height * 2 / 3)) {
-		view->setPositionY(player->getPositionY() + (Director::getInstance()->getVisibleSize().height / 6));
+			if (player->getPositionY() >= (Director::getInstance()->getVisibleSize().height / 3) && player->getPositionY() <= STAGE_HEIGHT - (Director::getInstance()->getVisibleSize().height * 2 / 3)) {
+				view->setPositionY(player->getPositionY() + (Director::getInstance()->getVisibleSize().height / 6));
+			}
+		}
 	}
 
 }
@@ -1420,4 +1383,162 @@ bool A1_R5::init()
 void A1_R5::update(float dt)
 {
 	GameplayScene::update(dt);
+}
+
+bool A1_R6::init()	//Pushable And Crouch Tutorial
+{
+	//STAGE_HEIGHT = 600;
+	//STAGE_WIDTH = 1000;		Defaults
+
+	STAGE_HEIGHT = 650;
+	STAGE_WIDTH = 1200;
+
+	if (GameplayScene::init()) {
+
+
+		auto visibleSize = Director::getInstance()->getVisibleSize();
+		//Center of screen ///////////////////////////////////////////////////////////////////////
+		Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+		//Parallax Stuff
+		auto paraNode = ParallaxNode::create();
+		PNode = paraNode;
+		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
+
+		_bgColor->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor->setScale(1);
+
+		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+
+		this->addChild(paraNode);
+
+		// Lighting Tests
+		auto _effect = LightEffect::create();
+		_effect->retain();
+
+		_effect->setLightCutoffRadius(250);
+		_effect->setLightHalfRadius(0.5);
+		_effect->setBrightness(0.7);
+		_effect->setAmbientLightColor(Color3B(255, 255, 255));
+
+		player->setEffect(_effect, "test_NM.png");
+		_bgColor->setEffect(_effect, "test_NM.png");
+
+		player->switchLight();
+
+		//Entities
+		if (player != nullptr) {
+			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+
+			this->addChild(player, 10);
+		}
+		else {
+			return false;
+		}
+
+
+		// x,y w,h
+		terrain.pushBack(Block::create(0, 0, 1400, 200)); //Ground
+		
+
+
+
+		for each (Entity* plat in terrain)
+		{
+			if (plat != nullptr) {
+				this->addChild(plat);
+			}
+			else {
+				return false;
+			}
+		}
+
+		//Push_back
+		//for each (Ladder* lad in ladders) {
+		//	if (lad != nullptr) {
+		//		this->addChild(lad);
+		//	}
+		//	else {
+		//		return false;
+		//	}
+		//}
+										 //x,y,w,h  , Vec2 MaxLeft, Vec2 MaxRight
+
+		//for each (Pushable* push in Pushables) {
+		//	if (push != nullptr) {
+		//		this->addChild(push);
+		//	}
+		//	else
+		//		return false;
+		//
+		//}
+
+		//interactables.pushBack(LoadZone::create(-10, 205, 10, 400, A1_R1, Vec2(50, 205))); // LoadZone
+		//interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1050, 275), Vec2(50, 200), A1_R4));	//SceneDoor
+
+		for each (Interactable* inter in interactables) {
+			if (inter != nullptr) {
+				this->addChild(inter);
+			}
+			else {
+				return false;
+			}
+		}
+
+		//Platforms
+		//ActualPlatforms.pushBack(Platform::create("Platform1.png", cocos2d::Vec2(200, 380)));
+		//for each (Platform* p in ActualPlatforms) {
+		//	if (p != nullptr) {
+		//
+		//		/*p->setScale(SCALE);
+		//		p->getTexture()->setTexParameters(tp);*/
+		//
+		//		this->addChild(p);
+		//	}
+		//}
+
+
+
+		view = this->getDefaultCamera();
+
+
+		scheduleUpdate();
+
+		return true;
+	}
+
+
+	return false;
+}
+
+void A1_R6::update(float dt)
+{
+	GameplayScene::update(dt);
+
+	if (player->getPosition().x >= 800 && !cutSceneC) {
+		cutScene = true;
+		GAMEPLAY_INPUT.key_left = false;
+		GAMEPLAY_INPUT.key_up = false;
+		GAMEPLAY_INPUT.key_right = false;
+		GAMEPLAY_INPUT.key_down = false;
+		GAMEPLAY_INPUT.key_space = false;
+		GAMEPLAY_INPUT.key_space_p = false;
+		GAMEPLAY_INPUT.key_jump = false;
+		GAMEPLAY_INPUT.key_jump_p = false;
+		GAMEPLAY_INPUT.key_interact = false;
+		GAMEPLAY_INPUT.key_crouch = false;
+		GAMEPLAY_INPUT.key_crouch_p = false;
+	}
+
+	if (view->getPositionX() <= 1000 && cutScene) {
+		view->setPositionX(view->getPositionX() + 75 * dt);
+	}
+	else if (view->getPositionX() >= 1000 && !cutSceneC) {
+		cutScene = false;
+		cutSceneC = true;
+		terrain.pushBack(Block::create(0, 0, 598, 650)); //wall
+		addChild(terrain.at(terrain.size() -1));
+		terrain.pushBack(Block::create(1402, 0, 1500, 650)); //wall
+		addChild(terrain.at(terrain.size() - 1));
+	}
 }
