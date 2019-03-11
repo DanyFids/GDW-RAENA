@@ -1,6 +1,7 @@
 #include "cocos2d.h"
 #include "MenuScene.h"
 #include "GameplayScene.h"
+#include "InventoryScene.h"
 #include "LevelManager/LevelManager.h"
 
 USING_NS_CC;
@@ -25,12 +26,25 @@ bool MenuScene::init()
 	cocos2d::Texture2D::TexParams tp = { GL_NEAREST, GL_NEAREST, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE };
 
 	auto BG = Sprite::create();
-	BG->initWithFile("title1.png");
+	BG->initWithFile("Raena.png");
+	BG->getTexture()->setTexParameters(tp);
+	BG->initWithFile("Raena2.png");
+	BG->getTexture()->setTexParameters(tp);
+	BG->initWithFile("Raena3.png");
+	BG->getTexture()->setTexParameters(tp);
+	cocos2d::Vector<cocos2d::SpriteFrame *> title_frames = {
+		cocos2d::SpriteFrame::create("Raena.png", {0,0, 94, 39}, false, {0,0},{94, 39}),
+		cocos2d::SpriteFrame::create("Raena2.png", {0,0, 94, 39}, false, {0,0},{94, 39}),
+		cocos2d::SpriteFrame::create("Raena3.png", {0,0, 94, 39}, false, {0,0},{94, 39}),
+	};
+
+	auto anim = cocos2d::Animation::createWithSpriteFrames(title_frames, 0.2);
+	BG->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(anim)));
+
 	// Center of the image
 	BG->setPosition({origin.x + (visibleSize.width/2), origin.y + (visibleSize.height / 2)});
 	// Resize if picture is too small
-	BG->setScale(4);
-	BG->getTexture()->setTexParameters(tp);
+	BG->setScale(5);
 
 	// Return to different menu
 	auto play = MenuItemImage::create(

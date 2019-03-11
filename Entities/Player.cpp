@@ -3,12 +3,13 @@
 #include "Constants.h"
 #include "Fireball.h"
 #include "Ladder.h"
+#include "Torch.h"
 
 Player * Player::create(const std::string& filename, cocos2d::Scene * s)
 {
 	auto ret = new (std::nothrow) Player;
 	if (ret && ret->initWithFile(filename)) {
-		cocos2d::Vector<cocos2d::SpriteFrame *> stand_frames = { cocos2d::SpriteFrame::create("test_dummy.png", cocos2d::Rect(0,0,38,60), false, {0,0}, {38, 60 }) };
+		cocos2d::Vector<cocos2d::SpriteFrame *> stand_frames = { cocos2d::SpriteFrame::create("dragon_idle.png", cocos2d::Rect(0,0,38,60), false, {0,0}, {38, 60 }) };
 		cocos2d::Vector<cocos2d::SpriteFrame *> crouch_frames = { cocos2d::SpriteFrame::create( "test_dummy_2.png", cocos2d::Rect(0,0,60,38), false, {0,0}, {60, 38 }) };
 
 		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(stand_frames, 0.1f));
@@ -166,14 +167,21 @@ void Player::Attack()
 
 		cocos2d::Vec2 atk_pos;
 		if (face_right) {
-			atk_pos = cocos2d::Vec2(getPositionX() + (getBoundingBox().size.width / 2 + 30), getPositionY() + 5);
+			atk_pos = cocos2d::Vec2(getPositionX() + (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
 		}
 		else {
-			atk_pos = cocos2d::Vec2(getPositionX() - (getBoundingBox().size.width / 2 + 30), getPositionY() + 5);
+			atk_pos = cocos2d::Vec2(getPositionX() - (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
 		}
 
 		atk = Fireball::create(atk_pos, getEffect());
-
+		if (face_right)
+		{
+			atk->setFlipX(false);
+		}
+		else
+		{
+			atk->setFlipX(true);
+		}
 		scn->addChild(atk, 10);
 
 

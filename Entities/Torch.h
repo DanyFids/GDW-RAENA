@@ -5,7 +5,6 @@ class Torch : public Enemy {
 private:
 	LightEffect * _light = nullptr;
 	int _light_id = -1;
-	bool lit = false;
 
 public:
 	static Torch * create(cocos2d::Vec2 pos, LightEffect * l);
@@ -21,6 +20,8 @@ public:
 	virtual void Hurt(int d) override;
 
 	void Light();
+
+	bool lit = false;
 
 	void setLight(LightEffect * l) {
 		_light = l;

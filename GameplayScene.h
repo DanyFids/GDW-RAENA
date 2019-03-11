@@ -24,6 +24,7 @@ class GameplayScene : public cocos2d::Scene {
 protected:
 	Player * player;
 	Knight * knight;
+	Moth * moth;
 
 	player_inventory * currInv;
 

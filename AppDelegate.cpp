@@ -27,6 +27,12 @@
 #include "MenuScene.h"
 #include "GameplayScene.h"
 #include "LevelManager/LevelManager.h"
+#include "TutorialScene.h"
+#include "InventoryScene.h"
+
+MenuScene * menuscene;
+TutorialScene * tutorialscene;
+GameplayScene * level1scene;
 
 #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -122,13 +128,15 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
+    auto menu = MenuScene::createScene();
 	auto scene = MenuScene::createScene();
 
 	//auto TutorialRoom1 = TutRoom1::createScene();
 	//director->getInstance()->pushScene(TransitionFade::create(1,TutorialRoom1));
 
     // run
-    director->runWithScene(scene);
+	director->runWithScene(menu);
+	
 
 	cocos2d::Vector<GameplayScene*> levels = {
 		A1_R1::create(),A1_R2::create(),A1_R3::create(),A1_R4::create(),A1_R5::create(),TestRoom1::create()

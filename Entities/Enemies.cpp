@@ -2,10 +2,19 @@
 #include "Effects/LightEffect.h"
 #include "Constants.h"
 
+auto ret = new (std::nothrow) Knight;
+auto mothret = new (std::nothrow) Moth;
+
 Knight * Knight::create(const std::string& filename)
 {
-	auto ret = new (std::nothrow) Knight;
 	if (ret && ret->initWithFile(filename)) {
+			cocos2d::Vector<cocos2d::SpriteFrame *> walk_frames = { cocos2d::SpriteFrame::create("knightwalkyboi0000.png", cocos2d::Rect(0,0,64,100), false, {0,0}, {64,100}),
+																	cocos2d::SpriteFrame::create("knightwalkyboi0001.png", cocos2d::Rect(0,0,64,100), false, {0,0}, {64,100}),
+																	cocos2d::SpriteFrame::create("knightwalkyboi0002.png", cocos2d::Rect(0,0,56,100), false, {0,0}, {64,100}),
+																	cocos2d::SpriteFrame::create("knightwalkyboi0003.png", cocos2d::Rect(0,0,64,100), false, {0,0}, {64,100}) };
+			ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(walk_frames, 0.3f));
+
+		ret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(ret->animations.at(0))));
 		ret->autorelease();
 		return ret;
 	}
@@ -47,6 +56,7 @@ void Knight::AI(Player* player, float dt) {
 			}
 
 			else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 300)) {
+			ret->setFlipX(true);
 				if (player->getPosition().y <= this->getPosition().y + 100 || player->getPosition().y <= this->getPosition().y - 100) {
 					this->spd.x -= charge * dt;
 					attacking = true;
@@ -80,6 +90,7 @@ void Knight::AI(Player* player, float dt) {
 			}
 
 			else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 300)) {
+			ret->setFlipX(false);
 				if (player->getPosition().y <= this->getPosition().y + 100 || player->getPosition().y <= this->getPosition().y - 100) {
 					this->spd.x += charge * dt;
 					attacking = true;
@@ -276,4 +287,58 @@ void Knight::Move()
 		on_ground = false;
 	}
 
+}
+
+Moth * Moth::create(const std::string & filename)
+{
+	if (mothret && mothret->initWithFile(filename)) {
+		cocos2d::Vector<cocos2d::SpriteFrame *> fly_frames = { cocos2d::SpriteFrame::create("mothboi.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}) };
+		mothret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(fly_frames, 0.3f));
+
+		mothret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(mothret->animations.at(0))));
+		mothret->autorelease();
+		return mothret;
+	}
+	CC_SAFE_RELEASE(mothret);
+	return nullptr;
+}
+
+void Moth::AI(Player * player, float dt)
+{
+	
+}
+
+void Moth::Hurt(int dmg)
+{
+}
+
+void Moth::Hit(Player * p)
+{
+}
+
+int Moth::getHp()
+{
+	return 0;
+}
+
+bool Moth::HitDetect(Entity * other)
+{
+	return false;
+}
+
+void Moth::Update(float dt)
+{
+	if (spd.y < T_VELOCITY) {
+		spd.y = T_VELOCITY;
+	}
+	spd.x = 0;
+}
+
+void Moth::Move()
+{
+	setPosition(getPosition() + spd);
+
+	if (spd.y != 0 && on_ground) {
+		on_ground = false;
+	}
 }

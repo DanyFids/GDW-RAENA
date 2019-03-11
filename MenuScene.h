@@ -3,7 +3,6 @@
 
 
 class MenuScene : public cocos2d::Scene {
-private:
 public:
 	static Scene* MenuScene::createScene();
 	virtual bool init();

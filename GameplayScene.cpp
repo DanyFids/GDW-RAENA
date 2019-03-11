@@ -10,8 +10,7 @@
 
 #include "Entities/Door.h"
 #include "GamePad.h"
-
-
+#include "InventoryScene.h"
 USING_NS_CC;
 			  
 Gamepad* TheGamepad;
@@ -98,6 +97,8 @@ bool GameplayScene::init() {
 		case EventKeyboard::KeyCode::KEY_X:
 			GAMEPLAY_INPUT.key_crouch = true;
 			break;
+		case EventKeyboard::KeyCode::KEY_ENTER:
+			Director::getInstance()->pushScene(InventoryScene::create());
 		}
 	};
 
@@ -256,6 +257,7 @@ void GameplayScene::update(float dt) {
 
 	if (GAMEPLAY_INPUT.key_left) {
 		if (player->getState() != PS_Climb) {
+			player->setFlipX(true);
 			player->spd.x = -PLAYER_SPEED * dt;
 		}
 	}
@@ -265,6 +267,7 @@ void GameplayScene::update(float dt) {
 			if (player->getState() == PS_Crouch) {
 				player->spd.x = CROUCH_SPEED * dt;
 			}
+			player->setFlipX(false);
 			player->spd.x = PLAYER_SPEED * dt;
 		}
 	}
