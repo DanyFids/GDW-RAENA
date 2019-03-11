@@ -284,7 +284,7 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-
+	
 	if (TheGamepad->CheckConnection() == true)
 	{
 		if (TheGamepad->leftStickX >= 0.2)
@@ -304,13 +304,63 @@ void GameplayScene::update(float dt) {
 		{
 			player->spd.x = -PLAYER_SPEED * dt;
 		}
-		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A))
-		{
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A ) && !Bpress1)
+		{	
+			Bpress1 = true;
 			player->Jump();
+		}
+		else if (!(TheGamepad->IsPressed(XINPUT_GAMEPAD_A)))
+		{
+			Bpress1 = false;
 		}
 		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_X))
 		{
 			player->Attack();
+		}
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_START))
+		{
+			Director::getInstance()->pushScene(InventoryScene::create());
+		}
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !Bpress2)
+		{
+			if (player->getState() == PS_Stand) {
+				player->Crouch();
+			}
+			else if (player->getState() == PS_Crouch) {
+				player->Stand();
+			}
+			Bpress2 = true;
+		}
+		else if (!(TheGamepad->IsPressed(XINPUT_GAMEPAD_B)))
+		{
+			Bpress2 = false;
+		}
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_Y))
+		{
+			//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
+			for each (Interactable* i in interactables) 
+			{
+				if (i->inRange(player)) 
+				{
+					InteractType curr_thing = i->getType();
+					switch (curr_thing) 
+					{
+					case DOOR:
+						((Door*)i)->Effect(player, currInv);
+						i->setCooldown();
+						break;
+					case SWITCH:
+						break;
+					case S_DOOR:
+						((SceneDoor*)i)->Effect(player, currInv);
+						i->setCooldown();
+						break;
+					}
+
+					i->setCooldown();
+					break;
+				}
+			}			
 		}
 	}
 
