@@ -1479,10 +1479,12 @@ void A1_R6::update(float dt)
 	if (view->getPositionX() <= 1000 && cutScene) {
 		view->setPositionX(view->getPositionX() + 75 * dt);
 	}
-	else if (view->getPositionX() >= 1000) {
+	else if (view->getPositionX() >= 1000 && !cutSceneC) {
 		cutScene = false;
 		cutSceneC = true;
-		terrain.pushBack(Block::create(0, 0, 600, 650)); //wall
+		terrain.pushBack(Block::create(0, 0, 598, 650)); //wall
 		addChild(terrain.at(terrain.size() -1));
+		terrain.pushBack(Block::create(1402, 0, 1500, 650)); //wall
+		addChild(terrain.at(terrain.size() - 1));
 	}
 }
