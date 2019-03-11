@@ -56,7 +56,7 @@ bool Pushable::HitDetect(Entity * other)
 			/*
 			pushed = true;
 			_other = other;*/
-			if (other->getonground())
+			if (other->isOnGround())
 			{
 				float n = t_left - o_right;
 				spd.x = (other->spd.x - n) * 3 / 4;
@@ -94,7 +94,7 @@ bool Pushable::HitDetect(Entity * other)
 			other->spd.x = n;
 			pushed = true;
 			_other = other;*/
-			if (other->getonground())
+			if (other->isOnGround())
 			{
 				float n = t_right - o_left;
 				spd.x = (other->spd.x - n) * 3 / 4;

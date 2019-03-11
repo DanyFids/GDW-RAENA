@@ -23,7 +23,7 @@ public :
 	virtual void Update(float dt) = 0;
 	virtual void Move() override;
 
-	virtual void Effect(Entity * player, player_inventory * p_inv);	 //For Doors
+	virtual void Effect(Entity * player, player_inventory * p_inv);	
 
 	virtual void setCooldown() {
 		if (CoolDownState == false) { CoolDownState = true; }

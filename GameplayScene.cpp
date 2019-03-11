@@ -23,6 +23,12 @@ Scene* GameplayScene::createScene() {
 	return GameplayScene::create();
 }
 
+void GameplayScene::movePlayer(Entity * player,cocos2d::Vec2 move)
+{
+	player->setPosition(move);
+}
+
+
 bool GameplayScene::init() {
 	Texture2D::TexParams tp = { GL_NEAREST , GL_NEAREST, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE };
 
@@ -164,65 +170,72 @@ void GameplayScene::update(float dt) {
 	player->Update(dt);
 
 	TheGamepad->Refresh();
-	knight->Update(dt);
-	knight->AI(player, dt);
+
+	if (knight != nullptr) {
+		knight->Update(dt);
+		knight->AI(player, dt);
+	}
 
 	PNode->setPosition(view->getPosition());
 
-	for each (Interactable* i in interactables) { //Showing Prompts?
-		if (i->inRange(player)) {
-			if (promptInit == false) {
-				auto Prompt1 = Prompt::create(1, (this));
-				addChild(Prompt1, 10);
-				Prompt1->Load();
-				if (ActivePrompt)
-				{
-					ActivePrompt->Close();
+	if (interactables.size() > 0) {
+		for each (Interactable* i in interactables) { //Showing Prompts?
+			if (i->inRange(player) && i->getType() != LOAD_ZONE) {
+				if (promptInit == false) {
+					auto Prompt1 = Prompt::create(1, (this));
+					addChild(Prompt1, 10);
+					Prompt1->Load();
+					if (ActivePrompt)
+					{
+						ActivePrompt->Close();
+					}
+					ActivePrompt = Prompt1;
+					promptInit = true;
 				}
-				ActivePrompt = Prompt1;
+				overlap = true;
 				promptInit = true;
-			}
-			overlap = true;
-			promptInit = true;
-			ActivePrompt->Show();
-			break;
-		}
-		else
-		{
-			overlap = false;
-
-		}
-
-		if (!(i->inRange(player) || i->getCooldown() )) {
-			if (ActivePrompt && !(overlap)) { ActivePrompt->Hide();}
-		}
-	}
-
-	if (GAMEPLAY_INPUT.key_interact) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
-		for each (Interactable* i in interactables) {
-			if (i->inRange(player) ) {
-				InteractType curr_thing = i->getType();
-				switch (curr_thing) {
-				case DOOR:
-					((Door*)i)->Effect(player, currInv);
-					i->setCooldown();
-					break;
-				case SWITCH:
-					break;
-				case S_DOOR:
-					((SceneDoor*)i)->Effect(player, currInv, this);
-					i->setCooldown();
-					break;
-				}
-				
-				i->setCooldown();
+				ActivePrompt->Show();
 				break;
 			}
-		}
-	}
+			else
+			{
+				overlap = false;
 
-	for each (Interactable* i in interactables) {
-		i->Update(dt);
+			}
+
+			if (!(i->inRange(player) || i->getCooldown())) {
+				if (ActivePrompt && !(overlap)) { ActivePrompt->Hide(); }
+			}
+		}
+
+
+		if (GAMEPLAY_INPUT.key_interact) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
+			for each (Interactable* i in interactables) {
+				if (i->inRange(player)) {
+					InteractType curr_thing = i->getType();
+					switch (curr_thing) {
+					case DOOR:
+						((Door*)i)->Effect(player, currInv);
+						i->setCooldown();
+						break;
+					case SWITCH:
+						break;
+					case S_DOOR:
+						((SceneDoor*)i)->Effect(player, currInv);
+						i->setCooldown();
+						break;
+					}
+
+					i->setCooldown();
+					break;
+				}
+			}
+		}
+
+
+		for each (Interactable* i in interactables) {
+			i->Update(dt);
+		}
 	}
 
 	if (!player->isKnocked()) {
@@ -233,9 +246,12 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	for each (Pushable* P in Pushables)
+	if (Pushables.size() > 0)
 	{
-		P->Update(dt);
+		for each (Pushable* P in Pushables)
+		{
+			P->Update(dt);
+		}
 	}
 
 	if (GAMEPLAY_INPUT.key_left) {
@@ -243,161 +259,177 @@ void GameplayScene::update(float dt) {
 			player->spd.x = -PLAYER_SPEED * dt;
 		}
 	}
-		if (GAMEPLAY_INPUT.key_right) {
-			if (player->getState() != PS_Climb) {
-				if (player->getState() == PS_Crouch) {
-					player->spd.x = CROUCH_SPEED * dt;
-				}
-				player->spd.x = PLAYER_SPEED * dt;
+
+	if (GAMEPLAY_INPUT.key_right) {
+		if (player->getState() != PS_Climb) {
+			if (player->getState() == PS_Crouch) {
+				player->spd.x = CROUCH_SPEED * dt;
 			}
+			player->spd.x = PLAYER_SPEED * dt;
 		}
+	}
 
-		if (GAMEPLAY_INPUT.key_down) {
-			if (player->getState() == PS_Climb) {
-				player->spd.y = -PLAYER_SPEED * dt;
-			}
+	if (GAMEPLAY_INPUT.key_down) {
+		if (player->getState() == PS_Climb) {
+			player->spd.y = -PLAYER_SPEED * dt;
 		}
+	}
 
-		if (GAMEPLAY_INPUT.key_up) {
-			if (player->getState() == PS_Climb) {
-				player->spd.y = PLAYER_SPEED * dt;
-			}
+	if (GAMEPLAY_INPUT.key_up) {
+		if (player->getState() == PS_Climb) {
+			player->spd.y = PLAYER_SPEED * dt;
 		}
+	}
 
 
-		if (TheGamepad->CheckConnection() == true)
+	if (TheGamepad->CheckConnection() == true)
+	{
+		if (TheGamepad->leftStickX >= 0.2)
 		{
-			if (TheGamepad->leftStickX >= 0.2)
-			{
-				player->spd.x = TheGamepad->leftStickX * 100 * dt;
-			}
-			if (TheGamepad->leftStickX <= -0.2)
-			{
-				player->spd.x = TheGamepad->leftStickX * 100 * dt;
-			}
-
-			if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
-			{
-				player->spd.x = PLAYER_SPEED * dt;
-			}
-			if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT))
-			{
-				player->spd.x = -PLAYER_SPEED * dt;
-			}
-			if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A))
-			{
-				player->Jump();
-			}
-			if (TheGamepad->IsPressed(XINPUT_GAMEPAD_X))
-			{
-				player->Attack();
-			}
+			player->spd.x = TheGamepad->leftStickX * 100 * dt;
+		}
+		if (TheGamepad->leftStickX <= -0.2)
+		{
+			player->spd.x = TheGamepad->leftStickX * 100 * dt;
 		}
 
-
-		if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
 		{
-			auto Textbox1 = Textbox::create(1, { 1 }, { "What up fuckbois" }, (this));
-			addChild(Textbox1, 10);
-			Textbox1->Load();
-			if (ActiveTextbox)
-			{
-				ActiveTextbox->Close();
-			}
-
-
-			ActiveTextbox = Textbox1;
-
-			GAMEPLAY_INPUT.key_oneP = true;
-
-
+			player->spd.x = PLAYER_SPEED * dt;
 		}
-
-
-
-		if (GAMEPLAY_INPUT.key_two && !GAMEPLAY_INPUT.key_twoP)
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT))
 		{
-			auto Textbox2 = Textbox::create(2, { 1,1 }, { "Yeet", "Get Dabbed on" }, (this));
-			addChild(Textbox2, 10);
-			Textbox2->Load();
-			if (ActiveTextbox)
-			{
-				ActiveTextbox->Close();
-			}
-			ActiveTextbox = Textbox2;
-
-			GAMEPLAY_INPUT.key_twoP = true;
-
+			player->spd.x = -PLAYER_SPEED * dt;
 		}
-
-		if (GAMEPLAY_INPUT.key_P1 && !GAMEPLAY_INPUT.key_P1P)
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A))
 		{
-			auto Prompt1 = Prompt::create(1, (this));
-			addChild(Prompt1, 10);
-			Prompt1->Load();
-			if (ActivePrompt)
-			{
-				ActivePrompt->Close();
-			}
-			ActivePrompt = Prompt1;
-
-			GAMEPLAY_INPUT.key_P1P = true;
+			player->Jump();
 		}
-
-		if (GAMEPLAY_INPUT.key_P2 && !GAMEPLAY_INPUT.key_P2P)
+		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_X))
 		{
-			auto Prompt2 = Prompt::create(2, (this));
-			addChild(Prompt2, 10);
-			Prompt2->Load();
-			if (ActivePrompt)
-			{
-				ActivePrompt->Close();
-			}
-			ActivePrompt = Prompt2;
-
-			GAMEPLAY_INPUT.key_P2P = true;
+			player->Attack();
 		}
+	}
 
-		if (GAMEPLAY_INPUT.key_F && !GAMEPLAY_INPUT.key_FP)
+
+	if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
+	{
+		auto Textbox1 = Textbox::create(1, { 1 }, { "What up fuckbois" }, (this));
+		addChild(Textbox1, 10);
+		Textbox1->Load();
+		if (ActiveTextbox)
 		{
-
-			//ActiveTextbox->Load();
 			ActiveTextbox->Close();
-			int ActiveCurrPage = ActiveTextbox->getCurrPage();
-			int ActivePages = ActiveTextbox->getPages();
-			if (!(ActiveCurrPage == ActivePages - 1))
-			{
-				ActiveTextbox->Flippage();
-				ActiveTextbox->Load();
-			}
-
-			GAMEPLAY_INPUT.key_FP = true;
 		}
 
+
+		ActiveTextbox = Textbox1;
+
+		GAMEPLAY_INPUT.key_oneP = true;
+
+
+	}
+
+
+
+	if (GAMEPLAY_INPUT.key_two && !GAMEPLAY_INPUT.key_twoP)
+	{
+		auto Textbox2 = Textbox::create(2, { 1,1 }, { "Yeet", "Get Dabbed on" }, (this));
+		addChild(Textbox2, 10);
+		Textbox2->Load();
+		if (ActiveTextbox)
+		{
+			ActiveTextbox->Close();
+		}
+		ActiveTextbox = Textbox2;
+
+		GAMEPLAY_INPUT.key_twoP = true;
+
+	}
+
+	if (GAMEPLAY_INPUT.key_P1 && !GAMEPLAY_INPUT.key_P1P)
+	{
+		auto Prompt1 = Prompt::create(1, (this));
+		addChild(Prompt1, 10);
+		Prompt1->Load();
 		if (ActivePrompt)
 		{
-			ActivePrompt->Follow(player);
+			ActivePrompt->Close();
+		}
+		ActivePrompt = Prompt1;
+
+		GAMEPLAY_INPUT.key_P1P = true;
+	}
+
+	if (GAMEPLAY_INPUT.key_P2 && !GAMEPLAY_INPUT.key_P2P)
+	{
+		auto Prompt2 = Prompt::create(2, (this));
+		addChild(Prompt2, 10);
+		Prompt2->Load();
+		if (ActivePrompt)
+		{
+			ActivePrompt->Close();
+		}
+		ActivePrompt = Prompt2;
+
+		GAMEPLAY_INPUT.key_P2P = true;
+	}
+
+	if (GAMEPLAY_INPUT.key_F && !GAMEPLAY_INPUT.key_FP)
+	{
+
+		//ActiveTextbox->Load();
+		ActiveTextbox->Close();
+		int ActiveCurrPage = ActiveTextbox->getCurrPage();
+		int ActivePages = ActiveTextbox->getPages();
+		if (!(ActiveCurrPage == ActivePages - 1))
+		{
+			ActiveTextbox->Flippage();
+			ActiveTextbox->Load();
 		}
 
+		GAMEPLAY_INPUT.key_FP = true;
+	}
+
+	if (ActivePrompt)
+	{
+		ActivePrompt->Follow(player);
+	}
 
 
 
 
-		if (GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) {
-			player->Jump();
-			GAMEPLAY_INPUT.key_jump_p = true;
-		}
 
+	if (GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) {
+		player->Jump();
+		GAMEPLAY_INPUT.key_jump_p = true;
+	}
+
+	if (knight != nullptr)
+	{
 		if (knight->HitDetect(player)) {
 			player->hurt(2);
 		}
+	}
 	
 	
+	if (interactables.size() > 0)	//Are there interactables on this map?
+	{
+		for each (Interactable* i in interactables) {
+			if (i->getType() == DOOR) {	//Add all interactable types that actually collide with the player here.
+				i->HitDetect(player);
 
-	for each (Interactable* i in interactables) {
-		if (i->getType() == DOOR) {	//Add all interactable types that actually collide with the player here.
-			i->HitDetect(player);
-			i->HitDetect(knight);
+				if (knight != nullptr)
+				{
+					i->HitDetect(knight);
+				}
+			}
+
+			if (i->getType() == LOAD_ZONE)
+			{
+				((LoadZone*)i)->HitDetect(player);
+			}
+
 		}
 	}
 
@@ -409,46 +441,53 @@ void GameplayScene::update(float dt) {
 	for each (Block* platform in terrain)
 	{
 		platform->HitDetect(player);
-		platform->HitDetect(knight);
+
+		if (knight != nullptr) {
+			platform->HitDetect(knight);
+		}
 	}
 
-
+	if (Pushables.size() > 0)
+	{
 		for each (Pushable* Push in Pushables)
 		{
 			Push->HitDetect(player);
 			//platform->HitDetect(Push);
 			//Push->HitDetect(player);
 		}
+	}
 
 		
-
-	for each (Platform* p in ActualPlatforms) {
-		p->HitDetect(player);
-		p->HitDetect(knight);
-
-	}
-
-	//for each (Pushable* Push in Pushables)
-	//{
-	//	for each (Block* platform in platforms)
-	//	{
-	//		Push->HitDetect(platform);
-	//	}
-	//	//Push->HitDetect(player);
-	//}
-
-	for each (Torch* t in torches) {
-		player->HitDetectEnem(t);
-	}
-
-	for each (Ladder* lad in ladders)
+	if (ActualPlatforms.size() > 0)
 	{
-		if (lad->HitDetect(player) && player->getState() != PS_Climb) {
-			if (GAMEPLAY_INPUT.key_up && !lad->PlayerOnTop()) {
-				player->Climb(lad);
+		for each (Platform* p in ActualPlatforms) {
+			p->HitDetect(player);
+
+			if (knight != nullptr)
+			{
+				p->HitDetect(knight);
 			}
-			else if(GAMEPLAY_INPUT.key_down && lad->PlayerOnTop()){
-				player->ClimbDown(lad);
+		}
+	}
+
+	if (torches.size() > 0)
+	{
+		for each (Torch* t in torches) {
+			player->HitDetectEnem(t);
+		}
+	}
+
+	if (ladders.size())
+	{
+		for each (Ladder* lad in ladders)
+		{
+			if (lad->HitDetect(player) && player->getState() != PS_Climb) {
+				if (GAMEPLAY_INPUT.key_up && !lad->PlayerOnTop()) {
+					player->Climb(lad);
+				}
+				else if (GAMEPLAY_INPUT.key_down && lad->PlayerOnTop()) {
+					player->ClimbDown(lad);
+				}
 			}
 		}
 	}
@@ -466,18 +505,23 @@ void GameplayScene::update(float dt) {
 	player->Move();
 	player->moveLightToPlayer();
 
-	
-	for each (Pushable* P in Pushables)
+	if (Pushables.size() > 0)
 	{
-		P->Move();
+		for each (Pushable* P in Pushables)
+		{
+			P->Move();
+		}
 	}
 	
 
+	if (knight != nullptr) {
+		knight->Move();
+	}
 
-	knight->Move();
-
-	if (knight->HitDetect(player)) {
-		player->hurt(2);
+	if (knight != nullptr) {
+		if (knight->HitDetect(player)) {
+			player->hurt(2);
+		}
 	}
 
 	// Move Camera
@@ -582,7 +626,7 @@ bool TestRoom1::init()
 
 		//interactables.pushBack(Door::create(320, 200, 30, 70, DOOR)); //Normal Door
 
-		//interactables.pushBack(Interactable::create(550,270, 30, 70, S_DOOR)); // Scene Door
+		
 
 		//interactables.pushBack(Door::create(210, 200, 20, 80, DOOR, GEN_KEY)); // KeyDoor with general Key.
 
@@ -596,9 +640,9 @@ bool TestRoom1::init()
 			}
 		}
 		//Actual Platforms ///////////////////////////////////////////////////////////////////////////////////////////
-		std::string plat1_file = "Platform1.png";
-		ActualPlatforms.pushBack(Platform::create(plat1_file, cocos2d::Vec2(100, 280)));
+		
 
+		ActualPlatforms.pushBack(Platform::create("Platform1.png", cocos2d::Vec2(100, 280)));
 		for each (Platform* p in ActualPlatforms) {
 			if (p != nullptr) {
 
@@ -661,3 +705,660 @@ void TestRoom1::update(float dt)
 
 
 
+bool A1_R1::init()
+{
+	//STAGE_HEIGHT = 600;
+	//STAGE_WIDTH = 1000;		Defaults
+
+	STAGE_WIDTH = 900;
+
+	if (GameplayScene::init()) {
+
+
+		auto visibleSize = Director::getInstance()->getVisibleSize();
+		//Center of screen ///////////////////////////////////////////////////////////////////////
+		Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+		//Parallax Stuff
+		auto paraNode = ParallaxNode::create();
+		PNode = paraNode;
+		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
+
+		_bgColor->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor->setScale(1);
+
+		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+
+
+		this->addChild(paraNode);
+
+		// Lighting Tests
+		auto _effect = LightEffect::create();
+		_effect->retain();
+
+		_effect->setLightCutoffRadius(250);
+		_effect->setLightHalfRadius(0.5);
+		_effect->setBrightness(0.7);
+		_effect->setAmbientLightColor(Color3B(255, 255, 255));  //255 = no shadow, 0 = black
+
+		player->setEffect(_effect, "test_NM.png");
+		_bgColor->setEffect(_effect, "test_NM.png");
+		
+		player->switchLight();
+
+		//Entities
+		if (player != nullptr) {
+			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+
+			this->addChild(player, 10);
+		}
+		else {
+			return false;
+		}
+									  // x,y w,h
+		terrain.pushBack(Block::create(0, 0, 600, 200)); //Ground
+
+		terrain.pushBack(Block::create(600, 0, 400, 270)); //Ground
+
+		terrain.pushBack(Block::create(0, 200, 100, 750)); //Tree
+
+		for each (Entity* plat in terrain)
+		{
+			if (plat != nullptr) {
+				this->addChild(plat);
+			}
+			else {
+				return false;
+			}
+		}
+
+		//Push_back
+		//for each (Ladder* lad in ladders) {
+		//	if (lad != nullptr) {
+		//		this->addChild(lad);
+		//	}
+		//	else {
+		//		return false;
+		//	}
+		//}
+
+		//interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(700,270),A1_R2)); // Scene Door
+		interactables.pushBack(LoadZone::create(900,270,30,400, A1_R2,Vec2(50,205))); // LoadZone
+
+		for each (Interactable* inter in interactables) {
+			if (inter != nullptr) {
+				this->addChild(inter);
+			}
+			else {
+				return false;
+			}
+		}
+
+		//Platforms
+		//ActualPlatforms.pushBack(Platform::create("Platform1.png", cocos2d::Vec2(100, 280)));
+		//for each (Platform* p in ActualPlatforms) {
+		//	if (p != nullptr) {
+		//
+		//		/*p->setScale(SCALE);
+		//		p->getTexture()->setTexParameters(tp);*/
+		//
+		//		this->addChild(p);
+		//	}
+		//}
+
+
+
+		view = this->getDefaultCamera();
+
+
+		scheduleUpdate();
+
+		return true;
+	}
+
+
+	return false;
+}
+
+void A1_R1::update(float dt)
+{
+	GameplayScene::update(dt);
+}
+
+
+// A1_R2
+
+bool A1_R2::init()
+{
+	//STAGE_HEIGHT = 600;
+	//STAGE_WIDTH = 1000;		Defaults
+
+	STAGE_HEIGHT = 900;
+
+	if (GameplayScene::init()) {
+
+
+		auto visibleSize = Director::getInstance()->getVisibleSize();
+		//Center of screen ///////////////////////////////////////////////////////////////////////
+		Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+		//Parallax Stuff
+		auto paraNode = ParallaxNode::create();
+		PNode = paraNode;
+		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
+
+		_bgColor->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor->setScale(1);
+
+		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+
+		this->addChild(paraNode);
+
+		// Lighting Tests
+		auto _effect = LightEffect::create();
+		_effect->retain();
+
+		_effect->setLightCutoffRadius(250);
+		_effect->setLightHalfRadius(0.5);
+		_effect->setBrightness(0.7);
+		_effect->setAmbientLightColor(Color3B(255, 255, 255));
+
+		player->setEffect(_effect, "test_NM.png");
+		_bgColor->setEffect(_effect, "test_NM.png");
+
+		player->switchLight();
+
+		//Entities
+		if (player != nullptr) {
+			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+
+			this->addChild(player, 10);
+		}
+		else {
+			return false;
+		}
+
+
+		// x,y w,h
+		terrain.pushBack(Block::create(0, 0, 600, 200)); //Ground
+		terrain.pushBack(Block::create(600, 0, 400,670)); //Ground
+		terrain.pushBack(Block::create(260, 200, 70, 70)); //Rock
+		
+		for each (Entity* plat in terrain)
+		{
+			if (plat != nullptr) {
+				this->addChild(plat);
+			}
+			else {
+				return false;
+			}
+		}
+
+		//Push_back
+		//for each (Ladder* lad in ladders) {
+		//	if (lad != nullptr) {
+		//		this->addChild(lad);
+		//	}
+		//	else {
+		//		return false;
+		//	}
+		//}
+
+		interactables.pushBack(LoadZone::create(-10, 205, 10, 400, A1_R1, Vec2(50, 205))); // LoadZone
+		interactables.pushBack(LoadZone::create(1000, 670, 10, 400, A1_R1, Vec2(50, 205))); // LoadZone
+
+		for each (Interactable* inter in interactables) {
+			if (inter != nullptr) {
+				this->addChild(inter);
+			}
+			else {
+				return false;
+			}
+		}
+
+		//Platforms
+		ActualPlatforms.pushBack(Platform::create("Platform1.png", cocos2d::Vec2(200, 380)));
+		for each (Platform* p in ActualPlatforms) {
+			if (p != nullptr) {
+		
+				/*p->setScale(SCALE);
+				p->getTexture()->setTexParameters(tp);*/
+		
+				this->addChild(p);
+			}
+		}
+
+
+
+		view = this->getDefaultCamera();
+
+
+		scheduleUpdate();
+
+		return true;
+	}
+
+
+	return false;
+}
+
+void A1_R2::update(float dt)
+{
+	GameplayScene::update(dt);
+}
+
+
+//A1_R3
+bool A1_R3::init()	//Pushable And Crouch Tutorial
+{
+	//STAGE_HEIGHT = 600;
+	//STAGE_WIDTH = 1000;		Defaults
+
+	STAGE_HEIGHT = 650;
+	STAGE_WIDTH = 1200;
+
+	if (GameplayScene::init()) {
+
+
+		auto visibleSize = Director::getInstance()->getVisibleSize();
+		//Center of screen ///////////////////////////////////////////////////////////////////////
+		Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+		//Parallax Stuff
+		auto paraNode = ParallaxNode::create();
+		PNode = paraNode;
+		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
+
+		_bgColor->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor->setScale(1);
+
+		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+
+		this->addChild(paraNode);
+
+		// Lighting Tests
+		auto _effect = LightEffect::create();
+		_effect->retain();
+
+		_effect->setLightCutoffRadius(250);
+		_effect->setLightHalfRadius(0.5);
+		_effect->setBrightness(0.7);
+		_effect->setAmbientLightColor(Color3B(255, 255, 255));
+
+		player->setEffect(_effect, "test_NM.png");
+		_bgColor->setEffect(_effect, "test_NM.png");
+
+		player->switchLight();
+
+		//Entities
+		if (player != nullptr) {
+			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+
+			this->addChild(player, 10);
+		}
+		else {
+			return false;
+		}
+
+
+		// x,y w,h
+		terrain.pushBack(Block::create(0, 0, 300, 200)); //Ground
+		terrain.pushBack(Block::create(300, 0, 400, 100)); //Ground
+		terrain.pushBack(Block::create(700, 0, 400, 275)); //Ground
+		terrain.pushBack(Block::create(1100, 0, 120, 500)); //Ground
+
+		terrain.pushBack(Block::create(300, 0, 60, 120)); //Ground	*stopper block
+
+		terrain.pushBack(Block::create(800, 308, 60, 400)); //Floating
+		terrain.pushBack(Block::create(800, 500, 420, 400)); //Roof
+
+		
+
+		for each (Entity* plat in terrain)
+		{
+			if (plat != nullptr) {
+				this->addChild(plat);
+			}
+			else {
+				return false;
+			}
+		}
+
+		//Push_back
+		//for each (Ladder* lad in ladders) {
+		//	if (lad != nullptr) {
+		//		this->addChild(lad);
+		//	}
+		//	else {
+		//		return false;
+		//	}
+		//}
+										 //x,y,w,h  , Vec2 MaxLeft, Vec2 MaxRight
+		Pushables.pushBack(Pushable::create(470,140,80,80, Vec2(400,140),Vec2(660,140)));
+
+		for each (Pushable* push in Pushables) {
+			if (push != nullptr) {
+				this->addChild(push);
+			}
+			else
+				return false;
+			
+		}
+
+		interactables.pushBack(LoadZone::create(-10, 205, 10, 400, A1_R1, Vec2(50, 205))); // LoadZone
+		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1050, 275), Vec2(50,200), A1_R4));	//SceneDoor
+
+		for each (Interactable* inter in interactables) {
+			if (inter != nullptr) {
+				this->addChild(inter);
+			}
+			else {
+				return false;
+			}
+		}
+
+		//Platforms
+		//ActualPlatforms.pushBack(Platform::create("Platform1.png", cocos2d::Vec2(200, 380)));
+		//for each (Platform* p in ActualPlatforms) {
+		//	if (p != nullptr) {
+		//
+		//		/*p->setScale(SCALE);
+		//		p->getTexture()->setTexParameters(tp);*/
+		//
+		//		this->addChild(p);
+		//	}
+		//}
+
+
+
+		view = this->getDefaultCamera();
+
+
+		scheduleUpdate();
+
+		return true;
+	}
+
+
+	return false;
+}
+
+void A1_R3::update(float dt)
+{
+	GameplayScene::update(dt);
+}
+
+
+// A1_R4
+
+bool A1_R4::init()
+{
+	//STAGE_HEIGHT = 600;
+	//STAGE_WIDTH = 1000;		Defaults
+
+	STAGE_HEIGHT = 900;
+
+
+
+	if (GameplayScene::init()) {
+
+
+		auto visibleSize = Director::getInstance()->getVisibleSize();
+		//Center of screen ///////////////////////////////////////////////////////////////////////
+		Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+		//Parallax Stuff
+		auto paraNode = ParallaxNode::create();
+		PNode = paraNode;
+		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
+
+		_bgColor->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor->setScale(1);
+
+		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+
+		this->addChild(paraNode);
+
+		// Lighting Tests
+		auto _effect = LightEffect::create();
+		_effect->retain();
+
+		_effect->setLightCutoffRadius(250);
+		_effect->setLightHalfRadius(0.5);
+		_effect->setBrightness(0.7);
+		_effect->setAmbientLightColor(Color3B(255, 255, 255));
+
+		player->setEffect(_effect, "test_NM.png");
+		_bgColor->setEffect(_effect, "test_NM.png");
+
+		player->switchLight();
+
+		//Entities
+		if (player != nullptr) {
+			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+
+			this->addChild(player, 10);
+		}
+		else {
+			return false;
+		}
+
+
+		// x,y w,h
+		terrain.pushBack(Block::create(0, 0, 1000, 150)); //Ground
+		terrain.pushBack(Block::create(275, 900, 450, 10)); //Cieling
+
+		terrain.pushBack(Block::create(0, 150, 275, 400)); //Ground 1
+		terrain.pushBack(Block::create(750, 150, 500, 300)); //Ground 2
+
+		for each (Entity* plat in terrain)
+		{
+			if (plat != nullptr) {
+				this->addChild(plat);
+			}
+			else {
+				return false;
+			}
+		}
+						 //x y w h
+		ladders.pushBack(Ladder::create(300, 200, 32, 900));
+
+		ladders.pushBack(Ladder::create(600, 400, 32, 500));
+
+		for each (Ladder* lad in ladders) {
+			if (lad != nullptr) {
+				this->addChild(lad);
+			}
+			else {
+				return false;
+			}
+		}
+
+		interactables.pushBack(LoadZone::create(-10, 400, 10, 400, A1_R3, Vec2(50, 205))); // LoadZone
+		interactables.pushBack(LoadZone::create(1000, 300, 10, 400, A1_R5, Vec2(50, 205))); // LoadZone
+
+		for each (Interactable* inter in interactables) {
+			if (inter != nullptr) {
+				this->addChild(inter);
+			}
+			else {
+				return false;
+			}
+		}
+
+		//Platforms
+		//ActualPlatforms.pushBack(Platform::create("Platform1.png", cocos2d::Vec2(200, 380)));
+		//for each (Platform* p in ActualPlatforms) {
+		//	if (p != nullptr) {
+		//
+		//		/*p->setScale(SCALE);
+		//		p->getTexture()->setTexParameters(tp);*/
+		//
+		//		this->addChild(p);
+		//	}
+		//}
+
+
+
+		view = this->getDefaultCamera();
+
+
+		scheduleUpdate();
+
+		return true;
+	}
+
+
+	return false;
+}
+
+void A1_R4::update(float dt)
+{
+	GameplayScene::update(dt);
+}
+
+//A1_R5
+
+bool A1_R5::init()
+{
+	//STAGE_HEIGHT = 600;
+	//STAGE_WIDTH = 1000;		Defaults
+
+	STAGE_HEIGHT = 900;
+	STAGE_WIDTH = 1700;
+
+
+
+	if (GameplayScene::init()) {
+
+
+		auto visibleSize = Director::getInstance()->getVisibleSize();
+		//Center of screen ///////////////////////////////////////////////////////////////////////
+		Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+		//Parallax Stuff
+		auto paraNode = ParallaxNode::create();
+		PNode = paraNode;
+		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
+
+		_bgColor->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor->setScale(1);
+
+		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+
+		this->addChild(paraNode);
+
+		// Lighting Tests
+		auto _effect = LightEffect::create();
+		_effect->retain();
+
+		_effect->setLightCutoffRadius(250);
+		_effect->setLightHalfRadius(0.5);
+		_effect->setBrightness(0.7);
+		_effect->setAmbientLightColor(Color3B(255, 255, 255));
+
+		player->setEffect(_effect, "test_NM.png");
+		_bgColor->setEffect(_effect, "test_NM.png");
+
+		player->switchLight();
+
+		//Entities
+		if (player != nullptr) {
+			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+
+			this->addChild(player, 10);
+		}
+		else {
+			return false;
+		}
+
+
+		// x,y w,h
+		terrain.pushBack(Block::create(0, 0, 1400, 100)); //Base Ground
+
+		terrain.pushBack(Block::create(-100, 100, 250, 75)); //Ground 1
+		terrain.pushBack(Block::create(150, 100, 75, 40)); //Ground 2
+		terrain.pushBack(Block::create(640, 100, 60, 40)); //Ground 2
+
+		terrain.pushBack(Block::create(700, 100, 300, 75)); //Ground 3
+		terrain.pushBack(Block::create(700, 210, 225, 200)); //floating 3
+
+		for each (Entity* plat in terrain)
+		{
+			if (plat != nullptr) {
+				this->addChild(plat);
+			}
+			else {
+				return false;
+			}
+		}
+
+		Pushables.pushBack(Pushable::create(559, 140, 80, 80, Vec2(265, 140), Vec2(600, 140)));
+
+		for each (Pushable* push in Pushables) {
+			if (push != nullptr) {
+				this->addChild(push);
+			}
+			else
+				return false;
+
+		}
+
+		//x y w h
+		//ladders.pushBack(Ladder::create(300, 200, 32, 900));
+
+		//ladders.pushBack(Ladder::create(600, 400, 32, 500));
+		//
+		//for each (Ladder* lad in ladders) {
+		//	if (lad != nullptr) {
+		//		this->addChild(lad);
+		//	}
+		//	else {
+		//		return false;
+		//	}
+		//}
+
+		interactables.pushBack(LoadZone::create(-10, 100, 10, 400, A1_R4, Vec2(50, 205))); // LoadZone
+		//interactables.pushBack(LoadZone::create(1000, 300, 10, 400, A1_R6, Vec2(50, 205))); // LoadZone
+
+		for each (Interactable* inter in interactables) {
+			if (inter != nullptr) {
+				this->addChild(inter);
+			}
+			else {
+				return false;
+			}
+		}
+
+		//Platforms
+		//ActualPlatforms.pushBack(Platform::create("Platform1.png", cocos2d::Vec2(200, 380)));
+		//for each (Platform* p in ActualPlatforms) {
+		//	if (p != nullptr) {
+		//
+		//		/*p->setScale(SCALE);
+		//		p->getTexture()->setTexParameters(tp);*/
+		//
+		//		this->addChild(p);
+		//	}
+		//}
+
+
+
+
+
+		view = this->getDefaultCamera();
+
+
+		scheduleUpdate();
+
+		return true;
+	}
+
+
+	return false;
+}
+
+void A1_R5::update(float dt)
+{
+	GameplayScene::update(dt);
+}

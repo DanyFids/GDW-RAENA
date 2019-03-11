@@ -28,20 +28,23 @@ protected:
 	player_inventory * currInv;
 
 	cocos2d::ParallaxNode * PNode;
-	
+	cocos2d::Camera * view;
 	
 	cocos2d::Vector<Interactable *> interactables;
 	cocos2d::Vector<Platform *> ActualPlatforms;
-	cocos2d::Camera * view;
+	
+	
 
 	cocos2d::Vector<Entity *> terrain;
 	cocos2d::Vector<Ladder *> ladders;
 	cocos2d::Vector<Torch *> torches;
 	cocos2d::Vector<Pushable *> Pushables;
 
+
 	int STAGE_WIDTH = 1000;
 	int STAGE_HEIGHT = 600;
 public:
+
 	struct {
 		bool key_up = false;
 		bool key_right = false;
@@ -70,6 +73,7 @@ public:
 	} GAMEPLAY_INPUT;
 
 	static cocos2d::Scene * createScene();
+	 virtual void movePlayer(Entity * player, cocos2d::Vec2 move);
 	//player_inventory * currInv;
 	virtual bool init();
 
@@ -92,4 +96,48 @@ public:
 	virtual bool init() override;
 	void TestRoom1::update(float dt);
 	CREATE_FUNC(TestRoom1);
+
+	
+};
+											   
+class A1_R1 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A1_R1::update(float dt);
+	CREATE_FUNC(A1_R1);
+};
+
+class A1_R2 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A1_R2::update(float dt);
+	CREATE_FUNC(A1_R2);
+};
+
+class A1_R3 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A1_R3::update(float dt);
+	CREATE_FUNC(A1_R3);
+};
+
+class A1_R4 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A1_R4::update(float dt);
+	CREATE_FUNC(A1_R4);
+};
+
+class A1_R5 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A1_R5::update(float dt);
+	CREATE_FUNC(A1_R5);
+};
+
+class A1_R6 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A1_R6::update(float dt);
+	CREATE_FUNC(A1_R6);
 };

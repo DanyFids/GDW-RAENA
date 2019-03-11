@@ -210,7 +210,7 @@ void Door::editKeys(player_inventory * p_inv, KeyType k, int i)
 
 //// ----------------------- S C E N E		D O O R	----------------------------------
 
-SceneDoor * SceneDoor::create(std::string filename, cocos2d::Vec2 p, levelEnum lvl, KeyType key)
+SceneDoor * SceneDoor::create(std::string filename, cocos2d::Vec2 p, cocos2d::Vec2 pPos, levelEnum lvl, KeyType key)
 {
 	auto ret = new (std::nothrow) SceneDoor;
 
@@ -220,6 +220,7 @@ SceneDoor * SceneDoor::create(std::string filename, cocos2d::Vec2 p, levelEnum l
 		ret->objectType = S_DOOR;
 		ret->requiredKey = key;
 		ret->goTo = lvl;
+		ret->movePlayer = pPos;
 		//ret->goTo = scn;
 
 		if (key != NONE) { ret->locked = true; } // If this door requires a key it starts as locked.
@@ -236,7 +237,7 @@ SceneDoor * SceneDoor::create(std::string filename, cocos2d::Vec2 p, levelEnum l
 	return nullptr;
 }
 
-void SceneDoor::Effect(Entity * player, player_inventory * p_inv, cocos2d::Scene* currScene)
+void SceneDoor::Effect(Entity * player, player_inventory * p_inv)
 {
 	if (this->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
 
@@ -259,11 +260,17 @@ void SceneDoor::Effect(Entity * player, player_inventory * p_inv, cocos2d::Scene
 		if (this->Active == false) {
 
 			this->Active = true;
-			
-			switch (goTo) {
+
+			switch (this->goTo) {
+			case A1_R1:
+				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R1));
+				player->setPosition(this->movePlayer);
+				break;
+
 			case TUT_LVL1:
 				//cocos2d::Director::getInstance()->pushScene(currScene);
-				//cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(TUT_LVL1));
+				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(TUT_LVL1));
+				player->setPosition(this->movePlayer);
 				break;
 
 			}
@@ -276,3 +283,100 @@ void SceneDoor::Effect(Entity * player, player_inventory * p_inv, cocos2d::Scene
 	}
 
 }
+
+
+// LOAD ZONE
+
+LoadZone * LoadZone::create(int x, int y, int w, int h, levelEnum dest,cocos2d::Vec2 pPos)
+{
+	auto ret = new (std::nothrow) LoadZone;
+
+	if (ret && ret->init()) {
+		ret->autorelease();
+
+		ret->objectType = LOAD_ZONE;
+		ret->goTo = dest;
+		ret->movePlayer = pPos;
+		//ret->requiredKey = key;
+
+		//if (key != NONE) { ret->locked = true; } // If this door requires a key it starts as locked.
+
+		//ret->CD = 0.5f;
+		//ret->temp_CD = 0.5f;
+
+		ret->setAnchorPoint(cocos2d::Vec2(0, 0));
+		ret->setPositionX(x);
+		ret->setPositionY(y);
+		ret->setContentSize(cocos2d::Size(w, h));
+		
+
+		auto rect = cocos2d::DrawNode::create();
+		rect->drawSolidRect(cocos2d::Vec2(0, 0), cocos2d::Vec2(w, h), cocos2d::Color4F::BLUE);
+		
+		ret->addChild(rect);
+
+		return ret;
+	}
+	CC_SAFE_RELEASE(ret);
+	return nullptr;
+}
+
+void LoadZone::Effect(Entity * player)
+{
+	switch (this->goTo) {
+	case A1_R1:
+		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R1));
+		LevelManager::GetLevel(A1_R1)->movePlayer(player, movePlayer);
+		break;
+
+	case A1_R2:
+		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R2));
+		LevelManager::GetLevel(A1_R2)->movePlayer(player, movePlayer);
+		break;
+
+	case TUT_LVL1:
+		//cocos2d::Director::getInstance()->pushScene(currScene);
+		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(TUT_LVL1));
+		player->setPosition(this->movePlayer);
+		break;
+
+	}
+}
+
+bool LoadZone::HitDetect(Entity * other)
+{
+	float o_TOP = other->getPositionY() + (other->getBoundingBox().size.height / 2); //This is for Objs with A Sprite (beccause it has a centered Origin)
+	float o_BOT = other->getPositionY() - (other->getBoundingBox().size.height / 2);
+
+	float o_LEFT = other->getPositionX() - (other->getBoundingBox().size.width / 2);
+	float o_RIGHT = other->getPositionX() + (other->getBoundingBox().size.width / 2);
+
+	float MAX_Y = this->getPositionY() + (this->getBoundingBox().size.height);				// For simple shapes
+	float MIN_Y = this->getPositionY();
+
+	float MAX_X = this->getPositionX() + (this->getBoundingBox().size.width);
+	float MIN_X = this->getPositionX();
+
+				//o_TOP >= MIN_Y && o_BOT <= MAX_Y && o_RIGHT >= MIN_X && o_LEFT <= MAX_X
+		if (o_TOP > MIN_Y && o_BOT < MAX_Y &&
+			o_RIGHT + other->spd.x > MIN_X && o_LEFT + other->spd.x < MAX_X) {
+
+			if (other->spd.x >= 0.0f) {
+				this->Effect(other);
+				return true;
+			}
+			else
+			{
+				this->Effect(other);
+				return true;
+			}
+
+			return false;
+
+
+		}
+
+	return false;
+}
+
+
