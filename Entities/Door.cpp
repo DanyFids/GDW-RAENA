@@ -216,6 +216,11 @@ SceneDoor * SceneDoor::create(std::string filename, cocos2d::Vec2 p, cocos2d::Ve
 
 	if (ret && ret->initWithFile(filename)) {
 		ret->autorelease();
+		
+		cocos2d::Vector<cocos2d::SpriteFrame *> open_frames = { cocos2d::SpriteFrame::create("closed_door_side.png", cocos2d::Rect(0,0,42,64), false, {0,0}, {42,64}) };
+		cocos2d::Vector<cocos2d::SpriteFrame *> closed_frames = { cocos2d::SpriteFrame::create("open_door.png", cocos2d::Rect(0,0,42,64), false, {0,0}, {42,64}) };
+		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(open_frames, 0.1f));
+		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(closed_frames, 0.1f));
 
 		ret->objectType = S_DOOR;
 		ret->requiredKey = key;

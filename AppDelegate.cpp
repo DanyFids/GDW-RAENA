@@ -27,11 +27,11 @@
 #include "MenuScene.h"
 #include "GameplayScene.h"
 #include "LevelManager/LevelManager.h"
-#include "TutorialScene.h"
+//#include "TutorialScene.h"
 #include "InventoryScene.h"
 
 MenuScene * menuscene;
-TutorialScene * tutorialscene;
+//TutorialScene * tutorialscene;
 GameplayScene * level1scene;
 
 #define USE_AUDIO_ENGINE 1
@@ -129,7 +129,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // create a scene. it's an autorelease object
     auto menu = MenuScene::createScene();
-	auto scene = MenuScene::createScene();
+	//auto scene = MenuScene::createScene();
 
 	//auto TutorialRoom1 = TutRoom1::createScene();
 	//director->getInstance()->pushScene(TransitionFade::create(1,TutorialRoom1));

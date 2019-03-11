@@ -1228,7 +1228,7 @@ bool A1_R5::init()
 	//STAGE_WIDTH = 1000;		Defaults
 
 	STAGE_HEIGHT = 900;
-	STAGE_WIDTH = 1700;
+	STAGE_WIDTH = 1600;
 
 
 
@@ -1277,7 +1277,7 @@ bool A1_R5::init()
 
 
 		// x,y w,h
-		terrain.pushBack(Block::create(0, 0, 1400, 100)); //Base Ground
+		terrain.pushBack(Block::create(0, 0, 1600, 100)); //Base Ground
 
 		terrain.pushBack(Block::create(-100, 100, 250, 75)); //Ground 1
 		terrain.pushBack(Block::create(150, 100, 75, 40)); //Ground 2
@@ -1285,6 +1285,8 @@ bool A1_R5::init()
 
 		terrain.pushBack(Block::create(700, 100, 300, 75)); //Ground 3
 		terrain.pushBack(Block::create(700, 210, 225, 200)); //floating 3
+
+		terrain.pushBack(Block::create(1400, 100, 300, 450)); //Ground 3
 
 		for each (Entity* plat in terrain)
 		{
