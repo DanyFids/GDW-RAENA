@@ -24,8 +24,8 @@ bool InventoryScene::init()
 	}
 	
 	pickUpItem(0, "Key", "Key.png");
-	pickUpItem(1, "Bandages", "Bandages.png");
-	pickUpItem(2, "Rose", "Rose.png");
+	//pickUpItem(1, "Bandages", "Bandages.png");
+	//pickUpItem(2, "Rose", "Rose.png");
 
 	title = Label::createWithTTF("INVENTORY", "fonts/horrendo.ttf", 36);
 	invLabel = Label::createWithTTF("There is nothing in your inventory.", "fonts/horrendo.ttf", 24);
@@ -49,16 +49,16 @@ bool InventoryScene::init()
 
 	if (currInvNum >= 2)
 	{
-		int prev_id = (pointer + 1 >= currInvNum) ? 0 : pointer + 1;
-		prevPic->setTexture(inventory[prev_id].itemPic);
-		prevPic->setPosition(cocos2d::Vec2(200.0f, 350.0f));
+		int next_id = (pointer - 1 < 0) ? currInvNum - 1 : pointer - 1;
+		nextPic->setTexture(inventory[next_id].itemPic);
+		nextPic->setPosition(cocos2d::Vec2(600.0f, 350.0f));
 	}
 
 	if (currInvNum >= 3)
 	{
-		int next_id = (pointer - 1 < 0) ? currInvNum - 1 : pointer - 1;
-		nextPic->setTexture(inventory[next_id].itemPic);
-		nextPic->setPosition(cocos2d::Vec2(600.0f, 350.0f));
+		int prev_id = (pointer + 1 >= currInvNum) ? 0 : pointer + 1;
+		prevPic->setTexture(inventory[prev_id].itemPic);
+		prevPic->setPosition(cocos2d::Vec2(200.0f, 350.0f));
 	}
 
 
@@ -143,7 +143,8 @@ void InventoryScene::update(float dt)
 		if (GetAsyncKeyState(VK_RETURN) != 0)
 		{
 			if (exitTimer == 0)
-			{
+			{ 
+				exitTimer = 20;
 				Director::getInstance()->popScene();
 			}
 		}

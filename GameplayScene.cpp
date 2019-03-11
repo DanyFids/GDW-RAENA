@@ -11,6 +11,7 @@
 #include "Door.h"
 #include "GamePad.h"
 #include "InventoryScene.h"
+#include "PauseMenu.h"
 USING_NS_CC;
 			  
 Gamepad* TheGamepad;
@@ -188,6 +189,9 @@ bool GameplayScene::init() {
 			break;
 		case EventKeyboard::KeyCode::KEY_ENTER:
 			Director::getInstance()->pushScene(InventoryScene::create());
+			break;
+		case EventKeyboard::KeyCode::KEY_ESCAPE:
+			Director::getInstance()->pushScene(PauseMenu::create());
 		}
 	};
 

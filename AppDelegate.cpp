@@ -25,12 +25,10 @@
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
 #include "MenuScene.h"
-#include "TutorialScene.h"
 #include "GameplayScene.h"
 #include "InventoryScene.h"
 
 MenuScene * menuscene;
-TutorialScene * tutorialscene;
 GameplayScene * level1scene;
 
 #define USE_AUDIO_ENGINE 1

@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include <iostream>
 #include <vector>
 #include <string>
@@ -22,8 +21,6 @@ private:
 	cocos2d::Sprite* pic;
 	cocos2d::Sprite* nextPic;
 	cocos2d::Sprite* prevPic;
-	cocos2d::Sprite* nPic;
-	cocos2d::Sprite* pPic;
 public:
 	std::vector<inventoryItem> inventory;
 	void pickUpItem(int id, std::string name, std::string pic);
