@@ -32,8 +32,8 @@ bool InventoryScene::init()
 	pickUpItem(0, "Key", "Key.png");
 	pickUpItem(1, "Bandages", "Bandages.png");
 	pickUpItem(2, "Rose", "Rose.png");
-	pickUpItem(3, "Other Key", "Key.png");
-	pickUpItem(4, "Other Bandages", "Bandages.png");
+	pickUpItem(0, "Key", "Key.png");
+	pickUpItem(1, "Bandages", "Bandages.png");
 
 	title = Label::createWithTTF("INVENTORY", "fonts/horrendo.ttf", 36);
 	invLabel = Label::createWithTTF("There is nothing in your inventory.", "fonts/horrendo.ttf", 24);
@@ -133,12 +133,15 @@ bool InventoryScene::init()
 	examine->setTitleText("");
 
 	examine->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
+		auto description = Textbox::create(1, { 1 }, { "This is used to unlock a door." }, InventoryScene::create());
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			
+			description->setPosition(400.0f, 300.0f);
+			description->Load();
+			addChild(description, 2);
 			break;
 		default:
 			break;
@@ -398,18 +401,21 @@ bool InventoryScene::init()
 
 
 
-	auto inv7 = Menu::create(returnToTheGame, NULL);
-	auto inv8 = Menu::create(quitTheGame, NULL);
-	inv7->setPosition(Vec2::ZERO);
-	inv8->setPosition(Vec2::ZERO);
+	//auto inv7 = Menu::create(returnToTheGame, NULL);
+	//auto inv8 = Menu::create(quitTheGame, NULL);
+	//inv7->setPosition(Vec2::ZERO);
+	//inv8->setPosition(Vec2::ZERO);
+	use->setPosition(Vec2(400.0f, 100.0f));
+	examine->setPosition(Vec2(600.0f, 100.0f));
+	combine->setPosition(Vec2(200.0f, 100.0f));
 	this->addChild(use, 1);
 	//this->addChild(drop, 1);
 	this->addChild(examine, 1);
 	this->addChild(combine, 1);
 	this->addChild(left, 1);
 	this->addChild(right, 1);
-	this->addChild(inv7, 1);
-	this->addChild(inv8, 1);
+	//this->addChild(inv7, 1);
+	//this->addChild(inv8, 1);
 
 
 
