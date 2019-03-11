@@ -314,7 +314,6 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-
 	if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
 	{
 		auto Textbox1 = Textbox::create(1, { 1 }, { "What up fuckbois" }, (this));
@@ -329,8 +328,6 @@ void GameplayScene::update(float dt) {
 		ActiveTextbox = Textbox1;
 
 		GAMEPLAY_INPUT.key_oneP = true;
-
-
 	}
 
 
@@ -399,10 +396,6 @@ void GameplayScene::update(float dt) {
 		ActivePrompt->Follow(player);
 	}
 
-
-
-
-
 	if (GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) {
 		player->Jump();
 		GAMEPLAY_INPUT.key_jump_p = true;
@@ -415,6 +408,7 @@ void GameplayScene::update(float dt) {
 		}
 	}
 	
+	player->ResetObstruction();
 	
 	if (interactables.size() > 0)	//Are there interactables on this map?
 	{
@@ -422,6 +416,9 @@ void GameplayScene::update(float dt) {
 			if (i->getType() == DOOR) {	//Add all interactable types that actually collide with the player here.
 				i->HitDetect(player);
 
+			if (!i->getActive()) {
+				player->DetectObstruction(i);
+			}
 				if (knight != nullptr)
 				{
 					i->HitDetect(knight);
@@ -444,10 +441,10 @@ void GameplayScene::update(float dt) {
 	for each (Block* platform in terrain)
 	{
 		platform->HitDetect(player);
-
 		if (knight != nullptr) {
 			platform->HitDetect(knight);
 		}
+		player->DetectObstruction(platform);
 	}
 
 	if (Pushables.size() > 0)
@@ -455,8 +452,7 @@ void GameplayScene::update(float dt) {
 		for each (Pushable* Push in Pushables)
 		{
 			Push->HitDetect(player);
-			//platform->HitDetect(Push);
-			//Push->HitDetect(player);
+		player->DetectObstruction(p);
 		}
 	}
 

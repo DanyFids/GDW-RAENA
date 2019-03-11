@@ -32,6 +32,11 @@ private:
 	int hp = 6;
 	bool attacking = false;
 	bool glide_used = false;
+
+	//animation conversion booleans for change between 
+	bool can_vert = true;
+	bool can_horz = true;
+
 	float atk_timer = 0;
 	float glide_timer=0;
 	float knock_timer=0;
@@ -88,4 +93,10 @@ public:
 	bool isKnocked() {
 		return knock_timer > 0;
 	}
+
+	void ResetObstruction() {
+		can_vert = true;
+		can_horz = true;
+	}
+	void DetectObstruction(Entity * other);
 };

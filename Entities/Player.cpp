@@ -76,9 +76,9 @@ void Player::Update(float dt)
 		}
 	}
 
-	if (glide_timer > 0) {
+	if (state == PS_Glide) {
 		glide_timer -= dt;
-		if (glide_timer <= 0) {
+		if (glide_timer <= 0 && can_vert) {
 			state = PS_Jump;
 			this->stopAllActions();
 			this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
@@ -151,7 +151,7 @@ void Player::Jump()
 		on_ground = false;
 		state = PS_Jump;
 	}
-	else if (state == PS_Jump) {
+	else if (state == PS_Jump || state == PS_Glide) {
 		Glide();
 	}
 }
@@ -183,8 +183,6 @@ void Player::Attack()
 			atk->setFlipX(true);
 		}
 		scn->addChild(atk, 10);
-
-
 	}
 
 }
@@ -201,15 +199,17 @@ void Player::HitDetectEnem(Enemy * e)
 
 void Player::Climb(Ladder * lad)
 {
-	if (state == PS_Crouch) {
-		Stand();
+	if (can_vert) {
+		if (state == PS_Crouch) {
+			Stand();
+		}
+		this->stopAllActions();
+		this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
+		spd = { 0, 0 };
+		climb_lad = lad;
+		setPositionX(lad->getPositionX() + (lad->getBoundingBox().size.width / 2));
+		state = PS_Climb;
 	}
-	this->stopAllActions();
-	this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
-	spd = { 0, 0 };
-	climb_lad = lad;
-	setPositionX(lad->getPositionX() + (lad->getBoundingBox().size.width / 2));
-	state = PS_Climb;
 }
 
 void Player::ClimbDown(Ladder * lad)
@@ -228,55 +228,122 @@ void Player::ClimbDown(Ladder * lad)
 
 void Player::Land() {
 	if (!on_ground) {
-		if (state == PS_Glide) {
-			Stand();
+		if (can_vert) {
+			if (state == PS_Glide) {
+				Stand();
+			}
+			this->stopAllActions();
+			this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
+			on_ground = true;
+			state = PS_Stand;
+			glide_used = false;
 		}
-		this->stopAllActions();
-		this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
-		on_ground = true;
-		state = PS_Stand;
-		glide_used = false;
+		else {
+			this->stopAllActions();
+			this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(1))));
+			on_ground = true;
+			state = PS_Crouch;
+			glide_used = false;
+		}
 	}
 }
 
 void Player::Crouch()
 {
-	float foot = this->getPositionY() - (getContentSize().height / 2);
+	if (can_horz) {
+		float foot = this->getPositionY() - (getContentSize().height / 2);
 
 
-	float stand_height = getContentSize().height ;
-	float crouch_height = getContentSize().width;
-	this->stopAllActions();
-	this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(1))));
-	
-	state = PS_Crouch;
+		float stand_height = getContentSize().height;
+		float crouch_height = getContentSize().width;
+		this->stopAllActions();
+		this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(1))));
 
-	float new_y = foot + (crouch_height / 2);
+		state = PS_Crouch;
 
-	setContentSize({ getContentSize().height , getContentSize().width });
+		float new_y = foot + (crouch_height / 2);
 
-	this->setPositionY(new_y);
+		setContentSize({ getContentSize().height , getContentSize().width });
+
+		this->setPositionY(new_y);
+	}
 }
 
 void Player::Stand()
 {
-	float crouch_height = getBoundingBox().size.height;
-	float stand_height = getBoundingBox().size.width;
-	this->stopAllActions();
-	this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
-	state = PS_Stand;
+	if (can_vert) {
+		float crouch_height = getBoundingBox().size.height;
+		float stand_height = getBoundingBox().size.width;
+		this->stopAllActions();
+		this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
+		state = PS_Stand;
 
-	this->setPositionY(getPositionY() - (crouch_height / 2));
-	this->setPositionY(getPositionY() + (stand_height / 2));
+		this->setPositionY(getPositionY() - (crouch_height / 2));
+		this->setPositionY(getPositionY() + (stand_height / 2));
+	}
 }
 
 void Player::Glide()
 {
-	if (!glide_used) {
+	if (!glide_used && can_horz) {
 		this->stopAllActions();
 		this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(1))));
 		state = PS_Glide;
 		spd.y = 0;
 		glide_timer = GLIDE_TIME;
+	}
+	else if (state == PS_Glide && can_vert) {
+		this->stopAllActions();
+		this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
+		state = PS_Jump;
+	}
+}
+
+void Player::DetectObstruction(Entity * other)
+{
+	float largest_size = (getBoundingBox().size.width > getBoundingBox().size.height) ? getBoundingBox().size.width : getBoundingBox().size.height;
+	float small_size = (getBoundingBox().size.width < getBoundingBox().size.height) ? getBoundingBox().size.width : getBoundingBox().size.height;
+	
+	float t_head;
+	float t_foot;
+	float t_left;
+	float t_right;
+
+	if (state == PS_Crouch) {
+		t_foot = getPositionY() - (getBoundingBox().size.height/2);
+
+		t_head = t_foot + largest_size;
+		t_left = getPositionX() - (largest_size / 2.0f);
+		t_right = getPositionX() + (largest_size / 2.0f);
+	}
+	else {
+		t_head = getPositionY() + (largest_size/2.0f);
+		t_foot = getPositionY() - (largest_size / 2.0f);
+		t_left = getPositionX() - (largest_size / 2.0f);
+		t_right = getPositionX() + (largest_size / 2.0f);
+	}
+
+	cocos2d::Vec2 anchorP = other->getAnchorPoint();
+
+	float o_foot = other->getPositionY() - (other->getBoundingBox().size.height * anchorP.y);
+	float o_head = other->getPositionY() + (other->getBoundingBox().size.height - (other->getBoundingBox().size.height * anchorP.y));
+	float o_left = other->getPositionX() - (other->getBoundingBox().size.width * anchorP.x);
+	float o_right = other->getPositionX() + (other->getBoundingBox().size.width - (other->getBoundingBox().size.width * anchorP.x));
+
+	if (t_foot + spd.y < o_head && t_head + spd.y > o_foot && t_left + spd.x < o_right && t_right + spd.x > o_left) {
+		switch (state) {
+		case PS_Glide:
+		case PS_Crouch:
+			can_vert = false;
+			break;
+		case PS_Stand:
+			if (o_foot < t_foot + small_size) {
+				can_horz = false;
+			}
+			break;
+		default:
+			can_horz = false;
+			break;
+		}
 	}
 }
