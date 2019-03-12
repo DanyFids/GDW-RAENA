@@ -87,6 +87,8 @@ public:
 	int getHP();
 	void setHP(int i);
 
+	float getSpeedY() { return this->spd.y; }
+
 	virtual void Land() override;
 
 	void Crouch();

@@ -549,7 +549,7 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p) {
+	if (GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p && player->isOnGround() && player->getSpeedY() == 0) {
 		if (player->getState() == PS_Stand) {
 			player->Crouch();
 		}
