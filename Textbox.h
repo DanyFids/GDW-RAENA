@@ -14,7 +14,7 @@ private:
 
 	
 
-	GameplayScene* scene;
+	cocos2d::Scene* scene;
 
 public:
 	
@@ -29,5 +29,4 @@ public:
 	int getPages();
 	int getCurrPage();
 	void Init();
-
 };
