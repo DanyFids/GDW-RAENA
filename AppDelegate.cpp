@@ -139,7 +139,13 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	
 
 	cocos2d::Vector<GameplayScene*> levels = {
-		A1_R1::create(),A1_R2::create(),A1_R3::create(),A1_R4::create(),A1_R5::create(),A1_R6::create(),TestRoom1::create()
+		A1_R1::create(),
+		A1_R2::create(),
+		A1_R3::create(),
+		A1_R4::create(),
+		A1_R5::create(),
+		A1_R6::create(),
+		//TestRoom1::create()
 	};
 
 	LevelManager::AddLevels(levels);

@@ -271,7 +271,26 @@ void SceneDoor::Effect(Entity * player, player_inventory * p_inv)
 				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R1));
 				player->setPosition(this->movePlayer);
 				break;
-
+			case A1_R2:
+				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R2));
+				player->setPosition(this->movePlayer);
+				break;
+			case A1_R3:
+				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R3));
+				player->setPosition(this->movePlayer);
+				break;
+			case A1_R4:
+				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R4));
+				player->setPosition(this->movePlayer);
+				break;
+			case A1_R5:
+				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R5));
+				player->setPosition(this->movePlayer);
+				break;
+			case A1_R6:
+				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R6));
+				player->setPosition(this->movePlayer);
+				break;
 			case TUT_LVL1:
 				//cocos2d::Director::getInstance()->pushScene(currScene);
 				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(TUT_LVL1));
@@ -339,6 +358,25 @@ void LoadZone::Effect(Entity * player)
 		LevelManager::GetLevel(A1_R2)->movePlayer(player, movePlayer);
 		break;
 
+	case A1_R3:
+		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R3));
+		LevelManager::GetLevel(A1_R3)->movePlayer(player, movePlayer);
+		break;
+
+	case A1_R4:
+		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R4));
+		LevelManager::GetLevel(A1_R4)->movePlayer(player, movePlayer);
+		break;
+
+	case A1_R5:
+		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R5));
+		LevelManager::GetLevel(A1_R5)->movePlayer(player, movePlayer);
+		break;
+
+	case A1_R6:
+		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R6));
+		LevelManager::GetLevel(A1_R6)->movePlayer(player, movePlayer);
+		break;
 	case TUT_LVL1:
 		//cocos2d::Director::getInstance()->pushScene(currScene);
 		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(TUT_LVL1));

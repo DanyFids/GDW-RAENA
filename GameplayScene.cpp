@@ -9,6 +9,7 @@
 #include "Enums.h"
 
 #include "Entities/Door.h"
+#include "Entities/PuzzleInteractable.h"
 #include "GamePad.h"
 #include "InventoryScene.h"
 USING_NS_CC;
@@ -43,6 +44,8 @@ bool GameplayScene::init() {
 	player = Player ::create("test_dummy.png", this);
 	player->setScale(SCALE);
 	player->getTexture()->setTexParameters(tp);
+
+	;
 
 	
 	this->addChild(player,10);
@@ -188,6 +191,13 @@ void GameplayScene::update(float dt) {
 						((SceneDoor*)i)->Effect(player, currInv);
 						i->setCooldown();
 						break;
+					case PUZZLE:
+						((PuzzleInteract*)i)->Effect(player, currInv, this);
+						//if (((PuzzleInteract*)i)->checkPuzzle(Princess1) ) {
+						//	this->addChild(knight);
+						//}
+						i->setCooldown();
+						break;
 					}
 
 					i->setCooldown();
@@ -316,6 +326,13 @@ void GameplayScene::update(float dt) {
 						break;
 					case S_DOOR:
 						((SceneDoor*)i)->Effect(player, currInv);
+						i->setCooldown();
+						break;
+					case PUZZLE:
+						((PuzzleInteract*)i)->Effect(player, currInv, this);
+						//if (((PuzzleInteract*)i)->checkPuzzle(Princess1) ) {
+						//	this->addChild(knight);
+						//}
 						i->setCooldown();
 						break;
 					}
@@ -800,7 +817,7 @@ bool A1_R1::init()
 		//}
 
 		//interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(700,270),A1_R2)); // Scene Door
-		interactables.pushBack(LoadZone::create(900,270,30,400, A1_R2,Vec2(50,205))); // LoadZone
+		interactables.pushBack(LoadZone::create(905,270,30,400, A1_R2,Vec2(50,205))); // LoadZone
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -924,7 +941,7 @@ bool A1_R2::init()
 		//}
 
 		interactables.pushBack(LoadZone::create(-10, 205, 10, 400, A1_R1, Vec2(50, 205))); // LoadZone
-		interactables.pushBack(LoadZone::create(1000, 670, 10, 400, A1_R1, Vec2(50, 205))); // LoadZone
+		interactables.pushBack(LoadZone::create(1000, 670, 10, 400, A1_R3, Vec2(50, 205))); // LoadZone
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -936,7 +953,17 @@ bool A1_R2::init()
 		}
 
 		//Platforms
-		ActualPlatforms.pushBack(Platform::create("Platform1.png", cocos2d::Vec2(200, 380)));
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(200, 340)));
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(290, 390)));
+
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(450, 430)));
+
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(340, 520)));
+
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(240, 580)));
+
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(510, 605)));
+
 		for each (Platform* p in ActualPlatforms) {
 			if (p != nullptr) {
 		
@@ -1193,8 +1220,9 @@ bool A1_R4::init()
 			}
 		}
 
-		interactables.pushBack(LoadZone::create(-10, 400, 10, 400, A1_R3, Vec2(50, 205))); // LoadZone
+		
 		interactables.pushBack(LoadZone::create(1000, 300, 10, 400, A1_R5, Vec2(50, 205))); // LoadZone
+		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(100, 550), Vec2(50, 200), A1_R3));	//SceneDoor
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -1243,7 +1271,7 @@ bool A1_R5::init()
 	//STAGE_HEIGHT = 600;
 	//STAGE_WIDTH = 1000;		Defaults
 
-	STAGE_HEIGHT = 900;
+	STAGE_HEIGHT = 1200;
 	STAGE_WIDTH = 1600;
 
 
@@ -1303,7 +1331,7 @@ bool A1_R5::init()
 		terrain.pushBack(Block::create(700, 100, 300, 75)); //Ground 3
 		
 
-		terrain.pushBack(Block::create(1400, 100, 300, 450)); //Ground 3
+		terrain.pushBack(Block::create(1400, 100, 300, 450)); //Ground 4
 
 		for each (Entity* plat in terrain)
 		{
@@ -1327,21 +1355,21 @@ bool A1_R5::init()
 		}
 
 		//x y w h
-		//ladders.pushBack(Ladder::create(300, 200, 32, 900));
+		ladders.pushBack(Ladder::create(390, 290, 32, 320));
 
 		//ladders.pushBack(Ladder::create(600, 400, 32, 500));
-		//
-		//for each (Ladder* lad in ladders) {
-		//	if (lad != nullptr) {
-		//		this->addChild(lad);
-		//	}
-		//	else {
-		//		return false;
-		//	}
-		//}
+		
+		for each (Ladder* lad in ladders) {
+			if (lad != nullptr) {
+				this->addChild(lad);
+			}
+			else {
+				return false;
+			}
+		}
 
-		interactables.pushBack(LoadZone::create(-10, 100, 10, 400, A1_R4, Vec2(50, 205))); // LoadZone
-		//interactables.pushBack(LoadZone::create(1000, 300, 10, 400, A1_R6, Vec2(50, 205))); // LoadZone
+		interactables.pushBack(LoadZone::create(-10, 165, 10, 400, A1_R4, Vec2(50, 205))); // LoadZone
+		interactables.pushBack(LoadZone::create(1620, 550, 10, 400, A1_R6, Vec2(50, 205))); // LoadZone
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -1353,16 +1381,28 @@ bool A1_R5::init()
 		}
 
 		//Platforms
-		//ActualPlatforms.pushBack(Platform::create("Platform1.png", cocos2d::Vec2(200, 380)));
-		//for each (Platform* p in ActualPlatforms) {
-		//	if (p != nullptr) {
-		//
-		//		/*p->setScale(SCALE);
-		//		p->getTexture()->setTexParameters(tp);*/
-		//
-		//		this->addChild(p);
-		//	}
-		//}
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(400, 590.6)));
+
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(560, 645)));
+
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(360, 720)));
+
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(590, 770)));
+
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(975, 660)));
+
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(1175, 500)));
+
+
+		for each (Platform* p in ActualPlatforms) {
+			if (p != nullptr) {
+		
+				/*p->setScale(SCALE);
+				p->getTexture()->setTexParameters(tp);*/
+		
+				this->addChild(p);
+			}
+		}
 
 
 
@@ -1430,7 +1470,7 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 		if (player != nullptr) {
 			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
 
-			this->addChild(player, 10);
+			//this->addChild(player, 10);
 		}
 		else {
 			return false;
@@ -1473,9 +1513,9 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 		//
 		//}
 
-		//interactables.pushBack(LoadZone::create(-10, 205, 10, 400, A1_R1, Vec2(50, 205))); // LoadZone
+		interactables.pushBack(LoadZone::create(-10, 200, 10, 400, A1_R5, Vec2(50, 205))); // LoadZone
 		//interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1050, 275), Vec2(50, 200), A1_R4));	//SceneDoor
-
+		interactables.pushBack(PuzzleInteract::create("pinkRec.png", Vec2(1325, 200),Princess1, ROSE));
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
 				this->addChild(inter);

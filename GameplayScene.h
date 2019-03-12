@@ -85,6 +85,8 @@ public:
 
 	void update(float dt) override;
 
+	void setKnight(Knight * k) { knight = k; }
+
 	CREATE_FUNC(GameplayScene);
 };
 
