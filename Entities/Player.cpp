@@ -66,6 +66,8 @@ void Player::Update(float dt)
 		if (!climb_lad->HitDetect(this)) {
 			state = PS_Stand;
 		}
+		glide_used = false;
+		glide_timer = GLIDE_TIME;
 	}
 
 	if (knock_timer > 0) {
@@ -224,9 +226,22 @@ void Player::ClimbDown(Ladder * lad)
 	this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
 	spd = { 0, 0 };
 	state = PS_Climb;
+	
+
+
 	climb_lad = lad;
 	setPositionX(lad->getPositionX() + (lad->getBoundingBox().size.width / 2));
 	setPositionY(this->getPositionY() - (this->getBoundingBox().size.height / 2));
+}
+
+int Player::getHP()
+{
+	return this->hp;
+}
+
+void Player::setHP(int i)
+{
+	this->hp = i;
 }
 
 void Player::Land() {

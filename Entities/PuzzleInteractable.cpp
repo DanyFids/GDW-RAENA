@@ -70,8 +70,8 @@ void PuzzleInteract::Effect(Entity * player, player_inventory * p_inv,GameplaySc
 		
 		Knight * knight = Knight::create("knightwalkyboi0000.png");
 		knight->setPosition(cocos2d::Vec2(650, 200 + (knight->getBoundingBox().size.height / 2)));
-		scn->setKnight(knight);
 		scn->addChild(knight);
+		scn->setKnight(knight);
 	}
 }
 

@@ -84,6 +84,9 @@ public:
 
 	void ClimbDown(Ladder * lad);
 
+	int getHP();
+	void setHP(int i);
+
 	virtual void Land() override;
 
 	void Crouch();

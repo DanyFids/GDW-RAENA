@@ -145,7 +145,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 		A1_R4::create(),
 		A1_R5::create(),
 		A1_R6::create(),
-		//TestRoom1::create()
+		TestRoom1::create()
 	};
 
 	LevelManager::AddLevels(levels);

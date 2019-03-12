@@ -12,11 +12,10 @@
 #include "Entities/PuzzleInteractable.h"
 #include "GamePad.h"
 #include "InventoryScene.h"
+#include "LevelManager/LevelManager.h"
 USING_NS_CC;
 			  
 Gamepad* TheGamepad;
-
-
 
 
 Scene* GameplayScene::createScene() {
@@ -45,11 +44,8 @@ bool GameplayScene::init() {
 	player->setScale(SCALE);
 	player->getTexture()->setTexParameters(tp);
 
-	;
-
 	
 	this->addChild(player,10);
-
 
 	currInv = new player_inventory(1);
 
@@ -80,7 +76,7 @@ bool GameplayScene::init() {
 				case EventKeyboard::KeyCode::KEY_C:
 					GAMEPLAY_INPUT.key_jump = true;
 					break;
-				case EventKeyboard::KeyCode::KEY_E:
+				case EventKeyboard::KeyCode::KEY_D:
 					GAMEPLAY_INPUT.key_interact = true;
 					break;
 				case EventKeyboard::KeyCode::KEY_X:
@@ -88,6 +84,10 @@ bool GameplayScene::init() {
 					break;
 				case EventKeyboard::KeyCode::KEY_ENTER:
 					Director::getInstance()->pushScene(InventoryScene::create());
+					break;
+			//	case EventKeyboard::KeyCode::KEY_1:
+			//		GAMEPLAY_INPUT.key_one = true;
+			//		break;
 				}
 			}
 		};
@@ -114,13 +114,17 @@ bool GameplayScene::init() {
 				GAMEPLAY_INPUT.key_jump = false;
 				GAMEPLAY_INPUT.key_jump_p = false;
 				break;
-			case EventKeyboard::KeyCode::KEY_E:
+			case EventKeyboard::KeyCode::KEY_D:
 				GAMEPLAY_INPUT.key_interact = false;
 				break;
 			case EventKeyboard::KeyCode::KEY_X:
 				GAMEPLAY_INPUT.key_crouch = false;
 				GAMEPLAY_INPUT.key_crouch_p = false;
 				break;
+			//case EventKeyboard::KeyCode::KEY_1:
+			//	GAMEPLAY_INPUT.key_one = false;
+			//	GAMEPLAY_INPUT.key_oneP = false;
+			//	break;
 			}
 		};
 
@@ -346,64 +350,64 @@ void GameplayScene::update(float dt) {
 
 	if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
 	{
-		auto Textbox1 = Textbox::create(1, { 1 }, { "What up fuckbois" }, (this));
+		auto Textbox1 = Textbox::create(1, { 1 }, { "Hello World!" }, (this));
 		addChild(Textbox1, 10);
 		Textbox1->Load();
 		if (ActiveTextbox)
 		{
 			ActiveTextbox->Close();
 		}
-
-
+	
+	
 		ActiveTextbox = Textbox1;
-
+	
 		GAMEPLAY_INPUT.key_oneP = true;
 	}
+	//
+	//
+	//
+	//if (GAMEPLAY_INPUT.key_two && !GAMEPLAY_INPUT.key_twoP)
+	//{
+	//	auto Textbox2 = Textbox::create(2, { 1,1 }, { "Yeet", "Get Dabbed on" }, (this));
+	//	addChild(Textbox2, 10);
+	//	Textbox2->Load();
+	//	if (ActiveTextbox)
+	//	{
+	//		ActiveTextbox->Close();
+	//	}
+	//	ActiveTextbox = Textbox2;
+	//
+	//	GAMEPLAY_INPUT.key_twoP = true;
+	//
+	//}
 
-
-
-	if (GAMEPLAY_INPUT.key_two && !GAMEPLAY_INPUT.key_twoP)
-	{
-		auto Textbox2 = Textbox::create(2, { 1,1 }, { "Yeet", "Get Dabbed on" }, (this));
-		addChild(Textbox2, 10);
-		Textbox2->Load();
-		if (ActiveTextbox)
-		{
-			ActiveTextbox->Close();
-		}
-		ActiveTextbox = Textbox2;
-
-		GAMEPLAY_INPUT.key_twoP = true;
-
-	}
-
-	if (GAMEPLAY_INPUT.key_P1 && !GAMEPLAY_INPUT.key_P1P)
-	{
-		auto Prompt1 = Prompt::create(1, (this));
-		addChild(Prompt1, 10);
-		Prompt1->Load();
-		if (ActivePrompt)
-		{
-			ActivePrompt->Close();
-		}
-		ActivePrompt = Prompt1;
-
-		GAMEPLAY_INPUT.key_P1P = true;
-	}
-
-	if (GAMEPLAY_INPUT.key_P2 && !GAMEPLAY_INPUT.key_P2P)
-	{
-		auto Prompt2 = Prompt::create(2, (this));
-		addChild(Prompt2, 10);
-		Prompt2->Load();
-		if (ActivePrompt)
-		{
-			ActivePrompt->Close();
-		}
-		ActivePrompt = Prompt2;
-
-		GAMEPLAY_INPUT.key_P2P = true;
-	}
+	//if (GAMEPLAY_INPUT.key_P1 && !GAMEPLAY_INPUT.key_P1P)
+	//{
+	//	auto Prompt1 = Prompt::create(1, (this));
+	//	addChild(Prompt1, 10);
+	//	Prompt1->Load();
+	//	if (ActivePrompt)
+	//	{
+	//		ActivePrompt->Close();
+	//	}
+	//	ActivePrompt = Prompt1;
+	//
+	//	GAMEPLAY_INPUT.key_P1P = true;
+	//}
+	//
+	//if (GAMEPLAY_INPUT.key_P2 && !GAMEPLAY_INPUT.key_P2P)
+	//{
+	//	auto Prompt2 = Prompt::create(2, (this));
+	//	addChild(Prompt2, 10);
+	//	Prompt2->Load();
+	//	if (ActivePrompt)
+	//	{
+	//		ActivePrompt->Close();
+	//	}
+	//	ActivePrompt = Prompt2;
+	//
+	//	GAMEPLAY_INPUT.key_P2P = true;
+	//}
 
 	if (GAMEPLAY_INPUT.key_F && !GAMEPLAY_INPUT.key_FP)
 	{
@@ -566,7 +570,6 @@ void GameplayScene::update(float dt) {
 			}
 		}
 	}
-
 }
 
 bool TutRoom1::init()
@@ -587,7 +590,13 @@ void TutRoom1::update(float dt)
 
 bool TestRoom1::init()
 {
+
+	removeAllChildren();
+
+
 	if (GameplayScene::init()) {
+
+
 
 		//Paralax & Background //////////////////////////////////////////////////////////////////////////////
 		auto paraNode = ParallaxNode::create();
@@ -605,6 +614,27 @@ bool TestRoom1::init()
 
 		this->addChild(paraNode);
 
+		// Lighting Tests
+		auto _effect = LightEffect::create();
+		_effect->retain();
+
+		Vec3 l_pos(150, 300, 50);
+
+		//_effect->addLight(l_pos);
+		//_effect->addLight(Vec3(400, 250, 50));
+		//_effect->addLight(Vec3(600, 250, 50));
+		//_effect->addLight(Vec3(200, 250, 50));
+		//_effect->addLight(Vec3(0, 250, 50));
+		//_effect->addLight(Vec3(800, 250, 50));
+		_effect->setLightCutoffRadius(250);
+		_effect->setLightHalfRadius(0.5);
+		_effect->setBrightness(0.7);
+		_effect->setAmbientLightColor(Color3B(0, 0, 0));
+
+		player->setEffect(_effect, "test_NM.png");
+		_bgColor->setEffect(_effect, "layerNorm.png");
+		_bgColor2->setEffect(_effect, "layerNorm.png");
+
 		auto visibleSize = Director::getInstance()->getVisibleSize();
 		//Center of screen ///////////////////////////////////////////////////////////////////////
 		Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -613,18 +643,7 @@ bool TestRoom1::init()
 		if (player != nullptr) {
 			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
 
-			this->addChild(player, 10);
-		}
-		else {
-			return false;
-		}
-		//Knight //////////////////////////////////////////////////////////////////////////////////////
-		knight = Knight::create("test_dummy.png");
-
-		if (knight != nullptr) {
-			knight->setPosition(Vec2((visibleSize.width / 2) - knight->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - knight->getBoundingBox().size.height / 2 + origin.y));
-			knight->setPosition(700, 300);
-			this->addChild(knight);
+			//this->addChild(player, 10);
 		}
 		else {
 			return false;
@@ -637,6 +656,7 @@ bool TestRoom1::init()
 		for each (Entity* plat in terrain)
 		{
 			if (plat != nullptr) {
+				plat->setEffect(_effect,"layerNorm.png");
 				this->addChild(plat);
 			}
 			else {
@@ -687,26 +707,7 @@ bool TestRoom1::init()
 			}
 		}
 
-		// Lighting Tests
-		auto _effect = LightEffect::create();
-		_effect->retain();
-
-		Vec3 l_pos(150, 300, 50);
-
-		_effect->addLight(l_pos);
-		//_effect->addLight(Vec3(400, 250, 50));
-		//_effect->addLight(Vec3(600, 250, 50));
-		//_effect->addLight(Vec3(200, 250, 50));
-		//_effect->addLight(Vec3(0, 250, 50));
-		//_effect->addLight(Vec3(800, 250, 50));
-		_effect->setLightCutoffRadius(250);
-		_effect->setLightHalfRadius(0.5);
-		_effect->setBrightness(0.7);
-		_effect->setAmbientLightColor(Color3B(0, 0, 0));
-
-		player->setEffect(_effect, "test_NM.png");
-		_bgColor->setEffect(_effect, "test_NM.png");
-		_bgColor2->setEffect(_effect, "test_NM.png");
+		
 
 		//Set Torches;
 		torches.pushBack(Torch::create(cocos2d::Vec2(200, 230), _effect));
@@ -746,6 +747,8 @@ bool A1_R1::init()
 
 	STAGE_WIDTH = 900;
 
+	removeAllChildren();
+
 	if (GameplayScene::init()) {
 
 
@@ -782,7 +785,7 @@ bool A1_R1::init()
 
 		//Entities
 		if (player != nullptr) {
-			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+			player->setPosition(Vec2(300,245));
 
 			//this->addChild(player, 10);
 		}
@@ -871,6 +874,8 @@ bool A1_R2::init()
 
 	removeAllChildren();
 
+	
+
 	if (GameplayScene::init()) {
 
 
@@ -906,7 +911,7 @@ bool A1_R2::init()
 
 		//Entities
 		if (player != nullptr) {
-			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+			player->setPosition(Vec2(50,245));
 
 			//this->addChild(player, 10);
 		}
@@ -1003,6 +1008,10 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 	STAGE_HEIGHT = 650;
 	STAGE_WIDTH = 1200;
 
+	removeAllChildren();
+
+	
+
 	if (GameplayScene::init()) {
 
 
@@ -1038,7 +1047,7 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 
 		//Entities
 		if (player != nullptr) {
-			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+			player->setPosition(Vec2(50,300));
 
 			//this->addChild(player, 10);
 		}
@@ -1144,7 +1153,9 @@ bool A1_R4::init()
 
 	STAGE_HEIGHT = 900;
 
+	removeAllChildren();
 
+	
 
 	if (GameplayScene::init()) {
 
@@ -1181,13 +1192,14 @@ bool A1_R4::init()
 
 		//Entities
 		if (player != nullptr) {
-			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+			player->setPosition(Vec2(70,575));
 
 			//this->addChild(player, 10);
 		}
 		else {
 			return false;
 		}
+
 
 
 		// x,y w,h
@@ -1222,7 +1234,7 @@ bool A1_R4::init()
 
 		
 		interactables.pushBack(LoadZone::create(1000, 300, 10, 400, A1_R5, Vec2(50, 205))); // LoadZone
-		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(100, 550), Vec2(50, 200), A1_R3));	//SceneDoor
+		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(50, 550), Vec2(50, 200), A1_R3));	//SceneDoor
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -1248,7 +1260,8 @@ bool A1_R4::init()
 
 
 		view = this->getDefaultCamera();
-
+		view->setPositionY(view->getPositionY() + 200);
+		
 
 		scheduleUpdate();
 
@@ -1273,6 +1286,8 @@ bool A1_R5::init()
 
 	STAGE_HEIGHT = 1200;
 	STAGE_WIDTH = 1600;
+
+	removeAllChildren();
 
 
 
@@ -1311,7 +1326,7 @@ bool A1_R5::init()
 
 		//Entities
 		if (player != nullptr) {
-			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+			player->setPosition(Vec2(50,200));
 
 			//this->addChild(player, 10);
 		}
@@ -1432,6 +1447,10 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 
 	STAGE_HEIGHT = 650;
 	STAGE_WIDTH = 1200;
+
+	removeAllChildren();
+
+	
 
 	if (GameplayScene::init()) {
 
@@ -1580,5 +1599,10 @@ void A1_R6::update(float dt)
 		addChild(terrain.at(terrain.size() -1));
 		terrain.pushBack(Block::create(1402, 0, 1500, 650)); //wall
 		addChild(terrain.at(terrain.size() - 1));
+	}
+
+	if (player->getHP() <= 0) {
+		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(TUT_LVL1));
+		player->setHP(6);
 	}
 }

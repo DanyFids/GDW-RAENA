@@ -2,11 +2,13 @@
 #include "Effects/LightEffect.h"
 #include "Constants.h"
 
-auto ret = new (std::nothrow) Knight;
+
 auto mothret = new (std::nothrow) Moth;
 
 Knight * Knight::create(const std::string& filename)
 {
+	auto ret = new (std::nothrow) Knight;
+
 	if (ret && ret->initWithFile(filename)) {
 			cocos2d::Vector<cocos2d::SpriteFrame *> walk_frames = { cocos2d::SpriteFrame::create("knightwalkyboi0000.png", cocos2d::Rect(0,0,64,100), false, {0,0}, {64,100}),
 																	cocos2d::SpriteFrame::create("knightwalkyboi0001.png", cocos2d::Rect(0,0,64,100), false, {0,0}, {64,100}),
@@ -46,7 +48,7 @@ void Knight::AI(Player* player, float dt) {
 
 		//Left
 		if (!face_right && !delay) {
-			ret->setFlipX(true);
+			this->setFlipX(true);
 			//attack left
 			if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 60)) {
 				if (player->getPosition().y <= this->getPosition().y + 80 || player->getPosition().y <= this->getPosition().y - 80) {
@@ -81,7 +83,7 @@ void Knight::AI(Player* player, float dt) {
 		//Right
 		else if (face_right && !delay)
 		{
-			ret->setFlipX(false);
+			this->setFlipX(false);
 			//attack right
 			if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 60)) {
 				if (player->getPosition().y <= this->getPosition().y + 80 || player->getPosition().y <= this->getPosition().y - 80) {
