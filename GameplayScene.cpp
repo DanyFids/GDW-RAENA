@@ -254,7 +254,7 @@ void GameplayScene::update(float dt) {
 	}
 
 	if (!player->isKnocked()) {
-		if (GAMEPLAY_INPUT.key_left) {
+	if (GAMEPLAY_INPUT.key_left || TheGamepad->leftStickX <= -0.2) {
 			if (player->getState() != PS_Climb) {
 				player->setFlipX(true);
 				player->spd.x = -PLAYER_SPEED * dt;
@@ -262,7 +262,7 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (GAMEPLAY_INPUT.key_right) {
+	if (GAMEPLAY_INPUT.key_right || TheGamepad->leftStickX >= 0.2) {
 		if (player->getState() != PS_Climb) {
 			if (player->getState() == PS_Crouch) {
 				player->spd.x = CROUCH_SPEED * dt;
@@ -272,127 +272,121 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (GAMEPLAY_INPUT.key_down) {
+	if (GAMEPLAY_INPUT.key_down || TheGamepad->leftStickY <= -0.2) {
 		if (player->getState() == PS_Climb) {
 			player->spd.y = -PLAYER_SPEED * dt;
 		}
 	}
 
-	if (GAMEPLAY_INPUT.key_up) {
+	if (GAMEPLAY_INPUT.key_up || TheGamepad->leftStickY >= 0.2) {
 		if (player->getState() == PS_Climb) {
 			player->spd.y = PLAYER_SPEED * dt;
 		}
 	}
 
+	//GamePad///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//if (TheGamepad->CheckConnection() == true)
+	//{
+	//	if (TheGamepad->leftStickX >= 0.2)
+	//	{
+	//		//player->spd.x = TheGamepad->leftStickX * 100 * dt;
+	//		if (player->getState() != PS_Climb) {
+	//			if (player->getState() == PS_Crouch) {
+	//				player->spd.x = CROUCH_SPEED * dt;
+	//			}
+	//			player->setFlipX(false);
+	//			player->spd.x = PLAYER_SPEED * dt;
+	//		}
+	//	}
+	//	if (TheGamepad->leftStickX <= -0.2)
+	//	{
+	//		if (player->getState() != PS_Climb) {
+	//			player->setFlipX(true);
+	//			player->spd.x = -PLAYER_SPEED * dt;
+	//		}
+	//	}
+	//	if (TheGamepad->leftStickY <= -0.2)
+	//	{
+	//		if (player->getState() == PS_Climb) {
+	//			player->spd.y = -PLAYER_SPEED * dt;
+	//		}
+	//	}
 
-	if (TheGamepad->CheckConnection() == true && !cutScene && player->getState() != PS_HURT)
-	{
-		if (TheGamepad->leftStickX >= 0.2)
-		{
-			//player->spd.x = TheGamepad->leftStickX * 100 * dt;
-			if (player->getState() != PS_Climb) {
-				if (player->getState() == PS_Crouch) {
-					player->spd.x = CROUCH_SPEED * dt;
-				}
-				player->setFlipX(false);
-				player->spd.x = PLAYER_SPEED * dt;
-			}
-		}
-		if (TheGamepad->leftStickX <= -0.2)
-		{
-			if (player->getState() != PS_Climb) {
-				player->setFlipX(true);
-				player->spd.x = -PLAYER_SPEED * dt;
-			}
-		}
-		if (TheGamepad->leftStickY <= -0.2)
-		{
-			if (player->getState() == PS_Climb) {
-				player->spd.y = -PLAYER_SPEED * dt;
-			}
-		}
+	//	if (TheGamepad->leftStickY >= 0.2)
+	//	{
+	//		if (player->getState() == PS_Climb) {
+	//			player->spd.y = PLAYER_SPEED * dt;
+	//		}
+	//	}
 
-		if (TheGamepad->leftStickY >= 0.2)
-		{
-			if (player->getState() == PS_Climb) {
-				player->spd.y = PLAYER_SPEED * dt;
-			}
-		}
+	//	/*if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
+	//	{
+	//		player->spd.x = PLAYER_SPEED * dt;
+	//	}
+	//	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT))
+	//	{
+	//		player->spd.x = -PLAYER_SPEED * dt;
+	//	}*/
+	//	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A ) && !Bpress1)
+	//	{	
+	//		Bpress1 = true;
+	//		player->Jump();
+	//	}
+	//	else if (!(TheGamepad->IsPressed(XINPUT_GAMEPAD_A)))
+	//	{
+	//		Bpress1 = false;
+	//	}
+	//	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_X))
+	//	{
+	//		player->Attack();
+	//	}
+	//	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_START))
+	//	{
+	//		Director::getInstance()->pushScene(InventoryScene::create());
+	//	}
+	//	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !Bpress2)
+	//	{
+	//		if (player->getState() == PS_Stand) {
+	//			player->Crouch();
+	//		}
+	//		else if (player->getState() == PS_Crouch) {
+	//			player->Stand();
+	//		}
+	//		Bpress2 = true;
+	//	}
+	//	else if (!(TheGamepad->IsPressed(XINPUT_GAMEPAD_B)))
+	//	{
+	//		Bpress2 = false;
+	//	}
+	//	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_Y))
+	//	{
+	//		//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
+	//		for each (Interactable* i in interactables) 
+	//		{
+	//			if (i->inRange(player)) 
+	//			{
+	//				InteractType curr_thing = i->getType();
+	//				switch (curr_thing) 
+	//				{
+	//				case DOOR:
+	//					((Door*)i)->Effect(player, currInv);
+	//					i->setCooldown();
+	//					break;
+	//				case SWITCH:
+	//					break;
+	//				case S_DOOR:
+	//					((SceneDoor*)i)->Effect(player, currInv);
+	//					i->setCooldown();
+	//					break;
+	//				}
 
-		/*if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
-		{
-			player->spd.x = PLAYER_SPEED * dt;
-		}
-		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT))
-		{
-			player->spd.x = -PLAYER_SPEED * dt;
-		}*/
-		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A ) && !Bpress1)
-		{	
-			Bpress1 = true;
-			player->Jump();
-		}
-		else if (!(TheGamepad->IsPressed(XINPUT_GAMEPAD_A)))
-		{
-			Bpress1 = false;
-		}
-		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_X))
-		{
-			player->Attack();
-		}
-		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_START))
-		{
-			Director::getInstance()->pushScene(InventoryScene::create());
-		}
-		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !Bpress2)
-		{
-			if (player->getState() == PS_Stand) {
-				player->Crouch();
-			}
-			else if (player->getState() == PS_Crouch) {
-				player->Stand();
-			}
-			Bpress2 = true;
-		}
-		else if (!(TheGamepad->IsPressed(XINPUT_GAMEPAD_B)))
-		{
-			Bpress2 = false;
-		}
-		if (TheGamepad->IsPressed(XINPUT_GAMEPAD_Y))
-		{
-			//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
-			for each (Interactable* i in interactables) 
-			{
-				if (i->inRange(player)) 
-				{
-					InteractType curr_thing = i->getType();
-					switch (curr_thing) 
-					{
-					case DOOR:
-						((Door*)i)->Effect(player, currInv);
-						i->setCooldown();
-						break;
-					case SWITCH:
-						break;
-					case S_DOOR:
-						((SceneDoor*)i)->Effect(player, currInv);
-						i->setCooldown();
-						break;
-					case PUZZLE:
-						((PuzzleInteract*)i)->Effect(player, currInv, this);
-						//if (((PuzzleInteract*)i)->checkPuzzle(Princess1) ) {
-						//	this->addChild(knight);
-						//}
-						i->setCooldown();
-						break;
-					}
-
-					i->setCooldown();
-					break;
-				}
-			}			
-		}
-	}
+	//				i->setCooldown();
+	//				break;
+	//			}
+	//		}			
+	//	}
+	//}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
 	{
@@ -476,7 +470,14 @@ void GameplayScene::update(float dt) {
 		ActivePrompt->Follow(player);
 	}
 
-	if (GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) {
+
+
+
+	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && !GAMEPLAY_INPUT.key_jump)
+	{
+		GAMEPLAY_INPUT.key_jump_p = false;
+	}
+	if ((GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) || (TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && !GAMEPLAY_INPUT.key_jump_p)) {
 		player->Jump();
 		GAMEPLAY_INPUT.key_jump_p = true;
 	}
@@ -513,7 +514,7 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p) {
+	if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p) {
 		player->Attack();
 		GAMEPLAY_INPUT.key_space_p = true;
 	}
@@ -571,8 +572,12 @@ void GameplayScene::update(float dt) {
 			}
 		}
 	}
-
 	if (GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p && player->isOnGround() && player->getSpeedY() == 0) {
+	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch)
+	{
+		GAMEPLAY_INPUT.key_crouch_p = false;
+	}
+	if ((GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p) || (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch_p)) {
 		if (player->getState() == PS_Stand) {
 			player->Crouch();
 		}
