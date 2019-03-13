@@ -56,7 +56,7 @@ bool GameplayScene::init() {
 	*
 	*/
 		KeyHandler->onKeyPressed = [this](EventKeyboard::KeyCode key, Event * event) {
-			if (!cutScene) {
+			if (!cutScene && player->getState() != PS_HURT) {
 				switch (key) {
 				case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
 					GAMEPLAY_INPUT.key_left = true;
@@ -127,6 +127,27 @@ bool GameplayScene::init() {
 			//	break;
 			}
 		};
+
+		if (player->getState() == PS_HURT) {
+			GAMEPLAY_INPUT.key_crouch = false;
+			GAMEPLAY_INPUT.key_crouch_p = false;
+
+			GAMEPLAY_INPUT.key_interact = false;
+
+			GAMEPLAY_INPUT.key_jump = false;
+			GAMEPLAY_INPUT.key_jump_p = false;
+
+			GAMEPLAY_INPUT.key_space = false;
+			GAMEPLAY_INPUT.key_space_p = false;
+
+			GAMEPLAY_INPUT.key_down = false;
+
+			GAMEPLAY_INPUT.key_right = false;
+
+			GAMEPLAY_INPUT.key_up = false;
+
+			GAMEPLAY_INPUT.key_left = false;
+		}
 
 	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(KeyHandler, player);
 
@@ -216,7 +237,7 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (!player->isKnocked()) {
+	if (!player->isKnocked() ) {
 		if (GAMEPLAY_INPUT.key_left) {
 			if (player->getState() != PS_Climb) {
 				player->spd.x = -PLAYER_SPEED * dt;
@@ -232,10 +253,12 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (GAMEPLAY_INPUT.key_left) {
-		if (player->getState() != PS_Climb) {
-			player->setFlipX(true);
-			player->spd.x = -PLAYER_SPEED * dt;
+	if (!player->isKnocked()) {
+		if (GAMEPLAY_INPUT.key_left) {
+			if (player->getState() != PS_Climb) {
+				player->setFlipX(true);
+				player->spd.x = -PLAYER_SPEED * dt;
+			}
 		}
 	}
 
@@ -262,7 +285,7 @@ void GameplayScene::update(float dt) {
 	}
 
 
-	if (TheGamepad->CheckConnection() == true && !cutScene)
+	if (TheGamepad->CheckConnection() == true && !cutScene && player->getState() != PS_HURT)
 	{
 		if (TheGamepad->leftStickX >= 0.2)
 		{

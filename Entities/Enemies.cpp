@@ -57,7 +57,7 @@ void Knight::AI(Player* player, float dt) {
 				}
 			}
 
-			else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 300)) {
+			else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 500)) {
 			
 				if (player->getPosition().y <= this->getPosition().y + 100 || player->getPosition().y <= this->getPosition().y - 100) {
 					this->spd.x -= charge * dt;
@@ -92,7 +92,7 @@ void Knight::AI(Player* player, float dt) {
 				}
 			}
 
-			else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 300)) {
+			else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 500)) {
 			
 				if (player->getPosition().y <= this->getPosition().y + 100 || player->getPosition().y <= this->getPosition().y - 100) {
 					this->spd.x += charge * dt;
