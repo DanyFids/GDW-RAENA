@@ -201,7 +201,7 @@ void GameplayScene::update(float dt) {
 		}
 
 
-		if (GAMEPLAY_INPUT.key_interact) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
+		if (GAMEPLAY_INPUT.key_interact || TheGamepad->IsPressed(XINPUT_GAMEPAD_Y)) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
 			for each (Interactable* i in interactables) {
 				if (i->inRange(player)) {
 					InteractType curr_thing = i->getType();
@@ -513,8 +513,15 @@ void GameplayScene::update(float dt) {
 
 		}
 	}
+<<<<<<< Updated upstream
+=======
 
-	if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p) {
+>>>>>>> Stashed changes
+	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space)
+	{
+		GAMEPLAY_INPUT.key_space_p = false;
+	}
+	if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p)) {
 		player->Attack();
 		GAMEPLAY_INPUT.key_space_p = true;
 	}
@@ -562,22 +569,22 @@ void GameplayScene::update(float dt) {
 	{
 		for each (Ladder* lad in ladders)
 		{
-			if (lad->HitDetect(player) && player->getState() != PS_Climb) {
-				if (GAMEPLAY_INPUT.key_up && !lad->PlayerOnTop()) {
+			if ((lad->HitDetect(player) && player->getState() != PS_Climb)) {
+				if ((GAMEPLAY_INPUT.key_up && !lad->PlayerOnTop()) || (TheGamepad->leftStickY >= 0.2 && player->getState() != PS_Climb)) {
 					player->Climb(lad);
 				}
-				else if (GAMEPLAY_INPUT.key_down && lad->PlayerOnTop()) {
+				else if (GAMEPLAY_INPUT.key_down && lad->PlayerOnTop() || (TheGamepad->leftStickY <= -0.2 && player->getState() != PS_Climb)) {
 					player->ClimbDown(lad);
 				}
 			}
 		}
 	}
-	if (GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p && player->isOnGround() && player->getSpeedY() == 0) {
+	
 	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch)
 	{
 		GAMEPLAY_INPUT.key_crouch_p = false;
 	}
-	if ((GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p) || (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch_p)) {
+	if ((GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p && player->isOnGround() && player->getSpeedY() == 0) || (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch_p) && player->isOnGround() && player->getSpeedY() == 0) {
 		if (player->getState() == PS_Stand) {
 			player->Crouch();
 		}
@@ -1243,7 +1250,7 @@ bool A1_R4::init()
 
 		//Entities
 		if (player != nullptr) {
-			player->setPosition(Vec2(70,575));
+			player->setPosition(Vec2(150,575));
 
 			//this->addChild(player, 10);
 		}
