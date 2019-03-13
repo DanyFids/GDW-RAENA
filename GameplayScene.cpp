@@ -210,7 +210,7 @@ void GameplayScene::update(float dt) {
 		}
 
 
-		if (GAMEPLAY_INPUT.key_interact) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
+		if (GAMEPLAY_INPUT.key_interact || TheGamepad->IsPressed(XINPUT_GAMEPAD_Y)) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
 			for each (Interactable* i in interactables) {
 				if (i->inRange(player)) {
 					InteractType curr_thing = i->getType();
@@ -511,7 +511,7 @@ void GameplayScene::update(float dt) {
 
 		}
 	}
-	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p)
+	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space)
 	{
 		GAMEPLAY_INPUT.key_space_p = false;
 	}
@@ -563,11 +563,11 @@ void GameplayScene::update(float dt) {
 	{
 		for each (Ladder* lad in ladders)
 		{
-			if (lad->HitDetect(player) && player->getState() != PS_Climb) {
-				if (GAMEPLAY_INPUT.key_up && !lad->PlayerOnTop()) {
+			if ((lad->HitDetect(player) && player->getState() != PS_Climb)) {
+				if ((GAMEPLAY_INPUT.key_up && !lad->PlayerOnTop()) || (TheGamepad->leftStickY >= 0.2 && player->getState() != PS_Climb)) {
 					player->Climb(lad);
 				}
-				else if (GAMEPLAY_INPUT.key_down && lad->PlayerOnTop()) {
+				else if (GAMEPLAY_INPUT.key_down && lad->PlayerOnTop() || (TheGamepad->leftStickY <= -0.2 && player->getState() != PS_Climb)) {
 					player->ClimbDown(lad);
 				}
 			}
