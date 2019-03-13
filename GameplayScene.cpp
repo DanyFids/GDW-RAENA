@@ -513,10 +513,7 @@ void GameplayScene::update(float dt) {
 
 		}
 	}
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space)
 	{
 		GAMEPLAY_INPUT.key_space_p = false;
