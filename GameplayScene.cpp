@@ -475,8 +475,11 @@ void GameplayScene::update(float dt) {
 
 
 
-
-	if (GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p || TheGamepad->IsPressed(XINPUT_GAMEPAD_A && !GAMEPLAY_INPUT.key_jump_p)) {
+	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && !GAMEPLAY_INPUT.key_jump)
+	{
+		GAMEPLAY_INPUT.key_jump_p = false;
+	}
+	if ((GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) || (TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && !GAMEPLAY_INPUT.key_jump_p)) {
 		player->Jump();
 		GAMEPLAY_INPUT.key_jump_p = true;
 	}
@@ -567,8 +570,11 @@ void GameplayScene::update(float dt) {
 			}
 		}
 	}
-
-	if (GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p || TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch_p) {
+	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch)
+	{
+		GAMEPLAY_INPUT.key_crouch_p = false;
+	}
+	if ((GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p) || (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch_p)) {
 		if (player->getState() == PS_Stand) {
 			player->Crouch();
 		}
