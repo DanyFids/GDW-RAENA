@@ -309,6 +309,7 @@ void Player::Glide()
 		state = PS_Glide;
 		spd.y = 0;
 		glide_timer = GLIDE_TIME;
+		glide_used = true;
 	}
 	else if (state == PS_Glide && can_vert) {
 		this->stopAllActions();

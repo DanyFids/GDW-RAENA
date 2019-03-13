@@ -654,7 +654,7 @@ bool TestRoom1::init()
 		_effect->setBrightness(0.7);
 		_effect->setAmbientLightColor(Color3B(0, 0, 0));
 
-		player->setEffect(_effect, "test_NM.png");
+		player->setEffect(_effect, "layerNorm.png");
 		_bgColor->setEffect(_effect, "layerNorm.png");
 		_bgColor2->setEffect(_effect, "layerNorm.png");
 
@@ -1381,7 +1381,7 @@ bool A1_R5::init()
 			}
 		}
 
-		Pushables.pushBack(Pushable::create(559, 140, 80, 80, Vec2(265, 140), Vec2(600, 140)));
+		Pushables.pushBack(Pushable::create(559, 141, 80, 80, Vec2(265, 141), Vec2(600, 141)));
 
 		for each (Pushable* push in Pushables) {
 			if (push != nullptr) {
