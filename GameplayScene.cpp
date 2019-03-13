@@ -511,8 +511,11 @@ void GameplayScene::update(float dt) {
 
 		}
 	}
-
-	if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p) {
+	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p)
+	{
+		GAMEPLAY_INPUT.key_space_p = false;
+	}
+	if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p)) {
 		player->Attack();
 		GAMEPLAY_INPUT.key_space_p = true;
 	}
