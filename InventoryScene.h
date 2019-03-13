@@ -33,6 +33,6 @@ public:
 	virtual void update(float dt);
 	int pointer = 0;
 	int timer = 10;
-	int exitTimer = 20;
+	int exitTimer = 35;
 	CREATE_FUNC(InventoryScene);
 };
