@@ -855,7 +855,7 @@ bool A1_R1::init()
 									  // x,y w,h
 		terrain.pushBack(Block::create(0, 0, 600, 200)); //Ground
 
-		terrain.pushBack(Block::create(460, 0, 600, 250)); //Ground
+		terrain.pushBack(Block::create(503, 0, 600, 250)); //Ground
 
 		terrain.pushBack(Block::create(0, 200, 100, 750)); //Tree
 
