@@ -201,7 +201,7 @@ void GameplayScene::update(float dt) {
 		}
 
 
-		if (GAMEPLAY_INPUT.key_interact || TheGamepad->IsPressed(XINPUT_GAMEPAD_Y)) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
+		if (GAMEPLAY_INPUT.key_interact || TheGamepad->IsPressed(XINPUT_GAMEPAD_Y) && TheGamepad->CheckConnection()) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
 			for each (Interactable* i in interactables) {
 				if (i->inRange(player)) {
 					InteractType curr_thing = i->getType();
@@ -254,7 +254,7 @@ void GameplayScene::update(float dt) {
 	}
 
 	if (!player->isKnocked()) {
-	if (GAMEPLAY_INPUT.key_left || TheGamepad->leftStickX <= -0.2) {
+	if (GAMEPLAY_INPUT.key_left || TheGamepad->leftStickX <= -0.2 && TheGamepad->CheckConnection()) {
 			if (player->getState() != PS_Climb) {
 				player->setFlipX(true);
 				player->spd.x = -PLAYER_SPEED * dt;
@@ -262,7 +262,7 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (GAMEPLAY_INPUT.key_right || TheGamepad->leftStickX >= 0.2) {
+	if (GAMEPLAY_INPUT.key_right || TheGamepad->leftStickX >= 0.2 && TheGamepad->CheckConnection()) {
 		if (player->getState() != PS_Climb) {
 			if (player->getState() == PS_Crouch) {
 				player->spd.x = CROUCH_SPEED * dt;
@@ -272,13 +272,13 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (GAMEPLAY_INPUT.key_down || TheGamepad->leftStickY <= -0.2) {
+	if (GAMEPLAY_INPUT.key_down || TheGamepad->leftStickY <= -0.2 && TheGamepad->CheckConnection()) {
 		if (player->getState() == PS_Climb) {
 			player->spd.y = -PLAYER_SPEED * dt;
 		}
 	}
 
-	if (GAMEPLAY_INPUT.key_up || TheGamepad->leftStickY >= 0.2) {
+	if (GAMEPLAY_INPUT.key_up || TheGamepad->leftStickY >= 0.2 && TheGamepad->CheckConnection()) {
 		if (player->getState() == PS_Climb) {
 			player->spd.y = PLAYER_SPEED * dt;
 		}
@@ -473,7 +473,7 @@ void GameplayScene::update(float dt) {
 
 
 
-	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && !GAMEPLAY_INPUT.key_jump)
+	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && !GAMEPLAY_INPUT.key_jump && TheGamepad->CheckConnection())
 	{
 		GAMEPLAY_INPUT.key_jump_p = false;
 	}
@@ -514,11 +514,11 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space)
+	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space && TheGamepad->CheckConnection())
 	{
 		GAMEPLAY_INPUT.key_space_p = false;
 	}
-	if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p)) {
+	if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p) && TheGamepad->CheckConnection()) {
 		player->Attack();
 		GAMEPLAY_INPUT.key_space_p = true;
 	}
@@ -577,11 +577,12 @@ void GameplayScene::update(float dt) {
 		}
 	}
 	
-	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch)
+	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch && TheGamepad->CheckConnection())
 	{
 		GAMEPLAY_INPUT.key_crouch_p = false;
 	}
-	if ((GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p && player->isOnGround() && player->getSpeedY() == 0) || (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch_p) && player->isOnGround() && player->getSpeedY() == 0) {
+	if ((GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p && player->isOnGround() && player->getSpeedY() == 0) 
+		|| (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch_p) && player->isOnGround() && player->getSpeedY() == 0 && TheGamepad->CheckConnection()) {
 		if (player->getState() == PS_Stand) {
 			player->Crouch();
 		}
@@ -757,7 +758,7 @@ bool TestRoom1::init()
 
 				/*p->setScale(SCALE);
 				p->getTexture()->setTexParameters(tp);*/
-
+				p->setEffect(_effect,"layerNorm.png");
 				this->addChild(p);
 			}
 		}
@@ -821,6 +822,10 @@ bool A1_R1::init()
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
+		EffectSprite * tileSet = EffectSprite::create("A1_R1.png");
+		tileSet->setAnchorPoint(Vec2(0, 0));
+
+		this->addChild(tileSet, 4);
 
 		this->addChild(paraNode);
 
@@ -850,7 +855,7 @@ bool A1_R1::init()
 									  // x,y w,h
 		terrain.pushBack(Block::create(0, 0, 600, 200)); //Ground
 
-		terrain.pushBack(Block::create(600, 0, 400, 270)); //Ground
+		terrain.pushBack(Block::create(460, 0, 600, 250)); //Ground
 
 		terrain.pushBack(Block::create(0, 200, 100, 750)); //Tree
 
@@ -875,7 +880,7 @@ bool A1_R1::init()
 		//}
 
 		//interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(700,270),A1_R2)); // Scene Door
-		interactables.pushBack(LoadZone::create(905,270,30,400, A1_R2,Vec2(50,205))); // LoadZone
+		interactables.pushBack(LoadZone::create(905,270,30,400, A1_R2,Vec2(50,190))); // LoadZone
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
