@@ -953,6 +953,12 @@ bool A1_R2::init()
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
+		EffectSprite * tileSet = EffectSprite::create("A1_R2.png");
+		tileSet->setAnchorPoint(Vec2(0, 0));
+		
+		this->addChild(tileSet, 4);
+
+
 		this->addChild(paraNode);
 
 		// Lighting Tests
@@ -981,9 +987,9 @@ bool A1_R2::init()
 
 
 		// x,y w,h
-		terrain.pushBack(Block::create(0, 0, 600, 200)); //Ground
-		terrain.pushBack(Block::create(600, 0, 400,670)); //Ground
-		terrain.pushBack(Block::create(260, 200, 70, 70)); //Rock
+		terrain.pushBack(Block::create(0, 0, 600, 199)); //Ground
+		terrain.pushBack(Block::create(603, 0, 400,695)); //Ground
+		terrain.pushBack(Block::create(260, 199, 70, 70)); //Rock
 		
 		for each (Entity* plat in terrain)
 		{
@@ -1089,6 +1095,11 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
+		EffectSprite * tileSet = EffectSprite::create("A1_R3.png");
+		tileSet->setAnchorPoint(Vec2(0, 0));
+
+		this->addChild(tileSet, 4);
+
 		this->addChild(paraNode);
 
 		// Lighting Tests
@@ -1118,14 +1129,17 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 
 		// x,y w,h
 		terrain.pushBack(Block::create(0, 0, 300, 200)); //Ground
+
 		terrain.pushBack(Block::create(300, 0, 400, 100)); //Ground
-		terrain.pushBack(Block::create(700, 0, 400, 275)); //Ground
-		terrain.pushBack(Block::create(1100, 0, 120, 500)); //Ground
 
-		terrain.pushBack(Block::create(300, 0, 60, 120)); //Ground	*stopper block
+		terrain.pushBack(Block::create(703, 0, 400, 250)); //Ground
 
-		terrain.pushBack(Block::create(800, 308, 60, 400)); //Floating
-		terrain.pushBack(Block::create(800, 500, 420, 400)); //Roof
+		terrain.pushBack(Block::create(1103, 0, 120, 500)); //Crouch block
+
+		terrain.pushBack(Block::create(300, 0, 50, 150)); //Ground	*stopper block
+
+		terrain.pushBack(Block::create(803, 290, 44, 400)); //Floating
+		terrain.pushBack(Block::create(803, 503, 420, 400)); //Roof
 
 		
 
@@ -1161,7 +1175,7 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 		}
 
 		interactables.pushBack(LoadZone::create(-10, 205, 10, 400, A1_R1, Vec2(50, 205))); // LoadZone
-		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1050, 275), Vec2(50,200), A1_R4));	//SceneDoor
+		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1050, 250), Vec2(50,200), A1_R4));	//SceneDoor
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -1234,6 +1248,11 @@ bool A1_R4::init()
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
+		EffectSprite * tileSet = EffectSprite::create("A1_R4.png");
+		tileSet->setAnchorPoint(Vec2(0, 0));
+
+		this->addChild(tileSet, 4);
+
 		this->addChild(paraNode);
 
 		// Lighting Tests
@@ -1266,8 +1285,9 @@ bool A1_R4::init()
 		terrain.pushBack(Block::create(0, 0, 1000, 150)); //Ground
 		terrain.pushBack(Block::create(275, 900, 450, 10)); //Cieling
 
-		terrain.pushBack(Block::create(0, 150, 275, 400)); //Ground 1
-		terrain.pushBack(Block::create(750, 150, 500, 300)); //Ground 2
+		terrain.pushBack(Block::create(0, 150, 296, 400)); //Ground 1
+
+		terrain.pushBack(Block::create(753, 150, 500, 300)); //Ground 2
 
 		for each (Entity* plat in terrain)
 		{
@@ -1279,7 +1299,7 @@ bool A1_R4::init()
 			}
 		}
 						 //x y w h
-		ladders.pushBack(Ladder::create(300, 200, 32, 900));
+		ladders.pushBack(Ladder::create(365, 200, 32, 900));
 
 		ladders.pushBack(Ladder::create(600, 400, 32, 500));
 
@@ -1368,6 +1388,11 @@ bool A1_R5::init()
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
+		EffectSprite * tileSet = EffectSprite::create("A1_R5.png");
+		tileSet->setAnchorPoint(Vec2(0, 0));
+
+		this->addChild(tileSet, 4);
+
 		this->addChild(paraNode);
 
 		// Lighting Tests
@@ -1386,7 +1411,7 @@ bool A1_R5::init()
 
 		//Entities
 		if (player != nullptr) {
-			player->setPosition(Vec2(50,200));
+			player->setPosition(Vec2(50,250));
 
 			//this->addChild(player, 10);
 		}
@@ -1396,14 +1421,15 @@ bool A1_R5::init()
 
 
 		// x,y w,h
-		terrain.pushBack(Block::create(0, 0, 1600, 100)); //Base Ground
+		terrain.pushBack(Block::create(0, 0, 1600, 93)); //Base Ground
 
-		terrain.pushBack(Block::create(-100, 100, 250, 75)); //Ground 1
-		terrain.pushBack(Block::create(150, 100, 75, 40)); //Ground 2
-		terrain.pushBack(Block::create(640, 100, 60, 40)); //Ground 2
+		terrain.pushBack(Block::create(-100, 93, 247, 100)); //Ground 1
+		terrain.pushBack(Block::create(150, 93, 97, 50)); //Ground 2
 
-		terrain.pushBack(Block::create(700, 210, 225, 200)); //floating 3
-		terrain.pushBack(Block::create(700, 100, 300, 75)); //Ground 3
+		terrain.pushBack(Block::create(653, 90, 60, 53)); //Ground 2
+
+		terrain.pushBack(Block::create(703, 225, 244, 198)); //floating 3
+		terrain.pushBack(Block::create(703, 100, 293, 93)); //Ground 3
 		
 
 		terrain.pushBack(Block::create(1400, 100, 300, 450)); //Ground 4
@@ -1418,7 +1444,7 @@ bool A1_R5::init()
 			}
 		}
 
-		Pushables.pushBack(Pushable::create(559, 141, 80, 80, Vec2(265, 141), Vec2(600, 141)));
+		Pushables.pushBack(Pushable::create(558, 133, 80, 80, Vec2(289, 133), Vec2(600, 133)));
 
 		for each (Pushable* push in Pushables) {
 			if (push != nullptr) {
@@ -1528,6 +1554,11 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 		_bgColor->setScale(1);
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+
+		EffectSprite * tileSet = EffectSprite::create("A1_R6.png");
+		tileSet->setAnchorPoint(Vec2(0, 0));
+
+		this->addChild(tileSet, 4);
 
 		this->addChild(paraNode);
 
