@@ -269,11 +269,13 @@ void SceneDoor::Effect(Entity * player, player_inventory * p_inv)
 			switch (this->goTo) {
 			case A1_R1:
 				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R1));
-				player->setPosition(this->movePlayer);
+				//GameplayScene::movePlayer();
+				player = nullptr;
 				break;
 			case A1_R2:
 				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R2));
 				player->setPosition(this->movePlayer);
+				player = nullptr;
 				break;
 			case A1_R3:
 				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R3));

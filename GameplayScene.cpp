@@ -22,6 +22,11 @@ Scene* GameplayScene::createScene() {
 	return GameplayScene::create();
 }
 
+//void GameplayScene::setUp(cocos2d::Vec2 movePlayer)
+//{
+//	player->setPosition(movePlayer);
+//}
+
 void GameplayScene::movePlayer(Entity * player,cocos2d::Vec2 move)
 {
 	player->setPosition(move);
@@ -845,7 +850,7 @@ bool A1_R1::init()
 
 		//Entities
 		if (player != nullptr) {
-			player->setPosition(Vec2(300,245));
+			player->setPosition(Vec2(200,245));
 
 			//this->addChild(player, 10);
 		}
@@ -1011,7 +1016,7 @@ bool A1_R2::init()
 		//	}
 		//}
 
-		interactables.pushBack(LoadZone::create(-10, 205, 10, 400, A1_R1, Vec2(50, 205))); // LoadZone
+		interactables.pushBack(LoadZone::create(-10, 205, 10, 400, A1_R1, Vec2(150, 230))); // LoadZone
 		interactables.pushBack(LoadZone::create(1000, 670, 10, 400, A1_R3, Vec2(50, 205))); // LoadZone
 
 		for each (Interactable* inter in interactables) {
@@ -1175,7 +1180,7 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 		}
 
 		interactables.pushBack(LoadZone::create(-10, 205, 10, 400, A1_R1, Vec2(50, 205))); // LoadZone
-		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1050, 250), Vec2(50,200), A1_R4));	//SceneDoor
+		interactables.pushBack(SceneDoor::create("CaveOpening.png", Vec2(1050, 250), Vec2(50,200), A1_R4));	//SceneDoor
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -1314,7 +1319,7 @@ bool A1_R4::init()
 
 		
 		interactables.pushBack(LoadZone::create(1000, 300, 10, 400, A1_R5, Vec2(50, 205))); // LoadZone
-		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(50, 550), Vec2(50, 200), A1_R3));	//SceneDoor
+		interactables.pushBack(SceneDoor::create("CaveOpeningDark.png", Vec2(50, 550), Vec2(50, 200), A1_R3));	//SceneDoor
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -1432,7 +1437,7 @@ bool A1_R5::init()
 		terrain.pushBack(Block::create(703, 100, 293, 93)); //Ground 3
 		
 
-		terrain.pushBack(Block::create(1400, 100, 300, 450)); //Ground 4
+		terrain.pushBack(Block::create(1403, 100, 290, 442)); //Ground 4
 
 		for each (Entity* plat in terrain)
 		{

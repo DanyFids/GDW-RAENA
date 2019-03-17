@@ -77,6 +77,7 @@ public:
 	} GAMEPLAY_INPUT;
 
 	static cocos2d::Scene * createScene();
+	
 	 virtual void movePlayer(Entity * player, cocos2d::Vec2 move);
 	//player_inventory * currInv;
 	virtual bool init();
