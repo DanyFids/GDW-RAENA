@@ -188,6 +188,8 @@ bool GameplayScene::init() {
 			GAMEPLAY_INPUT.key_crouch = true;
 			break;
 		case EventKeyboard::KeyCode::KEY_ENTER:
+			GAMEPLAY_INPUT.key_left = false;
+			GAMEPLAY_INPUT.key_right = false;
 			Director::getInstance()->pushScene(InventoryScene::create());
 			break;
 		case EventKeyboard::KeyCode::KEY_ESCAPE:

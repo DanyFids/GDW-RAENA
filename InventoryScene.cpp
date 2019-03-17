@@ -28,6 +28,14 @@ bool InventoryScene::init()
 	}
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	cocos2d::Texture2D::TexParams tp = { GL_NEAREST, GL_NEAREST, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE };
+
+	auto BG = Sprite::create();
+	BG->initWithFile("TutorialBackground.png");
+	BG->getTexture()->setTexParameters(tp);
+	BG->setPosition({ origin.x + (visibleSize.width / 2), origin.y + (visibleSize.height / 2) });
+	addChild(BG);
 	
 	pickUpItem(0, "Key", "Key.png");
 	pickUpItem(1, "Bandages", "Bandages.png");

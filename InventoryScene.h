@@ -30,8 +30,8 @@ public:
 	virtual bool init();
 	virtual void update(float dt);
 	int pointer = 0;
-	int timer = 10;
-	int exitTimer = 20;
+	int timer = 15;
+	int exitTimer = 35;
 	bool canCombine = false;
 	void combine(std::string cOne, std::string cTwo);
 	void invReturnCallback(cocos2d::Ref* pSender);
