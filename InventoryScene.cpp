@@ -42,7 +42,6 @@ bool InventoryScene::init()
 	pickUpItem(2, "Rose", "Rose.png");
 	pickUpItem(0, "Key", "Key.png");
 	pickUpItem(1, "Bandages", "Bandages.png");
-	pickUpItem(0, "Key", "Key.png");
 
 	title = Label::createWithTTF("INVENTORY", "fonts/horrendo.ttf", 36);
 	invLabel = Label::createWithTTF("There is nothing in your inventory.", "fonts/horrendo.ttf", 24);
