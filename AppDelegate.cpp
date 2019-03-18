@@ -31,7 +31,6 @@
 #include "InventoryScene.h"
 
 MenuScene * menuscene;
-//TutorialScene * tutorialscene;
 GameplayScene * level1scene;
 
 #define USE_AUDIO_ENGINE 1

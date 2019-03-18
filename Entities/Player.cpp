@@ -366,3 +366,5 @@ void Player::DetectObstruction(Entity * other)
 		}
 	}
 }
+
+

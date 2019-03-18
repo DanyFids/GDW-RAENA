@@ -12,6 +12,7 @@
 #include "Entities/PuzzleInteractable.h"
 #include "GamePad.h"
 #include "InventoryScene.h"
+#include "PauseMenu.h"
 #include "LevelManager/LevelManager.h"
 USING_NS_CC;
 			  
@@ -93,6 +94,8 @@ bool GameplayScene::init() {
 			//	case EventKeyboard::KeyCode::KEY_1:
 			//		GAMEPLAY_INPUT.key_one = true;
 			//		break;
+		case EventKeyboard::KeyCode::KEY_ESCAPE:
+			Director::getInstance()->pushScene(PauseMenu::create());
 				}
 			}
 		};
