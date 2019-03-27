@@ -1,14 +1,18 @@
 #include "InventoryScene.h"
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
-USING_NS_CC;
+#include <iostream>
 
-void InventoryScene::pickUpItem(int id, std::string name, std::string pic){
-	inventory.push_back({int(id), name, pic});
+
+USING_NS_CC;
+using namespace std;
+
+void InventoryScene::pickUpItem(int id, std::string name, std::string pic, std::string des, Combining V){
+	inventory.push_back({int(id), name, pic, des, V});
 	currInvNum += 1;
 }
 
-void InventoryScene::dropItem(int id, std::string name, std::string pic){
+void InventoryScene::dropItem(int id, std::string name, std::string pic, std::string des,Combining V){
 	inventory.erase(inventory.begin()+id);
 	currInvNum -= 1;
 	pointer--;
@@ -20,6 +24,8 @@ void InventoryScene::dropItem(int id, std::string name, std::string pic){
 Scene * InventoryScene::createScene(){
 	return InventoryScene::create();
 }
+
+
 
 bool InventoryScene::init()
 {
@@ -37,11 +43,11 @@ bool InventoryScene::init()
 	BG->setPosition({ origin.x + (visibleSize.width / 2), origin.y + (visibleSize.height / 2) });
 	addChild(BG);
 	
-	pickUpItem(0, "Key", "Key.png");
-	pickUpItem(1, "Bandages", "Bandages.png");
-	pickUpItem(2, "Rose", "Rose.png");
-	pickUpItem(0, "Key", "Key.png");
-	pickUpItem(1, "Bandages", "Bandages.png");
+	pickUpItem(0, "Key", "Key.png","This can be used to open doors", e1);
+	pickUpItem(1, "Bandages", "Bandages.png", "This can be used to heal one heart", e2);
+	pickUpItem(2, "Rose", "Rose.png","Beautiful flower",e3);
+	pickUpItem(3, "Key", "Key.png", "This can be used to open doors", e1);
+	pickUpItem(4, "Bandages", "Bandages.png", "This can be used to heal one heart", e2);
 
 	title = Label::createWithTTF("INVENTORY", "fonts/horrendo.ttf", 36);
 	invLabel = Label::createWithTTF("There is nothing in your inventory.", "fonts/horrendo.ttf", 24);
@@ -96,7 +102,7 @@ bool InventoryScene::init()
 
 
 
-	auto use = cocos2d::ui::Button::create("CloseNormal.png", "CloseSelected.png");
+	auto use = cocos2d::ui::Button::create("Use.png", "CloseSelected.png");
 
 	use->setTitleText("");
 
@@ -106,7 +112,18 @@ bool InventoryScene::init()
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			//Player::use = pointer;
+			if (inventory[pointer].itemName == "Bandages") {
+				dropItem(pointer, inventory[pointer].itemName, inventory[pointer].itemPic, inventory[pointer].itemDescription, inventory[pointer].Val);
+				if ((player->getHP) <= 4) {
+					player->setHP(player->getHP + 2);
+				}
+				else {
+					player->setHP(6);
+				}
+			}
+			else {
+				player->equip = inventory[pointer].itemName;
+			}
 			break;
 		default:
 			break;
@@ -134,21 +151,24 @@ bool InventoryScene::init()
 	//});
 
 
-
-
-	auto examine = cocos2d::ui::Button::create("CloseNormal.png", "CloseSelected.png");
+	auto examine = cocos2d::ui::Button::create("Examine.png", "CloseSelected.png");
 
 	examine->setTitleText("");
+	examine->addTouchEventListener([this](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
+		if (lastLabel != nullptr)
+		{
+			removeChild(lastLabel);
+		}
+		description = Label::createWithTTF(inventory[pointer].itemDescription, "fonts/horrendo.ttf", 16);
+		lastLabel = description;
 
-	examine->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
-		auto description = Textbox::create(1, { 1 }, { "This is used to unlock a door." }, InventoryScene::create());
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			description->setPosition(400.0f, 300.0f);
-			description->Load();
+
+			description->setPosition(400, 200);
 			addChild(description, 2);
 			break;
 		default:
@@ -156,12 +176,9 @@ bool InventoryScene::init()
 		}
 	});
 
-	//this->addChild(examine);
+	
 
-	std::string combine1;
-	std::string combine2;
-
-	auto combine = cocos2d::ui::Button::create("CloseNormal.png", "CloseSelected.png");
+	auto combine = cocos2d::ui::Button::create("Combine.png", "CloseSelected.png");
 
 	combine->setTitleText("");
 
@@ -171,14 +188,34 @@ bool InventoryScene::init()
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			if (combine1 == "") {
-				combine1 = inventory[pointer].itemName;
+			if (combine1 == 0) {
+				combine1 = pointer;
+				combinewith = Label::createWithTTF("What would you like to combine the "+ inventory[combine1].itemName+" with?", "fonts/horrendo.ttf", 16);
+				combinewith->setPosition(400, 200);
+				addChild(combinewith, 2);
 			}
 			else {
-				combine2 = inventory[pointer].itemName;
-				if (canCombine)
-				{
-					InventoryScene::combine(combine1, combine2);
+				if(!(pointer == combine1)){
+					combine2 = pointer;
+					removeChild(combinewith);
+
+					int yolo = inventory[combine1].Val + inventory[combine2].Val;
+
+					if (combine1 < combine2) {
+						int temp = combine1;
+						combine1 = combine2;
+						combine2 = temp;
+
+					}
+					if (yolo == e3)
+					{
+						dropItem(combine1, "Key", "Key.png", "This can be used to open doors", e1);
+						dropItem(combine2, "Bandages", "Bandages.png", "This can be used to heal one heart", e2);
+						pickUpItem(inventory.size() - 1, "newItem", "CloseSelected.png", "This is the new item", e3);
+						combine1 = 0;
+						combine2 = 0;
+						pointer = inventory.size() - 1;
+					}
 				}
 			}
 			break;
@@ -191,7 +228,7 @@ bool InventoryScene::init()
 
 
 
-	auto left = cocos2d::ui::Button::create("CloseNormal.png", "CloseSelected.png");
+	auto left = cocos2d::ui::Button::create("Left.png", "CloseSelected.png");
 
 	left->setTitleText("");
 
@@ -202,6 +239,7 @@ bool InventoryScene::init()
 			break;
 		case ui::Widget::TouchEventType::ENDED:
 			pointer += 1;
+			removeChild(description);
 			if (pointer == currInvNum)
 			{
 				pointer = 0;
@@ -215,7 +253,7 @@ bool InventoryScene::init()
 
 
 
-	auto right = cocos2d::ui::Button::create("CloseNormal.png", "CloseSelected.png");
+	auto right = cocos2d::ui::Button::create("Right.png", "CloseSelected.png");
 
 	right->setTitleText("");
 
@@ -226,6 +264,7 @@ bool InventoryScene::init()
 			break;
 		case ui::Widget::TouchEventType::ENDED:
 			pointer -= 1;
+			removeChild(description);
 			if (pointer == -1)
 			{
 				pointer = currInvNum - 1;
@@ -368,51 +407,13 @@ bool InventoryScene::init()
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 	//currinv.at(i);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	//auto inv7 = Menu::create(returnToTheGame, NULL);
-	//auto inv8 = Menu::create(quitTheGame, NULL);
-	//inv7->setPosition(Vec2::ZERO);
-	//inv8->setPosition(Vec2::ZERO);
+	auto inv7 = Menu::create(returnToTheGame, NULL);
+	auto inv8 = Menu::create(quitTheGame, NULL);
+	inv7->setPosition(Vec2::ZERO);
+	inv8->setPosition(Vec2::ZERO);
 	use->setPosition(Vec2(400.0f, 100.0f));
 	examine->setPosition(Vec2(600.0f, 100.0f));
 	combine->setPosition(Vec2(200.0f, 100.0f));
@@ -422,8 +423,8 @@ bool InventoryScene::init()
 	this->addChild(combine, 1);
 	this->addChild(left, 1);
 	this->addChild(right, 1);
-	//this->addChild(inv7, 1);
-	//this->addChild(inv8, 1);
+	this->addChild(inv7, 1);
+	this->addChild(inv8, 1);
 
 
 
@@ -523,9 +524,9 @@ void InventoryScene::update(float dt)
 
 
 
-void InventoryScene::combine(std::string cOne, std::string cTwo)
-{
-}
+//void InventoryScene::combine(std::string cOne, std::string cTwo)
+//{
+//}
 
 void InventoryScene::invReturnCallback(Ref* pSender) {
 	Director::getInstance()->popScene();

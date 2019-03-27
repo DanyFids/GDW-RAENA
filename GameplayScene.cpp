@@ -830,7 +830,7 @@ bool A1_R1::init()
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
-		EffectSprite * tileSet = EffectSprite::create("A1_R1.png");
+		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R1.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
 
 		this->addChild(tileSet, 4);
@@ -961,7 +961,7 @@ bool A1_R2::init()
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
-		EffectSprite * tileSet = EffectSprite::create("A1_R2.png");
+		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R2.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
 		
 		this->addChild(tileSet, 4);
@@ -1103,7 +1103,7 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
-		EffectSprite * tileSet = EffectSprite::create("A1_R3.png");
+		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R3.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
 
 		this->addChild(tileSet, 4);
@@ -1256,7 +1256,7 @@ bool A1_R4::init()
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
-		EffectSprite * tileSet = EffectSprite::create("A1_R4.png");
+		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R4.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
 
 		this->addChild(tileSet, 4);
@@ -1396,7 +1396,7 @@ bool A1_R5::init()
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
-		EffectSprite * tileSet = EffectSprite::create("A1_R5.png");
+		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R5.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
 
 		this->addChild(tileSet, 4);
@@ -1563,7 +1563,7 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
-		EffectSprite * tileSet = EffectSprite::create("A1_R6.png");
+		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R6.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
 
 		this->addChild(tileSet, 4);

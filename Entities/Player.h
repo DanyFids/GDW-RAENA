@@ -84,6 +84,7 @@ public:
 
 	void ClimbDown(Ladder * lad);
 
+	std::string equip;
 	int getHP();
 	void setHP(int i);
 
