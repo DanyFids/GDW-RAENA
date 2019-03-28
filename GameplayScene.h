@@ -24,8 +24,9 @@
 class GameplayScene : public cocos2d::Scene {
 protected:
 	Player * player;
-	Knight * knight = nullptr;
-	Moth * moth = nullptr;
+	Knight * knight;
+	Moth * moth;
+	cocos2d::Vector<Rat *> rat;
 
 	player_inventory * currInv;
 

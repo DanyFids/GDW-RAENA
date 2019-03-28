@@ -46,7 +46,7 @@ bool GameplayScene::init() {
 	TheGamepad = Updatepad;
 	
 	// Player ////////////////////////////
-	player = Player ::create("test_dummy.png", this);
+	player = Player ::create ("test_dummy.png", this);
 	player->setScale(SCALE);
 	player->getTexture()->setTexParameters(tp);
 
@@ -175,6 +175,16 @@ void GameplayScene::update(float dt) {
 		knight->Update(dt);
 		knight->AI(player, dt);
 	}
+	if (moth != nullptr) {
+		moth->Update(dt);
+		moth->AI(player, dt);
+	}
+	if (rat.size() > 0) {
+		for each (Rat* r in rat) {
+			r->Update(dt);
+			r->AI(player, dt);
+		}
+	}
 
 	PNode->setPosition(view->getPosition());
 
@@ -272,23 +282,18 @@ void GameplayScene::update(float dt) {
 				player->spd.x = -PLAYER_SPEED * dt;
 			}
 		}
-	}
 
 	if (GAMEPLAY_INPUT.key_right || TheGamepad->leftStickX >= 0.2 && TheGamepad->CheckConnection()) {
 		if (player->getState() != PS_Climb) {
 			if (player->getState() == PS_Crouch) {
 				player->spd.x = CROUCH_SPEED * dt;
 			}
-			player->setFlipX(false);
-			player->spd.x = PLAYER_SPEED * dt;
 		}
-	}
 
 	if (GAMEPLAY_INPUT.key_down || TheGamepad->leftStickY <= -0.2 && TheGamepad->CheckConnection()) {
 		if (player->getState() == PS_Climb) {
 			player->spd.y = -PLAYER_SPEED * dt;
 		}
-	}
 
 	if (GAMEPLAY_INPUT.key_up || TheGamepad->leftStickY >= 0.2 && TheGamepad->CheckConnection()) {
 		if (player->getState() == PS_Climb) {
@@ -464,23 +469,15 @@ void GameplayScene::update(float dt) {
 	if (GAMEPLAY_INPUT.key_F && !GAMEPLAY_INPUT.key_FP)
 	{
 
-		//ActiveTextbox->Load();
-		ActiveTextbox->Close();
-		int ActiveCurrPage = ActiveTextbox->getCurrPage();
-		int ActivePages = ActiveTextbox->getPages();
-		if (!(ActiveCurrPage == ActivePages - 1))
-		{
-			ActiveTextbox->Flippage();
-			ActiveTextbox->Load();
+			GAMEPLAY_INPUT.key_FP = true;
 		}
 
-		GAMEPLAY_INPUT.key_FP = true;
-	}
+		if (ActivePrompt)
+		{
+			ActivePrompt->Follow(player);
+		}
 
-	if (ActivePrompt)
-	{
-		ActivePrompt->Follow(player);
-	}
+
 
 
 
@@ -516,6 +513,17 @@ void GameplayScene::update(float dt) {
 				{
 					i->HitDetect(knight);
 				}
+
+				if (moth != nullptr)
+				{
+					i->HitDetect(moth);
+				}
+
+				if (rat.size() > 0) {
+					for each (Rat* r in rat) {
+						i->HitDetect(r);
+					}
+				}
 			}
 
 			if (i->getType() == LOAD_ZONE)
@@ -541,6 +549,16 @@ void GameplayScene::update(float dt) {
 		if (knight != nullptr) {
 			platform->HitDetect(knight);
 		}
+
+		if (moth != nullptr) {
+			platform->HitDetect(moth);
+		}
+
+		if (rat.size() > 0) {
+			for each (Rat* r in rat) {
+				platform->HitDetect(r);
+			}
+		}
 		player->DetectObstruction(platform);
 	}
 
@@ -563,6 +581,17 @@ void GameplayScene::update(float dt) {
 			if (knight != nullptr)
 			{
 				p->HitDetect(knight);
+			}
+
+			if (moth != nullptr)
+			{
+				p->HitDetect(moth);
+			}
+
+			if (rat.size() > 0) {
+				for each (Rat* r in rat) {
+					p->HitDetect(r);
+				}
 			}
 		}
 	}
@@ -598,10 +627,6 @@ void GameplayScene::update(float dt) {
 		if (player->getState() == PS_Stand) {
 			player->Crouch();
 		}
-		else if (player->getState() == PS_Crouch) {
-			player->Stand();
-		}
-		GAMEPLAY_INPUT.key_crouch_p = true;
 	}
 
 	player->Move();
@@ -619,10 +644,33 @@ void GameplayScene::update(float dt) {
 	if (knight != nullptr) {
 		knight->Move();
 	}
+	if (moth != nullptr) {
+		moth->Move();
+	}
 
-	if (knight != nullptr) {
+	if (rat.size() > 0) {
+		for each (Rat* r in rat) {
+			r->Move();
+		}
+	}
+
+	if (knight != nullptr && player->getState() != PS_HURT) {
 		if (knight->HitDetect(player)) {
 			player->hurt(2);
+		}
+	}
+
+	if (moth != nullptr) {
+		if (moth->HitDetect(player)) {
+			moth->Hit(player);
+		}
+	}
+
+	if (rat.size() > 0) {
+		for each (Rat* r in rat) {
+			if (r->HitDetect(player)) {
+				r->Hit(player);
+			}
 		}
 	}
 
@@ -1393,12 +1441,12 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 		//Parallax Stuff
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
-		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
+		EffectSprite *_bgColor = EffectSprite::create("TutorialBackground.png");
 
 		_bgColor->setAnchorPoint(cocos2d::Vec2(0, 0));
 		_bgColor->setScale(1);
 
-		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+		paraNode->addChild(_bgColor, 1, Vec2(0,0.5), Vec2::ZERO);
 
 		EffectSprite * tileSet = EffectSprite::create("A1_R6.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
@@ -1431,6 +1479,30 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 			return false;
 		}
 
+		//moth = Moth::create("Mothboi.png");
+		//
+		//if (moth != nullptr) {
+		//	moth->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+		//	moth->setPosition(600, 250);
+		//
+		//	this->addChild(moth, 10);
+		//}
+		//else {
+		//	return false;
+		//}
+
+		//rat.pushBack(Rat::create("test_dummy_2.png")); //Rat Test
+		////Push_back
+		//for each (Rat* r in rat) {
+		//	if (r != nullptr) {
+		//		r->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+		//		r->setPosition(600, 250);
+		//		this->addChild(r);
+		//	}
+		//	else {
+		//		return false;
+		//	}
+		//}
 
 		// x,y w,h
 		terrain.pushBack(Block::create(0, 0, 1400, 200)); //Ground
@@ -1509,6 +1581,7 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 void A1_R6::update(float dt)
 {
 	GameplayScene::update(dt);
+
 
 	if (player->getPosition().x >= 800 && !cutSceneC) {
 		cutScene = true;
