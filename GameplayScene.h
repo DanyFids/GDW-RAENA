@@ -12,8 +12,6 @@
 #include "Entities/Platforms.h"
 #include "Entities/Ladder.h"
 
-
-
 #include "GameOver.h"
 
 

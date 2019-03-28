@@ -175,10 +175,12 @@ void GameplayScene::update(float dt) {
 		knight->Update(dt);
 		knight->AI(player, dt);
 	}
+
 	if (moth != nullptr) {
 		moth->Update(dt);
 		moth->AI(player, dt);
 	}
+
 	if (rat.size() > 0) {
 		for each (Rat* r in rat) {
 			r->Update(dt);
@@ -259,14 +261,6 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (!player->isKnocked() ) {
-		if (GAMEPLAY_INPUT.key_left) {
-			if (player->getState() != PS_Climb) {
-				player->spd.x = -PLAYER_SPEED * dt;
-			}
-		}
-	}
-
 	if (Pushables.size() > 0)
 	{
 		for each (Pushable* P in Pushables)
@@ -276,24 +270,29 @@ void GameplayScene::update(float dt) {
 	}
 
 	if (!player->isKnocked()) {
-	if (GAMEPLAY_INPUT.key_left || TheGamepad->leftStickX <= -0.2 && TheGamepad->CheckConnection()) {
+		if (GAMEPLAY_INPUT.key_left || TheGamepad->leftStickX <= -0.2 && TheGamepad->CheckConnection()) {
 			if (player->getState() != PS_Climb) {
 				player->setFlipX(true);
 				player->spd.x = -PLAYER_SPEED * dt;
 			}
 		}
+	}
 
 	if (GAMEPLAY_INPUT.key_right || TheGamepad->leftStickX >= 0.2 && TheGamepad->CheckConnection()) {
 		if (player->getState() != PS_Climb) {
 			if (player->getState() == PS_Crouch) {
 				player->spd.x = CROUCH_SPEED * dt;
 			}
+			player->setFlipX(false);
+			player->spd.x = PLAYER_SPEED * dt;
 		}
+	}
 
 	if (GAMEPLAY_INPUT.key_down || TheGamepad->leftStickY <= -0.2 && TheGamepad->CheckConnection()) {
 		if (player->getState() == PS_Climb) {
 			player->spd.y = -PLAYER_SPEED * dt;
 		}
+	}
 
 	if (GAMEPLAY_INPUT.key_up || TheGamepad->leftStickY >= 0.2 && TheGamepad->CheckConnection()) {
 		if (player->getState() == PS_Climb) {
@@ -414,10 +413,10 @@ void GameplayScene::update(float dt) {
 		{
 			ActiveTextbox->Close();
 		}
-	
-	
+
+
 		ActiveTextbox = Textbox1;
-	
+
 		GAMEPLAY_INPUT.key_oneP = true;
 	}
 	//
@@ -469,17 +468,13 @@ void GameplayScene::update(float dt) {
 	if (GAMEPLAY_INPUT.key_F && !GAMEPLAY_INPUT.key_FP)
 	{
 
-			GAMEPLAY_INPUT.key_FP = true;
-		}
+		GAMEPLAY_INPUT.key_FP = true;
+	}
 
-		if (ActivePrompt)
-		{
-			ActivePrompt->Follow(player);
-		}
-
-
-
-
+	if (ActivePrompt)
+	{
+		ActivePrompt->Follow(player);
+	}
 
 
 	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && !GAMEPLAY_INPUT.key_jump && TheGamepad->CheckConnection())
@@ -627,6 +622,10 @@ void GameplayScene::update(float dt) {
 		if (player->getState() == PS_Stand) {
 			player->Crouch();
 		}
+		else if (player->getState() == PS_Crouch) {
+			player->Stand();
+		}
+		GAMEPLAY_INPUT.key_crouch_p = true;
 	}
 
 	player->Move();
@@ -1441,7 +1440,7 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 		//Parallax Stuff
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
-		EffectSprite *_bgColor = EffectSprite::create("TutorialBackground.png");
+		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
 
 		_bgColor->setAnchorPoint(cocos2d::Vec2(0, 0));
 		_bgColor->setScale(1);
