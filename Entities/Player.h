@@ -25,6 +25,7 @@ private:
 	const float ATK_TIME = 0.3f;
 	const float GLIDE_TIME = 2;
 	const float KNOCK_TIME = 0.5f;
+	const float INVINCE_TIME = 2.0f;
 
 	const int DMG = 1;
 	int player_light;
@@ -35,6 +36,7 @@ private:
 	float atk_timer = 0;
 	float glide_timer=0;
 	float knock_timer=0;
+	float invince_timer = 0;
 
 	PlayerState state = PS_Stand;
 

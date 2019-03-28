@@ -25,6 +25,7 @@ protected:
 	Player * player;
 	Knight * knight;
 	Moth * moth;
+	cocos2d::Vector<Rat *> rat;
 
 	player_inventory * currInv;
 
@@ -75,7 +76,7 @@ public:
 	} GAMEPLAY_INPUT;
 
 	static cocos2d::Scene * createScene();
-	 virtual void movePlayer(Entity * player, cocos2d::Vec2 move);
+	virtual void movePlayer(Entity * player, cocos2d::Vec2 move);
 	//player_inventory * currInv;
 	virtual bool init();
 
@@ -143,3 +144,7 @@ public:
 	void A1_R6::update(float dt);
 	CREATE_FUNC(A1_R6);
 };
+
+//void destroyAllChildren() {
+//	removeAllChildren();
+//}

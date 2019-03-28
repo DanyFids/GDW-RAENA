@@ -46,9 +46,10 @@ void Player::moveLightToPlayer()
 }
 
 void Player::hurt(int dmg) {
-	if (state != PS_HURT) {
+	if (state != PS_HURT && invince_timer <= 0) {
 		hp -= dmg;
 		knock_timer = KNOCK_TIME;
+		invince_timer = INVINCE_TIME;
 		state = PS_HURT;
 		stopAllActions();
 		runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
@@ -64,14 +65,6 @@ void Player::Update(float dt)
 {
 	if (state == PS_Climb && climb_lad != nullptr) {
 		if (!climb_lad->HitDetect(this)) {
-			state = PS_Stand;
-		}
-	}
-
-	if (knock_timer > 0) {
-		knock_timer -= dt;
-		state = PS_HURT;
-		if (knock_timer <= 0) {
 			state = PS_Stand;
 		}
 	}
@@ -116,6 +109,20 @@ void Player::Update(float dt)
 			atk = nullptr;
 
 			switchLight();
+		}
+	}
+
+	if (knock_timer > 0) {
+		knock_timer -= dt;
+		state = PS_HURT;
+		if (knock_timer <= 0) {
+			state = PS_Stand;
+		}
+	}
+
+	if (invince_timer > 0) {
+		invince_timer -= dt;
+		if (invince_timer <= 0) {
 		}
 	}
 }
