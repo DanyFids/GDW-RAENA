@@ -12,7 +12,7 @@
 #include "Entities/Platforms.h"
 #include "Entities/Ladder.h"
 
-
+#include "Projectile.h"
 
 #include "GameOver.h"
 
@@ -41,6 +41,7 @@ protected:
 	cocos2d::Vector<Ladder *> ladders;
 	cocos2d::Vector<Torch *> torches;
 	cocos2d::Vector<Pushable *> Pushables;
+	cocos2d::Vector<Projectile *> Projectiles;
 
 
 	int STAGE_WIDTH = 1000;

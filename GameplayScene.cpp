@@ -172,6 +172,18 @@ void GameplayScene::update(float dt) {
 
 	TheGamepad->Refresh();
 
+	if (Projectiles.size() > 0)	//Are there projectiles on this map?
+	{
+		for each (Projectile* i in Projectiles) {
+			i->updateShotProjectile(dt);
+			if (i->HitDetect(player))
+			{
+				player->hurt(1);
+			}
+
+		}
+	}
+
 	if (knight != nullptr) {
 		knight->Update(dt);
 		knight->AI(player, dt);
@@ -1369,6 +1381,8 @@ bool A1_R5::init()
 		terrain.pushBack(Block::create(700, 210, 225, 200)); //floating 3
 
 		terrain.pushBack(Block::create(1400, 100, 300, 450)); //Ground 3
+
+		Projectiles.pushBack(Projectile::create(100, 45, 0, 100, 500, this));
 
 		for each (Entity* plat in terrain)
 		{
