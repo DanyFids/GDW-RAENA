@@ -1,4 +1,5 @@
-#include "Pickups.h"
+#include "Pickups.h"  
+#include "InventoryScene.h"
 
 Pickup * Pickup::create(std::string filename, cocos2d::Vec2 p, itemEnum i)
 {
@@ -60,5 +61,5 @@ bool Pickup::inRange(Entity * other)
 
 void Pickup::Effect(Entity * player, player_inventory * p_inv)
 {
-
+	//InventoryScene::pickUpItem(2, "Rose", "Rose.png");
 }

@@ -298,8 +298,13 @@ void SceneDoor::Effect(Entity * player, player_inventory * p_inv)
 				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A2_R1));
 				player->setPosition(this->movePlayer);
 				break;
-
+			case A2_R2:
+				//cocos2d::Director::getInstance()->pushScene(currScene);
+				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A2_R2));
+				player->setPosition(this->movePlayer);
+				break;
 			}
+
 			
 
 		}
@@ -382,6 +387,11 @@ void LoadZone::Effect(Entity * player)
 	case A2_R1:
 		//cocos2d::Director::getInstance()->pushScene(currScene);
 		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A2_R1));
+		player->setPosition(this->movePlayer);
+		break;
+	case A2_R2:
+		//cocos2d::Director::getInstance()->pushScene(currScene);	   
+		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A2_R2));
 		player->setPosition(this->movePlayer);
 		break;
 

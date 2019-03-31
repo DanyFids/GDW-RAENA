@@ -364,7 +364,7 @@ void Player::DetectObstruction(Entity * other)
 	float o_left = other->getPositionX() - (other->getBoundingBox().size.width * anchorP.x);
 	float o_right = other->getPositionX() + (other->getBoundingBox().size.width - (other->getBoundingBox().size.width * anchorP.x));
 
-	if (t_foot + spd.y < o_head && t_head + spd.y > o_foot && t_left + spd.x < o_right && t_right + spd.x > o_left) {
+	if (t_foot < o_head && t_head > o_foot && t_left < o_right && t_right > o_left) {
 		switch (state) {
 		case PS_Glide:
 		case PS_Crouch:
