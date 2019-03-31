@@ -10,6 +10,7 @@ class Pushable : public Entity {
 
 public:
 	static Pushable* create(int x, int y, int w, int h, cocos2d::Vec2 s, cocos2d::Vec2 e);
+	static Pushable* create(std::string filename, cocos2d::Vec2 pos, cocos2d::Vec2 s, cocos2d::Vec2 e);
 
 	// Inherited via Entity
 	virtual bool HitDetect(Entity * other) override;
