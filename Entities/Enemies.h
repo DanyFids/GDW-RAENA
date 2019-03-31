@@ -74,7 +74,7 @@ public:
 
 class Rat : public Enemy {
 private:
-	bool face_right = true;
+	bool face_right = false;
 	bool attacking = false;
 	bool delay = false;
 	bool paused = false;
@@ -83,6 +83,8 @@ private:
 	float timer = TURNT_TIME;
 	int hp = 2;
 	Entity * platform;
+	float pLeft;
+	float pRight;
 public:
 	static Rat * create(const std::string& filename, Entity * Platform);
 

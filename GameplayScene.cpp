@@ -220,37 +220,38 @@ void GameplayScene::update(float dt) {
 			}
 		}
 
+		if (player->getState() != PS_HURT) {
+			if (GAMEPLAY_INPUT.key_interact || TheGamepad->IsPressed(XINPUT_GAMEPAD_Y) && TheGamepad->CheckConnection()) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
+				for (int i = 0; i < interactables.size(); i++) {
+					if (interactables.at(i)->inRange(player)) {
+						InteractType curr_thing = interactables.at(i)->getType();
+						switch (curr_thing) {
+						case DOOR:
+							((Door*)i)->Effect(player, currInv);
+							interactables.at(i)->setCooldown();
+							break;
+						case SWITCH:
+							break;
+						case S_DOOR:
+							((SceneDoor*)interactables.at(i))->Effect(player, currInv);
+							interactables.at(i)->setCooldown();
+							break;
+						case PUZZLE:
+							((PuzzleInteract*)interactables.at(i))->Effect(player, currInv, this);
+							//if (((PuzzleInteract*)i)->checkPuzzle(Princess1) ) {
+							//	this->addChild(knight);
+							//}
+							interactables.at(i)->setCooldown();
+							break;
+						case PICKUP:
+							((Pickup*)interactables.at(i))->Effect(player, currInv);
+							this->removeChild(interactables.at(i));
+							interactables.erase(i);
+						}
 
-		if (GAMEPLAY_INPUT.key_interact || TheGamepad->IsPressed(XINPUT_GAMEPAD_Y) && TheGamepad->CheckConnection()) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
-			for (int i = 0; i < interactables.size(); i++) {
-				if (interactables.at(i)->inRange(player)) {
-					InteractType curr_thing = interactables.at(i)->getType();
-					switch (curr_thing) {
-					case DOOR:
-						((Door*)i)->Effect(player, currInv);
 						interactables.at(i)->setCooldown();
 						break;
-					case SWITCH:
-						break;
-					case S_DOOR:
-						((SceneDoor*)interactables.at(i))->Effect(player, currInv);
-						interactables.at(i)->setCooldown();
-						break;
-					case PUZZLE:
-						((PuzzleInteract*)interactables.at(i))->Effect(player, currInv, this);
-						//if (((PuzzleInteract*)i)->checkPuzzle(Princess1) ) {
-						//	this->addChild(knight);
-						//}
-						interactables.at(i)->setCooldown();
-						break;
-					case PICKUP:
-						((Pickup*)interactables.at(i))->Effect(player, currInv);
-						this->removeChild(interactables.at(i));
-						interactables.erase(i);
 					}
-
-					interactables.at(i)->setCooldown();
-					break;
 				}
 			}
 		}
@@ -269,34 +270,35 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (!player->isKnocked()) {
+	if (player->getState() != PS_HURT) {
 		if (GAMEPLAY_INPUT.key_left || TheGamepad->leftStickX <= -0.2 && TheGamepad->CheckConnection()) {
 			if (player->getState() != PS_Climb) {
 				player->setFlipX(true);
 				player->spd.x = -PLAYER_SPEED * dt;
 			}
 		}
-	}
 
-	if (GAMEPLAY_INPUT.key_right || TheGamepad->leftStickX >= 0.2 && TheGamepad->CheckConnection()) {
-		if (player->getState() != PS_Climb) {
-			if (player->getState() == PS_Crouch) {
-				player->spd.x = CROUCH_SPEED * dt;
+
+		if (GAMEPLAY_INPUT.key_right || TheGamepad->leftStickX >= 0.2 && TheGamepad->CheckConnection()) {
+			if (player->getState() != PS_Climb) {
+				if (player->getState() == PS_Crouch) {
+					player->spd.x = CROUCH_SPEED * dt;
+				}
+				player->setFlipX(false);
+				player->spd.x = PLAYER_SPEED * dt;
 			}
-			player->setFlipX(false);
-			player->spd.x = PLAYER_SPEED * dt;
 		}
-	}
 
-	if (GAMEPLAY_INPUT.key_down || TheGamepad->leftStickY <= -0.2 && TheGamepad->CheckConnection()) {
-		if (player->getState() == PS_Climb) {
-			player->spd.y = -PLAYER_SPEED * dt;
+		if (GAMEPLAY_INPUT.key_down || TheGamepad->leftStickY <= -0.2 && TheGamepad->CheckConnection()) {
+			if (player->getState() == PS_Climb) {
+				player->spd.y = -PLAYER_SPEED * dt;
+			}
 		}
-	}
 
-	if (GAMEPLAY_INPUT.key_up || TheGamepad->leftStickY >= 0.2 && TheGamepad->CheckConnection()) {
-		if (player->getState() == PS_Climb) {
-			player->spd.y = PLAYER_SPEED * dt;
+		if (GAMEPLAY_INPUT.key_up || TheGamepad->leftStickY >= 0.2 && TheGamepad->CheckConnection()) {
+			if (player->getState() == PS_Climb) {
+				player->spd.y = PLAYER_SPEED * dt;
+			}
 		}
 	}
 
@@ -404,20 +406,22 @@ void GameplayScene::update(float dt) {
 	//}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
-	{
-		auto Textbox1 = Textbox::create(1, { 1 }, { "Hello World!" }, (this));
-		addChild(Textbox1, 10);
-		Textbox1->Load();
-		if (ActiveTextbox)
+	if (player->getState() != PS_HURT) {
+		if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
 		{
-			ActiveTextbox->Close();
+			auto Textbox1 = Textbox::create(1, { 1 }, { "Hello World!" }, (this));
+			addChild(Textbox1, 10);
+			Textbox1->Load();
+			if (ActiveTextbox)
+			{
+				ActiveTextbox->Close();
+			}
+
+
+			ActiveTextbox = Textbox1;
+
+			GAMEPLAY_INPUT.key_oneP = true;
 		}
-
-
-		ActiveTextbox = Textbox1;
-
-		GAMEPLAY_INPUT.key_oneP = true;
 	}
 	//
 	//
@@ -464,26 +468,27 @@ void GameplayScene::update(float dt) {
 	//
 	//	GAMEPLAY_INPUT.key_P2P = true;
 	//}
+	if (player->getState() != PS_HURT) {
+		if (GAMEPLAY_INPUT.key_F && !GAMEPLAY_INPUT.key_FP)
+		{
 
-	if (GAMEPLAY_INPUT.key_F && !GAMEPLAY_INPUT.key_FP)
-	{
+			GAMEPLAY_INPUT.key_FP = true;
+		}
 
-		GAMEPLAY_INPUT.key_FP = true;
-	}
-
-	if (ActivePrompt)
-	{
-		ActivePrompt->Follow(player);
-	}
+		if (ActivePrompt)
+		{
+			ActivePrompt->Follow(player);
+		}
 
 
-	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && !GAMEPLAY_INPUT.key_jump && TheGamepad->CheckConnection())
-	{
-		GAMEPLAY_INPUT.key_jump_p = false;
-	}
-	if ((GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) || (TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && !GAMEPLAY_INPUT.key_jump_p)) {
-		player->Jump();
-		GAMEPLAY_INPUT.key_jump_p = true;
+		if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && !GAMEPLAY_INPUT.key_jump && TheGamepad->CheckConnection())
+		{
+			GAMEPLAY_INPUT.key_jump_p = false;
+		}
+		if ((GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) || (TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && !GAMEPLAY_INPUT.key_jump_p)) {
+			player->Jump();
+			GAMEPLAY_INPUT.key_jump_p = true;
+		}
 	}
 
 	if (knight != nullptr)
@@ -529,13 +534,15 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space && TheGamepad->CheckConnection())
-	{
-		GAMEPLAY_INPUT.key_space_p = false;
-	}
-	if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p) && TheGamepad->CheckConnection()) {
-		player->Attack();
-		GAMEPLAY_INPUT.key_space_p = true;
+	if (player->getState() != PS_HURT) {
+		if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space && TheGamepad->CheckConnection())
+		{
+			GAMEPLAY_INPUT.key_space_p = false;
+		}
+		if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p) && TheGamepad->CheckConnection()) {
+			player->Attack();
+			GAMEPLAY_INPUT.key_space_p = true;
+		}
 	}
 
 	for each (Block* platform in terrain)
@@ -598,34 +605,36 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (ladders.size())
-	{
-		for each (Ladder* lad in ladders)
+	if (player->getState() != PS_HURT) {
+		if (ladders.size())
 		{
-			if ((lad->HitDetect(player) && player->getState() != PS_Climb)) {
-				if ((GAMEPLAY_INPUT.key_up && !lad->PlayerOnTop()) || (TheGamepad->leftStickY >= 0.2 && player->getState() != PS_Climb)) {
-					player->Climb(lad);
-				}
-				else if (GAMEPLAY_INPUT.key_down && lad->PlayerOnTop() || (TheGamepad->leftStickY <= -0.2 && player->getState() != PS_Climb)) {
-					player->ClimbDown(lad);
+			for each (Ladder* lad in ladders)
+			{
+				if ((lad->HitDetect(player) && player->getState() != PS_Climb)) {
+					if ((GAMEPLAY_INPUT.key_up && !lad->PlayerOnTop()) || (TheGamepad->leftStickY >= 0.2 && player->getState() != PS_Climb)) {
+						player->Climb(lad);
+					}
+					else if (GAMEPLAY_INPUT.key_down && lad->PlayerOnTop() || (TheGamepad->leftStickY <= -0.2 && player->getState() != PS_Climb)) {
+						player->ClimbDown(lad);
+					}
 				}
 			}
 		}
-	}
-	
-	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch && TheGamepad->CheckConnection())
-	{
-		GAMEPLAY_INPUT.key_crouch_p = false;
-	}
-	if ((GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p && player->isOnGround() && player->getSpeedY() == 0) 
-		|| (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch_p) && player->isOnGround() && player->getSpeedY() == 0 && TheGamepad->CheckConnection()) {
-		if (player->getState() == PS_Stand) {
-			player->Crouch();
+
+		if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch && TheGamepad->CheckConnection())
+		{
+			GAMEPLAY_INPUT.key_crouch_p = false;
 		}
-		else if (player->getState() == PS_Crouch) {
-			player->Stand();
+		if ((GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p && player->isOnGround() && player->getSpeedY() == 0)
+			|| (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch_p) && player->isOnGround() && player->getSpeedY() == 0 && TheGamepad->CheckConnection()) {
+			if (player->getState() == PS_Stand) {
+				player->Crouch();
+			}
+			else if (player->getState() == PS_Crouch) {
+				player->Stand();
+			}
+			GAMEPLAY_INPUT.key_crouch_p = true;
 		}
-		GAMEPLAY_INPUT.key_crouch_p = true;
 	}
 
 	player->Move();
@@ -915,17 +924,17 @@ bool A1_R2::init()
 		}
 
 		//Platforms
-		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(200, 340)));
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(200, 340))); //0
 
-		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(290, 390)));
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(290, 390))); //1
 
-		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(450, 430)));
-
-		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(340, 520)));
-
-		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(240, 580)));
-
-		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(510, 605)));
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(450, 430))); //2
+																								   
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(340, 520))); //3
+																								   
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(240, 580))); //4
+																								   
+		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(510, 605))); //5
 
 		for each (Platform* p in ActualPlatforms) {
 			if (p != nullptr) {
@@ -937,6 +946,18 @@ bool A1_R2::init()
 			}
 		}
 
+		// RAT STUFF
+
+		//rat.pushBack(Rat::create("Rat Death Animation/Rat_Death_Animation1.png", ActualPlatforms.at(3)));
+		//rat.at(0)->setPosition(ActualPlatforms.at(3)->getPositionX(), ActualPlatforms.at(3)->getPositionY() + 32);
+		//
+		//for each (Rat* r in rat) {
+		//	if (r != nullptr) {
+		//
+		//		this->addChild(r);
+		//
+		//	}
+		//}
 
 
 		view = this->getDefaultCamera();

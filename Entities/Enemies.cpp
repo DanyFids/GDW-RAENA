@@ -13,16 +13,31 @@ auto ratret = new (std::nothrow) Rat;
 Knight * Knight::create(const std::string& filename)
 {
 	auto ret = new (std::nothrow) Knight;
+	float h = 101;
+	float w = 57;
 
 	if (ret && ret->initWithFile(filename)) {
-			cocos2d::Vector<cocos2d::SpriteFrame *> walk_frames = { cocos2d::SpriteFrame::create("knightwalkyboi0000.png", cocos2d::Rect(0,0,64,100), false, {0,0}, {64,100}),
-																	cocos2d::SpriteFrame::create("knightwalkyboi0001.png", cocos2d::Rect(0,0,64,100), false, {0,0}, {64,100}),
-																	cocos2d::SpriteFrame::create("knightwalkyboi0002.png", cocos2d::Rect(0,0,56,100), false, {0,0}, {64,100}),
-																	cocos2d::SpriteFrame::create("knightwalkyboi0003.png", cocos2d::Rect(0,0,64,100), false, {0,0}, {64,100}) };
+		cocos2d::Vector<cocos2d::SpriteFrame *> walk_frames = { cocos2d::SpriteFrame::create("knightwalkyboi0000.png", cocos2d::Rect(0, 0, w, h), false, { 0,0 }, { w,h }),
+															cocos2d::SpriteFrame::create("knightwalkyboi0001.png", cocos2d::Rect(0, 0, w, h), false, { 0,0 }, { w,h }),
+															cocos2d::SpriteFrame::create("knightwalkyboi0002.png", cocos2d::Rect(0, 0, w, h), false, { 0,0 }, { w,h }),
+															cocos2d::SpriteFrame::create("knightwalkyboi0003.png", cocos2d::Rect(0, 0, w, h), false, { 0,0 }, { w,h }) };
+
+		//if (ret && ret->initWithFile(filename)) {
+		//	cocos2d::Vector<cocos2d::SpriteFrame *> walk_frames = { cocos2d::SpriteFrame::create("Knight_Idle_Resized.png", cocos2d::Rect(0, 0, w, h), false, { 0,0 }, { w,h }),
+		//														cocos2d::SpriteFrame::create("Knight_Idle_Resized.png", cocos2d::Rect(0, 0, w, h), false, { 0,0 }, { w,h }),
+		//														cocos2d::SpriteFrame::create("Knight_Idle_Resized.png", cocos2d::Rect(0, 0, w, h), false, { 0,0 }, { w,h }),
+		//														cocos2d::SpriteFrame::create("Knight_Idle_Resized.png", cocos2d::Rect(0, 0, w, h), false, { 0,0 }, { w,h }) };
+
 			ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(walk_frames, 0.3f));
 
 		ret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(ret->animations.at(0))));
 		ret->autorelease();
+
+		auto prim = cocos2d::DrawNode::create();
+		//prim->drawRect({ -(w/2),-(h/2) }, { w/2, h/2 }, cocos2d::Color4F::GREEN);
+		prim->drawRect({ 0,0 }, { w, h }, cocos2d::Color4F::GREEN);
+
+		ret->addChild(prim);
 		return ret;
 	}
 	CC_SAFE_RELEASE(ret);
@@ -71,7 +86,7 @@ void Knight::AI(Player* player, float dt) {
 			}
 
 			//Turn Go Right
-			else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 50)) {
+			else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 100)) {
 				if (player->getPosition().y <= this->getPosition().y + 60 || player->getPosition().y <= this->getPosition().y - 60) {
 					face_right = true;
 					this->spd.x += charge * dt;
@@ -214,18 +229,22 @@ void Knight::Hurt(int dmg) {
 
 void Knight::Hit(Player * other) {
 
-	if (other->getPosition().x >= this->getPosition().x && this->getPosition().x >= (other->getPosition().x - 75)) {
+	if (other->getPosition().x >= this->getPosition().x && this->getPosition().x >= (other->getPosition().x - 125)) {
 		if (other->getPosition().y <= this->getPosition().y + 40 || other->getPosition().y <= this->getPosition().y - 40) {
-			other->hurt(4);
-			other->spd.x = 5;
-			other->spd.y = 2;
+			if (other->getState() != PS_HURT && other->getInvince() <= 0) {
+				other->hurt(4);
+				other->spd.x = 5;
+				other->spd.y = 2;
+			}
 		}
 	}
-	else if (other->getPosition().x <= this->getPosition().x && this->getPosition().x <= (other->getPosition().x + 75)) {
+	else if (other->getPosition().x <= this->getPosition().x && this->getPosition().x <= (other->getPosition().x + 125)) {
 		if (other->getPosition().y <= this->getPosition().y + 40 || other->getPosition().y <= this->getPosition().y - 40) {
-			other->hurt(4);
-			other->spd.x = -5;
-			other->spd.y = 2;
+			if (other->getState() != PS_HURT && other->getInvince() <= 0) {
+				other->hurt(4);
+				other->spd.x = -5;
+				other->spd.y = 2;
+			}
 		}
 	}
 }
@@ -245,29 +264,33 @@ bool Knight::HitDetect(Entity * other)
 	if (o_head + other->spd.y > t_foot && o_foot + other->spd.y < t_head &&
 		o_left < t_right && o_right > t_left) {
 		if (other->spd.y > 0) {
-			//other->spd.y = t_foot - o_head;
-			other->spd.y = -1;
+			if (((Player *)other)->getState() != PS_HURT && ((Player *)other)->getInvince() <= 0) {
+				other->spd.y = -1;
+			}
 			return true;
 		}
 		else {
-			//other->spd.y = t_head - o_foot;
-			other->spd.y = 5;
+			if (((Player *)other)->getState() != PS_HURT && ((Player *)other)->getInvince() <= 0) {
+				other->spd.y = 5;
+			} 
 			return true;
 		}
 	}
 
 	if (o_head > t_foot && o_foot < t_head &&
 		o_left + other->spd.x < t_right + spd.x && o_right + other->spd.x > t_left + spd.x) {
-		if (other->spd.x > 0) { 
-			//other->spd.x = (t_left + spd.x) - o_right;
-			other->spd.y = 3;
-			other->spd.x = -3;
+		if (other->spd.x > 0) {
+			if (((Player *)other)->getState() != PS_HURT && ((Player *)other)->getInvince() <= 0) {
+				other->spd.y = 3;
+				other->spd.x = -3;
+			}
 			return true;
 		}
 		else {
-			//other->spd.x = (t_right + spd.x) - o_left;
-			other->spd.y = 3;
-			other->spd.x = 3;
+			if (((Player *)other)->getState() != PS_HURT && ((Player *)other)->getInvince() <= 0) {
+				other->spd.y = 3;
+				other->spd.x = 3;
+			}
 			return true;
 		}
 	}
@@ -533,7 +556,7 @@ void Moth::Hit(Player * p)
 	float t_left = this->getPositionX() - (this->getBoundingBox().size.width / 2);
 	float t_right = this->getPositionX() + (this->getBoundingBox().size.width / 2);
 
-	if (p->getState() != PS_HURT) {
+	if (p->getState() != PS_HURT && p->getInvince() <= 0) {
 
 		if (o_head + p->spd.y > t_foot && o_foot + p->spd.y < t_head &&
 			o_left < t_right && o_right > t_left) {
@@ -635,6 +658,10 @@ Rat * Rat::create(const std::string & filename, Entity * Platform)
 		cocos2d::Vector<cocos2d::SpriteFrame *> fly_frames = { cocos2d::SpriteFrame::create("test_dummy_2.png", cocos2d::Rect(0,0,60,38), false, {0,0}, {29,41}) };
 		ratret->platform = Platform;
 
+		ratret->pLeft = Platform->getPositionX() - (Platform->getBoundingBox().size.width / 2);
+		ratret->pRight = Platform->getPositionX() + (Platform->getBoundingBox().size.width / 2);
+
+		ratret->setScale(0.8);
 		//ratret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(ratret->animations.at(0))));
 		//ratret->autorelease();
 		return ratret;
@@ -649,6 +676,7 @@ Rat * Rat::create(const std::string & filename, Entity * Platform)
 		* Idle Movement
 		****************/
 
+		
 		if (timer >= 0) {
 			timer -= dt;
 		}
@@ -691,6 +719,15 @@ Rat * Rat::create(const std::string & filename, Entity * Platform)
 				}
 			}
 		}
+
+		if (this->getPositionX() >= pRight) {
+			spd.x = spd.x * (-1);
+			face_right = false;
+		}
+		else if (this->getPositionX() <= pLeft) {
+			spd.x = spd.x * (-1);
+			face_right = true;
+		}
 		/***************/
 	}
 
@@ -711,7 +748,7 @@ Rat * Rat::create(const std::string & filename, Entity * Platform)
 		float t_left = this->getPositionX() - (this->getBoundingBox().size.width / 2);
 		float t_right = this->getPositionX() + (this->getBoundingBox().size.width / 2);
 
-		if (p->getState() != PS_HURT) {
+		if (p->getState() != PS_HURT && p->getInvince() <= 0) {
 
 			if (o_head + p->spd.y > t_foot && o_foot + p->spd.y < t_head &&
 				o_left < t_right && o_right > t_left) {

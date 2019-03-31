@@ -56,6 +56,11 @@ void Player::hurt(int dmg) {
 	}
 }
 
+float Player::getInvince()
+{
+	return invince_timer;
+}
+
 bool Player::HitDetect(Entity * other)
 {
 	return false;
