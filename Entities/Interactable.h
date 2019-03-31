@@ -34,6 +34,10 @@ public :
 
 	virtual InteractType getType() = 0;
 
+	virtual bool getActive() {
+		return Active;
+	}
+
 	//int getKeys(player_inventory*,KeyType k);
 	//void editKeys(player_inventory*, KeyType k, int i);
 

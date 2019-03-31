@@ -21,7 +21,7 @@ public:
 	Sprite* Box;
 	cocos2d::Label* Yeet;
 
-	static Textbox * create(int P, std::vector<int> C, std::vector<std::string> T, GameplayScene * scn);
+	static Textbox * create(int P, std::vector<int> C, std::vector<std::string> T, cocos2d::Scene * scn);
 	//Textbox(int P, std::vector<int> C, std::vector<std::string> T);
 	void Flippage();
 	void Load();

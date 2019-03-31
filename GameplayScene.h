@@ -17,6 +17,7 @@
 #include "GameOver.h"
 
 
+
 //#include "HelloWorldScene.h"
 //#include "MenuScene.h"
 
@@ -25,6 +26,7 @@ protected:
 	Player * player;
 	Knight * knight;
 	Moth * moth;
+	cocos2d::Vector<Rat *> rat;
 
 	player_inventory * currInv;
 
@@ -34,6 +36,8 @@ protected:
 	cocos2d::Vector<Interactable *> interactables;
 	cocos2d::Vector<Platform *> ActualPlatforms;
 	
+	bool cutScene = false;
+	bool cutSceneC = false;
 	bool Bpress1 = false;
 	bool Bpress2 = false;
 
@@ -76,6 +80,11 @@ public:
 	} GAMEPLAY_INPUT;
 
 	static cocos2d::Scene * createScene();
+
+	//for moving player after changing scene.
+	
+	
+	
 	 virtual void movePlayer(Entity * player, cocos2d::Vec2 move);
 	//player_inventory * currInv;
 	virtual bool init();
@@ -84,24 +93,12 @@ public:
 
 	void update(float dt) override;
 
+	void setKnight(Knight * k) { knight = k; }
+
 	CREATE_FUNC(GameplayScene);
 };
 
-class TutRoom1 : public GameplayScene {
-public:
-	virtual bool init() override;
-	void TutRoom1::update(float dt);
-	CREATE_FUNC(TutRoom1);
-};
 
-class TestRoom1 : public GameplayScene {
-public:
-	virtual bool init() override;
-	void TestRoom1::update(float dt);
-	CREATE_FUNC(TestRoom1);
-
-	
-};
 											   
 class A1_R1 : public GameplayScene {
 public:
@@ -144,3 +141,19 @@ public:
 	void A1_R6::update(float dt);
 	CREATE_FUNC(A1_R6);
 };
+
+
+class A2_R1 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A2_R1::update(float dt);
+	CREATE_FUNC(A2_R1);
+};
+
+class A2_R2 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A2_R2::update(float dt);
+	CREATE_FUNC(A2_R2);
+};
+

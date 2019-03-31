@@ -26,6 +26,31 @@ Pushable * Pushable::create(int x, int y, int w, int h, cocos2d::Vec2 s, cocos2d
 	return nullptr;
 }
 
+Pushable * Pushable::create(std::string filename, cocos2d::Vec2 pos, cocos2d::Vec2 s, cocos2d::Vec2 e)
+{
+	auto ret = new (std::nothrow) Pushable;
+
+	if (ret && ret->initWithFile(filename)) {
+		ret->autorelease();
+
+		ret->start = s;
+		ret->end = e;
+
+		ret->setPosition(pos);
+		ret->setScale(1.55);
+
+		//ret->setContentSize(cocos2d::Size(w, h));
+
+		//auto rect = cocos2d::DrawNode::create();
+		//rect->drawSolidRect(cocos2d::Vec2(0, 0), cocos2d::Vec2(w, h), cocos2d::Color4F::WHITE);
+		//ret->addChild(rect);
+
+		return ret;
+	}
+	CC_SAFE_RELEASE(ret);
+	return nullptr;
+}
+
 bool Pushable::HitDetect(Entity * other)
 {
 	float o_head = other->getPositionY() + (other->getBoundingBox().size.height / 2.0f);
@@ -46,7 +71,7 @@ bool Pushable::HitDetect(Entity * other)
 		}
 		else {
 			other->spd.y = t_head - o_foot;
-			other->SetOnGround(true);
+			other->Land();
 		}
 	}
 

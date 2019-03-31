@@ -98,12 +98,12 @@ bool Platform::HitDetect(Entity * other)
 			o_LEFT < pRight && o_RIGHT > pLeft) {
 			if (other->spd.y <= 0) {
 				other->spd.y = pSurface - o_BOT;
-				other->SetOnGround(true);
+				other->Land();
 			}
 
 		}
 	}
-																								  //+ this->getBoundingBox().size.height
+	//+ this->getBoundingBox().size.height
 	//if (o_TOP + other->spd.y > this->getPositionY() && o_BOT + other->spd.y < this->getPositionY() + this->getBoundingBox().size.height &&
 	//	o_LEFT < getPositionX() + this->getBoundingBox().size.width && o_RIGHT > this->getPositionX()) {
 	//	if (other->spd.y > 0) {

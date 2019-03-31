@@ -25,6 +25,7 @@ private:
 	const float ATK_TIME = 0.3f;
 	const float GLIDE_TIME = 2;
 	const float KNOCK_TIME = 0.5f;
+	const float INVINCE_TIME = 2.0f;
 
 	const int DMG = 1;
 	int player_light;
@@ -32,9 +33,15 @@ private:
 	int hp = 6;
 	bool attacking = false;
 	bool glide_used = false;
+
+	//animation conversion booleans for change between 
+	bool can_vert = true;
+	bool can_horz = true;
+
 	float atk_timer = 0;
 	float glide_timer=0;
 	float knock_timer=0;
+	float invince_timer = 0;
 
 	PlayerState state = PS_Stand;
 
@@ -79,6 +86,11 @@ public:
 
 	void ClimbDown(Ladder * lad);
 
+	int getHP();
+	void setHP(int i);
+
+	float getSpeedY() { return this->spd.y; }
+
 	virtual void Land() override;
 
 	void Crouch();
@@ -88,4 +100,10 @@ public:
 	bool isKnocked() {
 		return knock_timer > 0;
 	}
+
+	void ResetObstruction() {
+		can_vert = true;
+		can_horz = true;
+	}
+	void DetectObstruction(Entity * other);
 };
