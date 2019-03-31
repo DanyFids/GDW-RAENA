@@ -52,11 +52,12 @@ public:
 	virtual bool getCooldown() { return CoolDownState; }
 
 	virtual InteractType getType() { return objectType; };
+	levelEnum goTo;
+	cocos2d::Vec2 movePlayer;
 
 	//cocos2d::Scene* getScenePointer() {return goTo;}
 protected:
-	levelEnum goTo;
-	cocos2d::Vec2 movePlayer;
+	
 	//cocos2d::Scene* goTo;
 };
 

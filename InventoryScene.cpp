@@ -21,8 +21,129 @@ void InventoryScene::dropItem(int id, std::string name, std::string pic, std::st
 	}
 }
 
-Scene * InventoryScene::createScene(){
-	return InventoryScene::create();
+Scene * InventoryScene::createScene(GameplayScene * playScene){
+	auto ret = InventoryScene::create();
+	ret->play = playScene;
+	ret->player = playScene->player;
+	ret->puzzles = playScene->interactables;
+
+	return ret;
+}
+
+void InventoryScene::useItem(std::string usename)
+{
+	if (usename == "Bandages") {
+
+		if ((player->getHP()) <= 4) {
+			player->setHP(player->getHP() + 2);
+		}
+		else {
+			player->setHP(6);
+		}
+		dropItem(inventory[pointer].itemId, inventory[pointer].itemName, inventory[pointer].itemPic, inventory[pointer].itemDescription, inventory[pointer].Val);
+	}
+
+	for (int i = 0; i < puzzles.size(); i++) {
+		if (usename == "Rose" && ((PuzzleInteract*)puzzles.at(i))->checkPuzzle(Princess1) && ((Interactable*)puzzles.at(i))->inRange(player) ) {
+			Knight * newKnight = Knight::create("knightwalkyboi0000.png");
+			newKnight->setScale(1);
+			newKnight->setPosition(cocos2d::Vec2(850, 200 + (newKnight->getBoundingBox().size.height / 2)));
+			play->setKnight(newKnight);
+			play->addChild(play->knight);
+			dropItem(inventory[pointer].itemId, inventory[pointer].itemName, inventory[pointer].itemPic, inventory[pointer].itemDescription, inventory[pointer].Val);
+			Director::getInstance()->popScene();
+		}
+		InteractType type =(puzzles.at(i))->getType();
+		if (usename == "Key" && type == DOOR && ((Interactable*)puzzles.at(i))->inRange(player)) {
+			if (d->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
+
+				if (d->requiredKey == GEN_KEY) {
+					
+					dropItem(inventory[pointer].itemId, inventory[pointer].itemName, inventory[pointer].itemPic, inventory[pointer].itemDescription, inventory[pointer].Val);
+					d->locked = false;
+	
+					}
+				}
+				//Include Each Keytype below
+
+			if (!(d->CoolDownState) && !(d->locked)) {
+
+				d->CoolDownState = true;
+
+				if (d->Active == false) {
+
+					d->Active = true;
+
+				}
+				else {
+					d->Active = false;
+				}
+			}
+		}
+		if (usename == "Key" && type == S_DOOR && ((Interactable*)puzzles.at(i))->inRange(player)) {
+			if (sd->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
+
+				if (sd->requiredKey == GEN_KEY) {
+					dropItem(inventory[pointer].itemId, inventory[pointer].itemName, inventory[pointer].itemPic, inventory[pointer].itemDescription, inventory[pointer].Val);
+					sd->locked = false;
+				}
+			}
+				//Include Each Keytype below
+
+			if (!(sd->CoolDownState) && !(sd->locked)) {
+
+				sd->CoolDownState = true;
+
+				if (sd->Active == false) {
+
+					sd->Active = true;
+
+					switch (sd->goTo) {
+					case A1_R1:
+						cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R1));
+						//GameplayScene::movePlayer();
+						player = nullptr;
+						break;
+					case A1_R2:
+						cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R2));
+						player->setPosition(sd->movePlayer);
+						player = nullptr;
+						break;
+					case A1_R3:
+						cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R3));
+						player->setPosition(sd->movePlayer);
+						break;
+					case A1_R4:
+						cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R4));
+						player->setPosition(sd->movePlayer);
+						break;
+					case A1_R5:
+						cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R5));
+						player->setPosition(sd->movePlayer);
+						break;
+					case A1_R6:
+						cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R6));
+						player->setPosition(sd->movePlayer);
+						break;
+					case TUT_LVL1:
+						//cocos2d::Director::getInstance()->pushScene(currScene);
+						cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(TUT_LVL1));
+						player->setPosition(sd->movePlayer);
+						break;
+
+					}
+
+
+				}
+				else {
+					sd->Active = false;
+				}
+			}
+
+		}
+
+	}
+
 }
 
 
@@ -106,24 +227,13 @@ bool InventoryScene::init()
 
 	use->setTitleText("");
 
-	use->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
+	use->addTouchEventListener([this](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			if (inventory[pointer].itemName == "Bandages") {
-				dropItem(pointer, inventory[pointer].itemName, inventory[pointer].itemPic, inventory[pointer].itemDescription, inventory[pointer].Val);
-				if ((player->getHP) <= 4) {
-					player->setHP(player->getHP + 2);
-				}
-				else {
-					player->setHP(6);
-				}
-			}
-			else {
-				player->equip = inventory[pointer].itemName;
-			}
+			useItem(inventory[pointer].itemName);
 			break;
 		default:
 			break;
@@ -150,6 +260,39 @@ bool InventoryScene::init()
 	//	}
 	//});
 
+	auto KeyHandle = EventListenerKeyboard::create();
+
+	KeyHandle->onKeyPressed = [this](EventKeyboard::KeyCode key, Event * event) {
+		switch (key) {
+		case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
+			this->INPUT.left = true;
+			break;
+		case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
+			this->INPUT.right = true;
+			break;
+		case EventKeyboard::KeyCode::KEY_ENTER:
+			if (enter_released) {
+				Director::getInstance()->popScene();
+			}
+			break;
+		}
+	};
+
+	KeyHandle->onKeyReleased = [this](EventKeyboard::KeyCode key, Event * event) {
+		switch (key) {
+		case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
+			this->INPUT.left = false;
+			break;
+		case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
+			this->INPUT.right = false;
+			break;
+		case EventKeyboard::KeyCode::KEY_ENTER:
+			enter_released = true;
+			break;
+		}
+	};
+
+	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(KeyHandle, this);
 
 	auto examine = cocos2d::ui::Button::create("Examine.png", "CloseSelected.png");
 
@@ -435,33 +578,26 @@ bool InventoryScene::init()
 void InventoryScene::update(float dt)
 {
 	timer -= dt;
-	exitTimer -= dt;
 	if (currInvNum != 0) {
 		if (timer == 0)
 		{
 			timer = 10;
-			if (GetAsyncKeyState(VK_LEFT) != 0)
+			if (INPUT.left)
 			{
+				removeChild(description);
 				pointer += 1;
 				if (pointer == currInvNum)
 				{
 					pointer = 0;
 				}
 			}
-			else if (GetAsyncKeyState(VK_RIGHT) != 0)
-			{
+			else if (INPUT.right)
+			{	
+				removeChild(description);
 				pointer -= 1;
 				if (pointer == -1)
 				{
 					pointer = currInvNum - 1;
-				}
-			}
-			else if (GetAsyncKeyState(VK_RETURN) != 0)
-			{
-				if (exitTimer == 0)
-				{
-					exitTimer = 20;
-					Director::getInstance()->popScene();
 				}
 			}
 
@@ -506,17 +642,6 @@ void InventoryScene::update(float dt)
 			else if (pointer + 1 != currInvNum && currInvNum >= 3)
 			{
 				prevPic->setTexture(inventory[pointer + 1].itemPic);
-			}
-		}
-	}
-	else
-	{
-		if (GetAsyncKeyState(VK_RETURN) != 0)
-		{
-			if (exitTimer == 0)
-			{ 
-				exitTimer = 20;
-				Director::getInstance()->popScene();
 			}
 		}
 	}

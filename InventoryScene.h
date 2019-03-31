@@ -5,8 +5,13 @@
 #include "2d/CCScene.h"
 #include "2d/CCLabel.h"
 #include "2d/CCSprite.h"
-#include "Textbox.h"
+#include "GameplayScene.h"
 #include "Entities/Player.h"
+#include "Entities/PuzzleInteractable.h"
+#include "Entities/Door.h"
+#include "classes/LevelManager/LevelManager.h"
+class Interactables;
+class PuzzleInteract;
 
 enum Combining {
 	e1 = 1,
@@ -28,8 +33,17 @@ struct inventoryItem
 
 class InventoryScene : public cocos2d::Scene {
 protected:
+	SceneDoor * sd;
+	Door * d;
+	cocos2d::Vector< Interactable*> puzzles;
+	GameplayScene * playScene;
 	Player * player;
 private:
+	struct {
+		bool left = false;
+		bool right = false;
+	} INPUT;
+
 	int currInvNum = 0;
 	cocos2d::Label* invLabel;
 	cocos2d::Label* title;
@@ -39,17 +53,19 @@ private:
 	cocos2d::Sprite* nextPic;
 	cocos2d::Sprite* prevPic;
 	cocos2d::Label* lastLabel;
+	GameplayScene * play;
 
 public:
 	std::vector<inventoryItem> inventory;
 	void pickUpItem(int id, std::string name, std::string pic, std::string des, Combining V);
 	void dropItem(int id, std::string name, std::string pic, std::string des,Combining V);
-	static Scene* InventoryScene::createScene();
+	static Scene* InventoryScene::createScene(GameplayScene * playScene);
+	void useItem(std::string usename);
 	virtual bool init();
 	virtual void update(float dt);
 	int pointer = 0;
 	int timer = 15;
-	int exitTimer = 35;
+	bool enter_released = false;
 	bool canCombine = false;
 	int combine1 = 0;
 	int combine2 = 0;

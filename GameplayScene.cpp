@@ -89,7 +89,8 @@ bool GameplayScene::init() {
 					GAMEPLAY_INPUT.key_crouch = true;
 					break;
 				case EventKeyboard::KeyCode::KEY_ENTER:
-					Director::getInstance()->pushScene(InventoryScene::create());
+					this->clearKeys();
+					Director::getInstance()->pushScene(InventoryScene::createScene(this));
 					break;
 			//	case EventKeyboard::KeyCode::KEY_1:
 			//		GAMEPLAY_INPUT.key_one = true;
@@ -215,14 +216,14 @@ void GameplayScene::update(float dt) {
 					InteractType curr_thing = i->getType();
 					switch (curr_thing) {
 					case DOOR:
-						((Door*)i)->Effect(player, currInv);
-						i->setCooldown();
+						//((Door*)i)->Effect(player, currInv);
+						//i->setCooldown();
 						break;
 					case SWITCH:
 						break;
 					case S_DOOR:
-						((SceneDoor*)i)->Effect(player, currInv);
-						i->setCooldown();
+						//((SceneDoor*)i)->Effect(player, currInv);
+						//i->setCooldown();
 						break;
 					case PUZZLE:
 						((PuzzleInteract*)i)->Effect(player, currInv, this);
@@ -634,6 +635,34 @@ void GameplayScene::update(float dt) {
 			}
 		}
 	}
+}
+
+void GameplayScene::clearKeys()
+{
+	GAMEPLAY_INPUT.key_up = false;
+	GAMEPLAY_INPUT.key_right = false;
+	GAMEPLAY_INPUT.key_down = false;
+	GAMEPLAY_INPUT.key_left = false;
+	GAMEPLAY_INPUT.key_space = false;
+	GAMEPLAY_INPUT.key_space_p = false;
+	GAMEPLAY_INPUT.key_jump = false;
+	GAMEPLAY_INPUT.key_jump_p = false;
+	GAMEPLAY_INPUT.key_crouch = false;
+	GAMEPLAY_INPUT.key_crouch_p = false;
+	GAMEPLAY_INPUT.key_interact = false;
+
+
+	GAMEPLAY_INPUT.key_one = false;
+	GAMEPLAY_INPUT.key_oneP = false;
+	GAMEPLAY_INPUT.key_F = false;
+	GAMEPLAY_INPUT.key_FP = false;
+	GAMEPLAY_INPUT.key_two = false;
+	GAMEPLAY_INPUT.key_twoP = false;
+
+	GAMEPLAY_INPUT.key_P1 = false;
+	GAMEPLAY_INPUT.key_P1P = false;
+	GAMEPLAY_INPUT.key_P2 = false;
+	GAMEPLAY_INPUT.key_P2P = false;
 }
 
 bool TutRoom1::init()
