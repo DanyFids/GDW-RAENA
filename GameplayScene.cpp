@@ -588,12 +588,11 @@ bool A1_R1::init()
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
 
-		EffectSprite *_bgColor1 = EffectSprite::create("Parallax Background/LightBlueBG_Updated.png");
-		EffectSprite *_bgColor2 = EffectSprite::create("Parallax Background/BlueBG_Updated.png");
-		EffectSprite *_bgColor3 = EffectSprite::create("Parallax Background/LightGreenBG_Updated.png");
+		EffectSprite *_bgColor1 = EffectSprite::create("Parallax Background/BlueBG_Updated.png");
+		EffectSprite *_bgColor2 = EffectSprite::create("Parallax Background/LightBlueBG_Updated.png");
+		EffectSprite *_bgColor3 = EffectSprite::create("Parallax Background/DarkGreenBG_Updated.png");
 		EffectSprite *_bgColor4 = EffectSprite::create("Parallax Background/GreenBG_Updated.png");
-		EffectSprite *_bgColor5 = EffectSprite::create("Parallax Background/DarkGreenBG_Updated.png");
-
+		EffectSprite *_bgColor5 = EffectSprite::create("Parallax Background/LightGreenBG_Updated.png");
 
 		_bgColor1->setAnchorPoint(cocos2d::Vec2(0, 0));
 		_bgColor1->setScale(1);
@@ -741,12 +740,11 @@ bool A1_R2::init()
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
 		
-		EffectSprite *_bgColor1 = EffectSprite::create("Parallax Background/LightBlueBG_Updated.png");
-		EffectSprite *_bgColor2 = EffectSprite::create("Parallax Background/BlueBG_Updated.png");
-		EffectSprite *_bgColor3 = EffectSprite::create("Parallax Background/LightGreenBG_Updated.png");
+		EffectSprite *_bgColor1 = EffectSprite::create("Parallax Background/BlueBG_Updated.png");
+		EffectSprite *_bgColor2 = EffectSprite::create("Parallax Background/LightBlueBG_Updated.png");
+		EffectSprite *_bgColor3 = EffectSprite::create("Parallax Background/DarkGreenBG_Updated.png");
 		EffectSprite *_bgColor4 = EffectSprite::create("Parallax Background/GreenBG_Updated.png");
-		EffectSprite *_bgColor5 = EffectSprite::create("Parallax Background/DarkGreenBG_Updated.png");
-
+		EffectSprite *_bgColor5 = EffectSprite::create("Parallax Background/LightGreenBG_Updated.png");
 
 		_bgColor1->setAnchorPoint(cocos2d::Vec2(0, 0));
 		_bgColor1->setScale(1.5);
@@ -912,7 +910,7 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
-		EffectSprite * tileSet = EffectSprite::create("A1_R3.png");
+		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R3.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
 
 		this->addChild(tileSet, 4);
@@ -993,7 +991,7 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 		}
 
 		interactables.pushBack(LoadZone::create(-10, 205, 10, 400, A1_R2, Vec2(50, 205))); // LoadZone
-		interactables.pushBack(SceneDoor::create("inner_cave_door.png", Vec2(1050, 250), Vec2(50,200), A1_R4));	//SceneDoor
+		interactables.pushBack(SceneDoor::create("terrain/inner_cave_door.png", Vec2(1050, 250), Vec2(50,200), A1_R4));	//SceneDoor
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -1066,7 +1064,7 @@ bool A1_R4::init()
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
-		EffectSprite * tileSet = EffectSprite::create("A1_R4.png");
+		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R4.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
 
 		this->addChild(tileSet, 4);
@@ -1137,7 +1135,7 @@ bool A1_R4::init()
 
 		
 		interactables.pushBack(LoadZone::create(1000, 300, 10, 400, A1_R5, Vec2(50, 205))); // LoadZone
-		interactables.pushBack(SceneDoor::create("outer_cave_door.png", Vec2(50, 550), Vec2(50, 200), A1_R3));	//SceneDoor
+		interactables.pushBack(SceneDoor::create("terrain/outer_cave_door.png", Vec2(50, 550), Vec2(50, 200), A1_R3));	//SceneDoor
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -1211,7 +1209,7 @@ bool A1_R5::init()
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
-		EffectSprite * tileSet = EffectSprite::create("A1_R5.png");
+		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R5.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
 
 		this->addChild(tileSet, 4);
@@ -1309,17 +1307,17 @@ bool A1_R5::init()
 		}
 
 		//Platforms
-		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(400, 590.6)));
+		ActualPlatforms.pushBack(Platform::create("terrain/leafy_platform.png", cocos2d::Vec2(400, 590.6)));
 
-		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(560, 645)));
+		ActualPlatforms.pushBack(Platform::create("terrain/leafy_platform.png", cocos2d::Vec2(560, 645)));
 
-		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(360, 720)));
+		ActualPlatforms.pushBack(Platform::create("terrain/leafy_platform.png", cocos2d::Vec2(360, 720)));
 
-		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(590, 770)));
+		ActualPlatforms.pushBack(Platform::create("terrain/leafy_platform.png", cocos2d::Vec2(590, 770)));
 
-		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(975, 660)));
+		ActualPlatforms.pushBack(Platform::create("terrain/leafy_platform.png", cocos2d::Vec2(975, 660)));
 
-		ActualPlatforms.pushBack(Platform::create("leafy_platform.png", cocos2d::Vec2(1175, 500)));
+		ActualPlatforms.pushBack(Platform::create("terrain/leafy_platform.png", cocos2d::Vec2(1175, 500)));
 
 
 		for each (Platform* p in ActualPlatforms) {
@@ -1382,7 +1380,7 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 
 		paraNode->addChild(_bgColor, 1, Vec2(0,0.5), Vec2::ZERO);
 
-		EffectSprite * tileSet = EffectSprite::create("A1_R6.png");
+		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R6.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
 
 		this->addChild(tileSet, 4);
