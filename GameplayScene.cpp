@@ -235,6 +235,9 @@ void GameplayScene::update(float dt) {
 			for each (Interactable* i in interactables) {
 				if (i->inRange(player)) {
 					InteractType curr_thing = i->getType();
+				}
+			}
+		}
 
 		if (GAMEPLAY_INPUT.key_interact || TheGamepad->IsPressed(XINPUT_GAMEPAD_Y) && TheGamepad->CheckConnection()) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
 			for (int i = 0; i < interactables.size(); i++) {
@@ -562,9 +565,6 @@ void GameplayScene::update(float dt) {
 			}
 		}
 	}
-}
-}
-}
 }
 
 
