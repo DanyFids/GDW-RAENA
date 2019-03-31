@@ -370,11 +370,11 @@ void Moth::AI(Player * player, float dt)
 
 			if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 250) {
 				attacking = true;
-				this->spd.y += 50 * dt;
+				this->spd.y += 60 * dt;
 			}
 			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 250) {
 				attacking = true;
-				this->spd.y -= 50 * dt;
+				this->spd.y -= 60 * dt;
 			}
 		}
 
@@ -384,12 +384,12 @@ void Moth::AI(Player * player, float dt)
 				this->spd.x -= 60 * dt;
 				attacking = true;
 			}
-			else if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 200){
+			else if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 300){
 				this->spd.x -= 60 * dt;
 				attacking = true;
 				this->spd.y += 50 * dt;
 			}
-			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 200) {
+			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 300) {
 				this->spd.x -= 60 * dt;
 				attacking = true;
 				this->spd.y -= 50 * dt;
@@ -397,20 +397,20 @@ void Moth::AI(Player * player, float dt)
 		}
 
 		//Turn Go Right
-		else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 50)) {
+		else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 75)) {
 
 			if (player->getPosition().y == this->getPosition().y) {
 				face_right = true;
 				this->spd.x += 60 * dt;
 				attacking = true;
 			}
-			else if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 120) {
+			else if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 150) {
 				face_right = true;
 				this->spd.x += 60 * dt;
 				attacking = true;
 				this->spd.y += 50 * dt;
 			}
-			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 120) {
+			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 150) {
 				face_right = true;
 				this->spd.x += 60 * dt;
 				attacking = true;
@@ -433,11 +433,11 @@ void Moth::AI(Player * player, float dt)
 
 			if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 250) {
 				attacking = true;
-				this->spd.y += 50 * dt;
+				this->spd.y += 60 * dt;
 			}
 			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 250) {
 				attacking = true;
-				this->spd.y -= 50 * dt;
+				this->spd.y -= 60 * dt;
 			}
 		}
 
@@ -447,12 +447,12 @@ void Moth::AI(Player * player, float dt)
 				this->spd.x += 60 * dt;
 				attacking = true;
 			}
-			else if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 200) {
+			else if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 300) {
 				this->spd.x += 60 * dt;
 				attacking = true;
 				this->spd.y += 50 * dt;
 			}
-			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 200) {
+			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 300) {
 				this->spd.x += 60 * dt;
 				attacking = true;
 				this->spd.y -= 50 * dt;
@@ -460,20 +460,20 @@ void Moth::AI(Player * player, float dt)
 		}
 
 		//Turn Go Left
-		else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 50)) {
+		else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 75)) {
 
 			if (player->getPosition().y == this->getPosition().y) {
 				face_right = false;
 				this->spd.x -= 60 * dt;
 				attacking = true;
 			}
-			else if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 120) {
+			else if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 150) {
 				face_right = false;
 				this->spd.x -= 60 * dt;
 				attacking = true;
 				this->spd.y += 50 * dt;
 			}
-			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 120) {
+			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 150) {
 				face_right = false;
 				this->spd.x -= 60 * dt;
 				attacking = true;
@@ -841,3 +841,18 @@ Rat * Rat::create(const std::string & filename, Entity * Platform)
 	{
 		setPosition(getPosition() + spd);
 	}
+
+	//How to actually spawn a Rat:
+
+	//IMPORTANT: All ActualPlatforms need to be at the same #
+
+	//rat.pushBack(Rat::create("Rat Death Animation/Rat_Death_Animation1.png", ActualPlatforms.at(3)));
+	//rat.at(0)->setPosition(ActualPlatforms.at(3)->getPositionX(), ActualPlatforms.at(3)->getPositionY() + 32);
+	//
+	//for each (Rat* r in rat) {
+	//	if (r != nullptr) {
+	//
+	//		this->addChild(r);
+	//
+	//	}
+	//}
