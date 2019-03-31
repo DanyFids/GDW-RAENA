@@ -180,7 +180,6 @@ void GameplayScene::update(float dt) {
 			{
 				player->hurt(1);
 			}
-
 		}
 	}
 
