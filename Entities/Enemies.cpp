@@ -14,7 +14,64 @@ Knight * Knight::create(const std::string& filename)
 																	cocos2d::SpriteFrame::create("knightwalkyboi0001.png", cocos2d::Rect(0,0,64,100), false, {0,0}, {64,100}),
 																	cocos2d::SpriteFrame::create("knightwalkyboi0002.png", cocos2d::Rect(0,0,56,100), false, {0,0}, {64,100}),
 																	cocos2d::SpriteFrame::create("knightwalkyboi0003.png", cocos2d::Rect(0,0,64,100), false, {0,0}, {64,100}) };
+			cocos2d::Vector<cocos2d::SpriteFrame *> attack_frames = { cocos2d::SpriteFrame::create("Knight_Attack_Anim_Resized1", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Attack_Anim_Resized2", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Attack_Anim_Resized3", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Attack_Anim_Resized4", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Attack_Anim_Resized5", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Attack_Anim_Resized6", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Attack_Anim_Resized7", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}) };
+			cocos2d::Vector<cocos2d::SpriteFrame *> death_frames = { cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized1", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized2", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized3", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized4", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized5", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized6", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized7", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized8", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized9", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized10", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized11", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized12", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized13", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized14", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized15", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized16", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized17", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized18", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized19", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized20", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized21", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized22", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized23", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized24", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized25", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized26", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized27", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized28", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Death_Anim_Resized29", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}) };
+			cocos2d::Vector<cocos2d::SpriteFrame *> revive_frames = { cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized1", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized2", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized3", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized4", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized5", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized6", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized7", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized8", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized9", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized10", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized11", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized12", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized13", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized14", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized15", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized16", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized17", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Revive_Anim_Resized18", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}) };
 			ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(walk_frames, 0.3f));
+			ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(attack_frames, 0.3f));
+			ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(death_frames, 0.3f));
+			ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(revive_frames, 0.3f));
 
 		ret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(ret->animations.at(0))));
 		ret->autorelease();
@@ -295,7 +352,10 @@ void Knight::Move()
 Moth * Moth::create(const std::string & filename)
 {
 	if (mothret && mothret->initWithFile(filename)) {
-		cocos2d::Vector<cocos2d::SpriteFrame *> fly_frames = { cocos2d::SpriteFrame::create("mothboi.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}) };
+		cocos2d::Vector<cocos2d::SpriteFrame *> fly_frames = { cocos2d::SpriteFrame::create("MothFlyingAnimation0000.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}),
+		                                                       cocos2d::SpriteFrame::create("MothFlyingAnimation0001.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}), 
+		                                                       cocos2d::SpriteFrame::create("MothFlyingAnimation0002.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}), 
+		                                                       cocos2d::SpriteFrame::create("MothFlyingAnimation0003.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}) };
 		mothret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(fly_frames, 0.3f));
 
 		mothret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(mothret->animations.at(0))));

@@ -10,10 +10,21 @@ Player * Player::create(const std::string& filename, cocos2d::Scene * s)
 	auto ret = new (std::nothrow) Player;
 	if (ret && ret->initWithFile(filename)) {
 		cocos2d::Vector<cocos2d::SpriteFrame *> stand_frames = { cocos2d::SpriteFrame::create("dragon_idle.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38, 64 }) };
+		//cocos2d::Vector<cocos2d::SpriteFrame *> walk_frames = { cocos2d::SpriteFrame::create(""), cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}) };
 		cocos2d::Vector<cocos2d::SpriteFrame *> crouch_frames = { cocos2d::SpriteFrame::create( "test_dummy_2.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }) };
+		cocos2d::Vector<cocos2d::SpriteFrame *> crouch_walk_frames = { cocos2d::SpriteFrame::create("player_crouch_walk0000.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
+																	   cocos2d::SpriteFrame::create("player_crouch_walk0001.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
+																	   cocos2d::SpriteFrame::create("player_crouch_walk0002.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
+																	   cocos2d::SpriteFrame::create("player_crouch_walk0003.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
+																	   cocos2d::SpriteFrame::create("player_crouch_walk0004.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
+																	   cocos2d::SpriteFrame::create("player_crouch_walk0005.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
+																	   cocos2d::SpriteFrame::create("player_crouch_walk0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
+																	   cocos2d::SpriteFrame::create("player_crouch_walk0007.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}) };
 
 		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(stand_frames, 0.1f));
+		//ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(walk_frames, 0.1f));
 		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(crouch_frames, 0.1f));
+		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(crouch_walk_frames, 0.1f));
 
 		ret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(ret->animations.at(0))));
 

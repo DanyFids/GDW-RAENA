@@ -1633,7 +1633,7 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 
 		interactables.pushBack(LoadZone::create(-10, 200, 10, 400, A1_R5, Vec2(50, 205))); // LoadZone
 		//interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1050, 275), Vec2(50, 200), A1_R4));	//SceneDoor
-		interactables.pushBack(PuzzleInteract::create("princess_iso.png", Vec2(1275, 200),Princess1, ROSE));
+		interactables.pushBack(PuzzleInteract::create("PrincessIdleFrame0000.png", Vec2(1275, 200),Princess1, ROSE));
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
 				this->addChild(inter);
@@ -1705,3 +1705,40 @@ void A1_R6::update(float dt)
 		player->setHP(6);
 	}
 }
+
+// I tried to eat ramen like spaghet and failed
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
+//screaming
