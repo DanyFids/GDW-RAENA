@@ -32,6 +32,7 @@ Knight * Knight::create(const std::string& filename)
 
 		ret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(ret->animations.at(0))));
 		ret->autorelease();
+		ret->setScale(2);
 
 		auto prim = cocos2d::DrawNode::create();
 		//prim->drawRect({ -(w/2),-(h/2) }, { w/2, h/2 }, cocos2d::Color4F::GREEN);
@@ -324,7 +325,7 @@ void Knight::Move()
 /*        Moth    Code       */
 /*****************************/
 
-Moth * Moth::create(const std::string & filename)
+Moth * Moth::create(const std::string & filename, cocos2d::Vector<Torch *> * t)
 {
 	if (mothret && mothret->initWithFile(filename)) {
 		cocos2d::Vector<cocos2d::SpriteFrame *> fly_frames = { cocos2d::SpriteFrame::create("MothFlyingAnimation0000.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}),
@@ -332,6 +333,8 @@ Moth * Moth::create(const std::string & filename)
 		 cocos2d::SpriteFrame::create("MothFlyingAnimation0004.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}),
 		 cocos2d::SpriteFrame::create("MothFlyingAnimation0006.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}) };
 		mothret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(fly_frames, 0.1f));
+
+		mothret->torches = t;
 
 		mothret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(mothret->animations.at(0))));
 		mothret->autorelease();
@@ -363,22 +366,11 @@ void Moth::AI(Player * player, float dt)
 {
 
 	//Left
-	if (!face_right && !delay) {
+	if (!face_right) {
 		//attack left
 		//if tere is an attack animation
-		if (player->getPosition().x == this->getPosition().x) {
 
-			if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 250) {
-				attacking = true;
-				this->spd.y += 60 * dt;
-			}
-			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 250) {
-				attacking = true;
-				this->spd.y -= 60 * dt;
-			}
-		}
-
-		else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 300)) {
+		if (player->getPosition().x - 60 <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 75)) {
 
 			if (player->getPosition().y == this->getPosition().y) {
 				this->spd.x -= 60 * dt;
@@ -397,20 +389,20 @@ void Moth::AI(Player * player, float dt)
 		}
 
 		//Turn Go Right
-		else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 75)) {
+		else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 50)) {
 
 			if (player->getPosition().y == this->getPosition().y) {
 				face_right = true;
 				this->spd.x += 60 * dt;
 				attacking = true;
 			}
-			else if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 150) {
+			else if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 250) {
 				face_right = true;
 				this->spd.x += 60 * dt;
 				attacking = true;
 				this->spd.y += 50 * dt;
 			}
-			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 150) {
+			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 250) {
 				face_right = true;
 				this->spd.x += 60 * dt;
 				attacking = true;
@@ -424,24 +416,12 @@ void Moth::AI(Player * player, float dt)
 	}
 
 	//Right
-	else if (face_right && !delay)
+	else if (face_right)
 	{
 		//attack right
 		//If there is attack code
 
-		if (player->getPosition().x == this->getPosition().x) {
-
-			if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 250) {
-				attacking = true;
-				this->spd.y += 60 * dt;
-			}
-			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 250) {
-				attacking = true;
-				this->spd.y -= 60 * dt;
-			}
-		}
-
-		else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 300)) {
+		if (player->getPosition().x + 60 >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 75)) {
 
 			if (player->getPosition().y == this->getPosition().y) {
 				this->spd.x += 60 * dt;
@@ -460,20 +440,20 @@ void Moth::AI(Player * player, float dt)
 		}
 
 		//Turn Go Left
-		else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 75)) {
+		else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 50)) {
 
 			if (player->getPosition().y == this->getPosition().y) {
 				face_right = false;
 				this->spd.x -= 60 * dt;
 				attacking = true;
 			}
-			else if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 150) {
+			else if (player->getPosition().y > this->getPosition().y && player->getPosition().y < this->getPosition().y + 300) {
 				face_right = false;
 				this->spd.x -= 60 * dt;
 				attacking = true;
 				this->spd.y += 50 * dt;
 			}
-			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 150) {
+			else if (player->getPosition().y < this->getPosition().y && player->getPosition().y > this->getPosition().y - 300) {
 				face_right = false;
 				this->spd.x -= 60 * dt;
 				attacking = true;
@@ -487,10 +467,114 @@ void Moth::AI(Player * player, float dt)
 	}
 
 
+	for each (Torch* t in *torches)
+	{
+		//Left
+		if (!face_right && !attacking) {
+			//attack left
+			//if tere is an attack animation
+
+			if (t->getPosition().x - 100 <= this->getPosition().x && this->getPosition().x <= (t->getPosition().x + 150)) {
+
+				if (t->getPosition().y == this->getPosition().y) {
+					this->spd.x -= 30 * dt;
+					torchFound = true;
+				}
+				else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 300) {
+					this->spd.x -= 30 * dt;
+					torchFound = true;
+					this->spd.y += 25 * dt;
+				}
+				else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 300) {
+					this->spd.x -= 30 * dt;
+					torchFound = true;
+					this->spd.y -= 25 * dt;
+				}
+			}
+
+			//Turn Go Right
+			else if (t->getPosition().x >= this->getPosition().x && this->getPosition().x >= (t->getPosition().x - 150)) {
+
+				if (t->getPosition().y == this->getPosition().y) {
+					face_right = true;
+					this->spd.x += 30 * dt;
+					torchFound = true;
+				}
+				else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 250) {
+					face_right = true;
+					this->spd.x += 30 * dt;
+					torchFound = true;
+					this->spd.y += 25 * dt;
+				}
+				else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 250) {
+					face_right = true;
+					this->spd.x += 30 * dt;
+					torchFound = true;
+					this->spd.y -= 25 * dt;
+				}
+			}
+
+			else {
+				torchFound = false;
+			}
+		}
+
+		//Right
+		else if (face_right && !attacking)
+		{
+			//attack right
+			//If there is attack code
+
+			if (t->getPosition().x + 100 >= this->getPosition().x && this->getPosition().x >= (t->getPosition().x - 150)) {
+
+				if (player->getPosition().y == this->getPosition().y) {
+					this->spd.x += 30 * dt;
+					torchFound = true;
+				}
+				else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 300) {
+					this->spd.x += 30 * dt;
+					torchFound = true;
+					this->spd.y += 25 * dt;
+				}
+				else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 300) {
+					this->spd.x += 30 * dt;
+					torchFound = true;
+					this->spd.y -= 25 * dt;
+				}
+			}
+
+			//Turn Go Left
+			else if (t->getPosition().x <= this->getPosition().x && this->getPosition().x <= (t->getPosition().x + 150)) {
+
+				if (t->getPosition().y == this->getPosition().y) {
+					face_right = false;
+					this->spd.x -= 30 * dt;
+					torchFound = true;
+				}
+				else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 300) {
+					face_right = false;
+					this->spd.x -= 30 * dt;
+					torchFound = true;
+					this->spd.y += 25 * dt;
+				}
+				else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 300) {
+					face_right = false;
+					this->spd.x -= 30 * dt;
+					torchFound = true;
+					this->spd.y -= 25 * dt;
+				}
+			}
+
+			else {
+				torchFound = false;
+			}
+		}
+	}
+
 	if (timer >= 0) {
 		timer -= dt;
 	}
-	if (timer <= 0 && (!attacking))
+	if (timer <= 0 && (!attacking) && !torchFound)
 	{
 		std::random_device gen;
 		std::uniform_int_distribution<> range(1, 40);
@@ -516,7 +600,7 @@ void Moth::AI(Player * player, float dt)
 		}
 	}
 
-	if (!attacking) {
+	if (!attacking && !torchFound) {
 		if (face_right) {
 			this->spd.x += 60 * dt;
 		}
@@ -574,23 +658,12 @@ void Moth::Hit(Player * p)
 			}
 		}
 
-		if (o_head > t_foot && o_foot < t_head &&
-			o_left + p->spd.x < t_right + spd.x && o_right + p->spd.x > t_left + spd.x) {
-			if (p->spd.x > 0) {
-				p->spd.y = 3;
-				p->spd.x = -3;
-				this->spd.x = 0;
-				this->spd.y = 0;
-				p->hurt(1);
-			}
-			else {
-				//other->spd.x = (t_right + spd.x) - o_left;
-				p->spd.y = 3;
-				p->spd.x = 3;
-				this->spd.x = 0;
-				this->spd.y = 0;
-				p->hurt(1);
-			}
+		if (o_head > t_foot && o_foot < t_head && o_left + p->spd.x < t_right + spd.x && o_right + p->spd.x > t_left + spd.x) {
+			p->spd.y = 3;
+			p->spd.x = (this->spd.x) * 4;
+			this->spd.x = 0;
+			this->spd.y = 0;
+			p->hurt(1);
 		}
 
 	}

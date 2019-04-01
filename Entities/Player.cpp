@@ -50,6 +50,9 @@ void Player::hurt(int dmg) {
 		hp -= dmg;
 		knock_timer = KNOCK_TIME;
 		invince_timer = INVINCE_TIME;
+		if ((state == PS_Crouch || state == PS_Glide) && can_vert) {
+			Stand();
+		}
 		state = PS_HURT;
 		stopAllActions();
 		runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));

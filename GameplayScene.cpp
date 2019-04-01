@@ -176,9 +176,11 @@ void GameplayScene::update(float dt) {
 		knight->AI(player, dt);
 	}
 
-	if (moth != nullptr) {
-		moth->Update(dt);
-		moth->AI(player, dt);
+	if (moth.size() > 0) {
+		for each (Moth* m in moth) {
+			m->Update(dt);
+			m->AI(player, dt);
+		}
 	}
 
 	if (rat.size() > 0) {
@@ -379,9 +381,10 @@ void GameplayScene::update(float dt) {
 					i->HitDetect(knight);
 				}
 
-				if (moth != nullptr)
-				{
-					i->HitDetect(moth);
+				if (moth.size() > 0) {
+					for each (Moth* m in moth) {
+						i->HitDetect(m);
+					}
 				}
 
 				if (rat.size() > 0) {
@@ -418,8 +421,10 @@ void GameplayScene::update(float dt) {
 			platform->HitDetect(knight);
 		}
 
-		if (moth != nullptr) {
-			platform->HitDetect(moth);
+		if (moth.size() > 0) {
+			for each (Moth* m in moth) {
+				platform->HitDetect(m);
+			}
 		}
 
 		if (rat.size() > 0) {
@@ -450,9 +455,10 @@ void GameplayScene::update(float dt) {
 				p->HitDetect(knight);
 			}
 
-			if (moth != nullptr)
-			{
-				p->HitDetect(moth);
+			if (moth.size() > 0) {
+				for each (Moth* m in moth) {
+					p->HitDetect(m);
+				}
 			}
 
 			if (rat.size() > 0) {
@@ -517,8 +523,11 @@ void GameplayScene::update(float dt) {
 	if (knight != nullptr) {
 		knight->Move();
 	}
-	if (moth != nullptr) {
-		moth->Move();
+
+	if (moth.size() > 0) {
+		for each (Moth* m in moth) {
+			m->Move();
+		}
 	}
 
 	if (rat.size() > 0) {
@@ -533,9 +542,11 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (moth != nullptr) {
-		if (moth->HitDetect(player)) {
-			moth->Hit(player);
+	if (moth.size() > 0) {
+		for each (Moth* m in moth) {
+			if (m->HitDetect(player)) {
+				m->Hit(player);
+			}
 		}
 	}
 
@@ -657,6 +668,8 @@ bool A1_R1::init()
 				return false;
 			}
 		}
+
+
 
 		//Push_back
 		//for each (Ladder* lad in ladders) {
@@ -1102,8 +1115,6 @@ bool A1_R4::init()
 		else {
 			return false;
 		}
-
-
 
 		// x,y w,h
 		terrain.pushBack(Block::create(0, 0, 1000, 150)); //Ground
@@ -1708,6 +1719,19 @@ bool A2_R1::init()
 				return false;
 			}
 		}
+
+		moth.pushBack(Moth::create("MothBoi.png", &torches));
+		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(0)->getBoundingBox().size.height / 2)));
+		moth.at(0)->setPosition(500, 300);
+
+		for each (Moth* m in moth) {
+			if (m != nullptr) {
+
+				this->addChild(m);
+
+			}
+		}
+
 		player->switchLight();
 		view = this->getDefaultCamera();
 

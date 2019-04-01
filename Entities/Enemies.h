@@ -45,14 +45,15 @@ private:
 	bool face_right = true;
 	bool go_up = true;
 	bool attacking = false;
-	bool delay = false;
+	bool torchFound = false;
 	bool paused = false;
 	int turn;
 	const float TURNT_TIME = 3;
 	float timer = TURNT_TIME;
-	int hp = 5;
+	int hp = 2;
+	cocos2d::Vector<Torch *> * torches;
 public:
-	static Moth * create(const std::string& filename);
+	static Moth * create(const std::string& filename, cocos2d::Vector<Torch *> * t);
 
 	void setSpd(cocos2d::Vec2 m_spd);
 	cocos2d::Vec2 getSpd();
