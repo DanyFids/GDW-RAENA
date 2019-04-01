@@ -2,7 +2,6 @@
 #include "2d/CCScene.h"
 #include "GamePad.h"
 
-
 class MenuScene : public cocos2d::Scene {
 private:
 	Gamepad* TheGamepad;
