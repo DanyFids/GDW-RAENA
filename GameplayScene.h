@@ -86,6 +86,34 @@ public:
 	//player_inventory * currInv;
 	virtual bool init();
 
+	void clearKeys() { 
+	
+		GAMEPLAY_INPUT.key_up = false;
+		GAMEPLAY_INPUT.key_right = false;
+		GAMEPLAY_INPUT.key_down = false;
+		GAMEPLAY_INPUT.key_left = false;
+		GAMEPLAY_INPUT.key_space = false;
+		GAMEPLAY_INPUT.key_space_p = false;
+		GAMEPLAY_INPUT.key_jump = false;
+		GAMEPLAY_INPUT.key_jump_p = false;
+		GAMEPLAY_INPUT.key_crouch = false;
+		GAMEPLAY_INPUT.key_crouch_p = false;
+		GAMEPLAY_INPUT.key_interact = false;
+	
+		GAMEPLAY_INPUT.key_one = false;
+		GAMEPLAY_INPUT.key_oneP = false;
+		GAMEPLAY_INPUT.key_F = false;
+		GAMEPLAY_INPUT.key_FP = false;
+		GAMEPLAY_INPUT.key_two = false;
+		GAMEPLAY_INPUT.key_twoP = false;
+		
+		GAMEPLAY_INPUT.key_P1 = false;
+		GAMEPLAY_INPUT.key_P1P = false;
+		GAMEPLAY_INPUT.key_P2 = false;
+		GAMEPLAY_INPUT.key_P2P = false;
+
+	}
+
 	//void menuCloseCallback(cocos2d::Ref* pSender);
 
 	void update(float dt) override;

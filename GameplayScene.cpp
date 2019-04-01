@@ -30,7 +30,9 @@ Scene* GameplayScene::createScene() {
 
 void GameplayScene::movePlayer(cocos2d::Vec2 move)
 {
+	this->clearKeys();
 	player->setPosition(move);
+	
 }
 
 
@@ -767,7 +769,7 @@ bool A1_R2::init()
 
 		//Entities
 		if (player != nullptr) {
-			player->setPosition(Vec2(50,245));
+			//player->setPosition(Vec2(50,245));
 
 			//this->addChild(player, 10);
 		}
@@ -801,8 +803,8 @@ bool A1_R2::init()
 		//	}
 		//}
 
-		interactables.pushBack(LoadZone::create(-10, 205, 10, 1000, A1_R1, Vec2(150, 230))); // LoadZone
-		interactables.pushBack(LoadZone::create(1000, 670, 10, 400, A1_R3, Vec2(50, 205))); // LoadZone
+		interactables.pushBack(LoadZone::create(-10, 205, 10, 1000, A1_R1, Vec2(800, 700))); // LoadZone
+		interactables.pushBack(LoadZone::create(1000, 670, 10, 400, A1_R3, Vec2(50, 255))); // LoadZone
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -966,8 +968,8 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 			
 		}
 
-		interactables.pushBack(LoadZone::create(-10, 205, 10, 400, A1_R2, Vec2(50, 205))); // LoadZone
-		interactables.pushBack(SceneDoor::create("inner_cave_door.png", Vec2(1050, 250), Vec2(50,200), A1_R4));	//SceneDoor
+		interactables.pushBack(LoadZone::create(-10, 205, 10, 400, A1_R2, Vec2(900, 750))); // LoadZone
+		interactables.pushBack(SceneDoor::create("inner_cave_door.png", Vec2(1050, 250), Vec2(70,600), A1_R4));	//SceneDoor
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -1110,8 +1112,8 @@ bool A1_R4::init()
 		}
 
 		
-		interactables.pushBack(LoadZone::create(1000, 300, 10, 400, A1_R5, Vec2(50, 205))); // LoadZone
-		interactables.pushBack(SceneDoor::create("outer_cave_door.png", Vec2(50, 550), Vec2(50, 200), A1_R3));	//SceneDoor
+		interactables.pushBack(LoadZone::create(1000, 300, 10, 400, A1_R5, Vec2(50, 235))); // LoadZone
+		interactables.pushBack(SceneDoor::create("outer_cave_door.png", Vec2(50, 550), Vec2(950, 280), A1_R3));	//SceneDoor
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -1268,8 +1270,8 @@ bool A1_R5::init()
 			}
 		}
 
-		interactables.pushBack(LoadZone::create(-10, 165, 10, 400, A1_R4, Vec2(50, 205))); // LoadZone
-		interactables.pushBack(LoadZone::create(1620, 550, 10, 400, A1_R6, Vec2(50, 205))); // LoadZone
+		interactables.pushBack(LoadZone::create(-10, 165, 10, 400, A1_R4, Vec2(925, 500))); // LoadZone
+		interactables.pushBack(LoadZone::create(1620, 550, 10, 400, A1_R6, Vec2(50, 250))); // LoadZone
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -1367,7 +1369,7 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 
 		_effect->setLightCutoffRadius(250);
 		_effect->setLightHalfRadius(0.5);
-		_effect->setBrightness(0.7);
+		_effect->setBrightness(0.7);												
 		_effect->setAmbientLightColor(Color3B(255, 255, 255));
 
 		player->setEffect(_effect, "test_NM.png");
