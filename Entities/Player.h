@@ -25,7 +25,7 @@ private:
 	const float ATK_TIME = 0.3f;
 	const float GLIDE_TIME = 2;
 	const float KNOCK_TIME = 0.5f;
-	const float INVINCE_TIME = 2.0f;
+	const float INVINCE_TIME = 1.0f;
 
 	const int DMG = 1;
 	int player_light;
@@ -59,6 +59,7 @@ public:
 	void switchLight();
 	void moveLightToPlayer();
 	void hurt(int dmg);
+	float getInvince();
 
 	// Inherited via Entity
 	virtual bool HitDetect(Entity * other) override;
@@ -101,6 +102,14 @@ public:
 
 	bool isKnocked() {
 		return knock_timer > 0;
+	}
+
+	void setFacingRight(bool f) {
+		face_right = f;
+	}
+
+	bool isAttacking() {
+		return attacking;
 	}
 
 	void ResetObstruction() {

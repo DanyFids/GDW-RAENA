@@ -32,6 +32,8 @@ protected:
 	bool promptInit = false;
 	bool overlap = false;
 
+	cocos2d::Vector<Moth *> moth;
+	BossKnight * bossKnight;
 	cocos2d::Vector<Rat *> rat;
 
 	player_inventory * currInv;
@@ -145,6 +147,10 @@ public:
 	void update(float dt) override;
 
 	void setKnight(Knight * k) { knight = k; }
+
+	void addTerrain(Block* howCouldDylanNotKnowHowToDoThis) {
+		terrain.pushBack(howCouldDylanNotKnowHowToDoThis);
+	}
 
 	
 

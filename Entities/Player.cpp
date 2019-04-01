@@ -50,10 +50,18 @@ void Player::hurt(int dmg) {
 		hp -= dmg;
 		knock_timer = KNOCK_TIME;
 		invince_timer = INVINCE_TIME;
+		if ((state == PS_Crouch || state == PS_Glide) && can_vert) {
+			Stand();
+		}
 		state = PS_HURT;
 		stopAllActions();
 		runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
 	}
+}
+
+float Player::getInvince()
+{
+	return invince_timer;
 }
 
 bool Player::HitDetect(Entity * other)
@@ -148,13 +156,6 @@ void Player::Move()
 			this->stopAllActions();
 			this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
 		}
-
-		if (spd.x > 0) {
-			face_right = true;
-		}
-		else if (spd.x < 0) {
-			face_right = false;
-		}
 	}
 }
 
@@ -187,10 +188,20 @@ void Player::Attack()
 
 		cocos2d::Vec2 atk_pos;
 		if (face_right) {
-			atk_pos = cocos2d::Vec2(getPositionX() + (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
+			if (state == PS_Stand) {
+				atk_pos = cocos2d::Vec2(getPositionX() + (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
+			}
+			else {
+				atk_pos = cocos2d::Vec2(getPositionX() + (getBoundingBox().size.width / 2 + 18), getPositionY() + 10);
+			}
 		}
 		else {
-			atk_pos = cocos2d::Vec2(getPositionX() - (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
+			if (state == PS_Stand) {
+				atk_pos = cocos2d::Vec2(getPositionX() - (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
+			}
+			else {
+				atk_pos = cocos2d::Vec2(getPositionX() - (getBoundingBox().size.width / 2 + 18), getPositionY() + 10);
+			}
 		}
 
 		atk = Fireball::create(atk_pos, getEffect());
