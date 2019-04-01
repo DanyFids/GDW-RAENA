@@ -15,6 +15,7 @@ class PuzzleInteract;
 
 class InventoryScene : public cocos2d::Scene {
 protected:
+	player_inventory * p_inv;
 	SceneDoor * sd;
 	Door * d;
 	cocos2d::Vector< Interactable*> puzzles;

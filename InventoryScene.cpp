@@ -239,9 +239,10 @@ bool InventoryScene::init()
 
 
 
-	auto use = cocos2d::ui::Button::create("Use.png", "CloseSelected.png");
+	auto use = cocos2d::ui::Button::create("UI/Use.png", "UI/UseClicked.png");
 
 	use->setTitleText("");
+	use->setScale(2);
 
 	use->addTouchEventListener([this](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
 		switch (type)
@@ -249,7 +250,11 @@ bool InventoryScene::init()
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			useItem((*inventory)[pointer].itemName);
+			if (this->inventory->size() > 0)
+			{
+				this->useItem((*inventory)[pointer].itemName);
+			}
+			
 			break;
 		default:
 			break;
@@ -310,9 +315,10 @@ bool InventoryScene::init()
 
 	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(KeyHandle, this);
 
-	auto examine = cocos2d::ui::Button::create("Examine.png", "CloseSelected.png");
+	auto examine = cocos2d::ui::Button::create("UI/Examine.png", "UI/ExamineClicked.png");
 
 	examine->setTitleText("");
+	examine->setScale(2);
 	examine->addTouchEventListener([this](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
 		if (lastLabel != nullptr)
 		{
@@ -326,9 +332,11 @@ bool InventoryScene::init()
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-
+			if(p_inv->items.size()>0)
+			{
 			description->setPosition(400, 200);
 			addChild(description, 2);
+			}
 			break;
 		default:
 			break;
@@ -337,52 +345,55 @@ bool InventoryScene::init()
 
 	
 
-	auto combine = cocos2d::ui::Button::create("Combine.png", "CloseSelected.png");
+	auto combine = cocos2d::ui::Button::create("UI/Combine.png", "UI/CombineClicked.png");
 
 	combine->setTitleText("");
-
+	combine->setScale(2);
 	combine->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			if (combine1 == 0) {
-				combine1 = pointer;
-				combinewith = Label::createWithTTF("What would you like to combine the "+ (*inventory)[combine1].itemName+" with?", "fonts/fofbb_reg.ttf", 16);
-				combinewith->setPosition(400, 200);
-				addChild(combinewith, 2);
-			}
-			else {
-				if(!(pointer == combine1)){
-					combine2 = pointer;
-					removeChild(combinewith);
+			if (p_inv->items.size() > 0)
+			{
+				if (combine1 == 0) {
+					combine1 = pointer;
+					combinewith = Label::createWithTTF("What would you like to combine the " + (*inventory)[combine1].itemName + " with?", "fonts/fofbb_reg.ttf", 16);
+					combinewith->setPosition(400, 200);
+					addChild(combinewith, 2);
+				}
+				else {
+					if (!(pointer == combine1)) {
+						combine2 = pointer;
+						removeChild(combinewith);
 
-					int yolo = (*inventory)[combine1].Val + (*inventory)[combine2].Val;
+						int yolo = (*inventory)[combine1].Val + (*inventory)[combine2].Val;
 
-					if (combine1 < combine2) {
-						int temp = combine1;
-						combine1 = combine2;
-						combine2 = temp;
+						if (combine1 < combine2) {
+							int temp = combine1;
+							combine1 = combine2;
+							combine2 = temp;
 
-					}
+						}
 
-					itemEnum newItem;
-					try {
-						newItem = (itemEnum)yolo;
-					}
-					catch(exception e){
-						newItem = I_NONE;
-					}
+						itemEnum newItem;
+						try {
+							newItem = (itemEnum)yolo;
+						}
+						catch (exception e) {
+							newItem = I_NONE;
+						}
 
-					if (newItem != I_NONE)
-					{
-						dropItem(combine1);
-						dropItem(combine2);
-						pickUpItem(inventory->size() - 1, "newItem", "CloseSelected.png", "This is the new item", newItem);
-						combine1 = 0;
-						combine2 = 0;
-						pointer = inventory->size() - 1;
+						if (newItem != I_NONE)
+						{
+							dropItem(combine1);
+							dropItem(combine2);
+							pickUpItem(inventory->size() - 1, "newItem", "CloseSelected.png", "This is the new item", newItem);
+							combine1 = 0;
+							combine2 = 0;
+							pointer = inventory->size() - 1;
+						}
 					}
 				}
 			}
@@ -396,7 +407,7 @@ bool InventoryScene::init()
 
 
 
-	auto left = cocos2d::ui::Button::create("Left.png", "CloseSelected.png");
+	auto left = cocos2d::ui::Button::create("UI/Left_Arrow.png", "UI/Left_Arrow.png");
 
 	left->setTitleText("");
 
@@ -421,7 +432,7 @@ bool InventoryScene::init()
 
 
 
-	auto right = cocos2d::ui::Button::create("Right.png", "CloseSelected.png");
+	auto right = cocos2d::ui::Button::create("UI/Right_Arrow.png", "UI/Right_Arrow.png");
 
 	right->setTitleText("");
 

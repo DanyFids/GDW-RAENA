@@ -62,10 +62,19 @@ bool Pickup::inRange(Entity * other)
 
 void Pickup::Effect(Entity * player, player_inventory * p_inv)
 {
+	inventoryItem newItem;
 	switch (this->ItemType) {
 	case ROSE:
-		inventoryItem newItem = { 0, "Rose", "Rose.png","Beautiful Flower", ROSE };
-
+		newItem = { (int)p_inv->items.size(), "Rose", "Rose.png","Beautiful Flower", ROSE };
+		p_inv->items.push_back(newItem);
+		break;
+	case BANDAGE:
+		newItem = { (int)p_inv->items.size(), "Bandage", "Bandage.png","Dirty Cloth.\n Use to heal you wounds.", BANDAGE };
+		p_inv->items.push_back(newItem);
+		break;
+	case KEY:
+		newItem = { (int)
+			p_inv->items.size(), "Key", "Key.png","A Rusted Key.\n Good for one door.", KEY };
 		p_inv->items.push_back(newItem);
 		break;
 	}

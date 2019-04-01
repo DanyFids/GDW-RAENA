@@ -148,6 +148,7 @@ public:
 
 	void setKnight(Knight * k) { knight = k; }
 
+	//void clearKeys();
 
 	std::vector<inventoryItem>* getInvRef() {
 		return &(currInv->items);
