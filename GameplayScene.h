@@ -170,3 +170,10 @@ public:
 	void A2_R4::update(float dt);
 	CREATE_FUNC(A2_R4);
 };
+
+class A2_R5 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A2_R5::update(float dt);
+	CREATE_FUNC(A2_R5);
+};

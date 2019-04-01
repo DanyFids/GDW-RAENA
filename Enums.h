@@ -33,6 +33,7 @@ enum levelEnum {
 	A2_R2,
 	A2_R3,
 	A2_R4,
+	A2_R5,
 	nil
 };
 
