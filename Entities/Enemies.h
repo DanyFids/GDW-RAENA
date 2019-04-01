@@ -106,3 +106,18 @@ public:
 	virtual void Update(float dt) override;
 	virtual void Move() override;
 };
+
+class BossKnight : public Enemy {
+private:
+
+public:
+	// Inherited via Enemy
+	void AI(Player* player, float dt);
+	void Hurt(int dmg);
+	void Hit(Player * p);
+
+	// Inherited via Entity
+	virtual bool HitDetect(Entity * other) override;
+	virtual void Update(float dt) override;
+	virtual void Move() override;
+};

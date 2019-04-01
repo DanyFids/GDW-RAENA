@@ -176,6 +176,11 @@ void GameplayScene::update(float dt) {
 		knight->AI(player, dt);
 	}
 
+	if (bossKnight != nullptr) {
+		bossKnight->Update(dt);
+		bossKnight->AI(player, dt);
+	}
+
 	if (moth.size() > 0) {
 		for each (Moth* m in moth) {
 			m->Update(dt);
@@ -454,6 +459,10 @@ void GameplayScene::update(float dt) {
 			platform->HitDetect(knight);
 		}
 
+		if (bossKnight != nullptr) {
+			platform->HitDetect(bossKnight);
+		}
+
 		if (moth.size() > 0) {
 			for each (Moth* m in moth) {
 				platform->HitDetect(m);
@@ -575,6 +584,10 @@ void GameplayScene::update(float dt) {
 		knight->Move();
 	}
 
+	if (bossKnight != nullptr) {
+		bossKnight->Move();
+	}
+
 	if (moth.size() > 0) {
 		for each (Moth* m in moth) {
 			m->Move();
@@ -591,6 +604,10 @@ void GameplayScene::update(float dt) {
 		if (knight->HitDetect(player)) {
 			player->hurt(2);
 		}
+	}
+
+	if (bossKnight != nullptr && player->getState() != PS_HURT) {
+		bossKnight->HitDetect(player);
 	}
 
 	if (moth.size() > 0) {
@@ -1506,8 +1523,7 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 
 		// x,y w,h
 		terrain.pushBack(Block::create(0, 0, 1400, 200)); //Ground
-		
-
+		terrain.pushBack(Block::create(1402, 0, 1500, 650)); //wall
 
 
 		for each (Entity* plat in terrain)
@@ -1604,10 +1620,6 @@ void A1_R6::update(float dt)
 	else if (view->getPositionX() >= 1000 && !cutSceneC) {
 		cutScene = false;
 		cutSceneC = true;
-		terrain.pushBack(Block::create(0, 0, 598, 650)); //wall
-		addChild(terrain.at(terrain.size() -1));
-		terrain.pushBack(Block::create(1402, 0, 1500, 650)); //wall
-		addChild(terrain.at(terrain.size() - 1));
 	}
 
 	if (player->getHP() <= 0) {

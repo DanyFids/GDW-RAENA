@@ -23,6 +23,7 @@ class GameplayScene : public cocos2d::Scene {
 protected:
 	Player * player;
 	Knight * knight;
+	BossKnight * bossKnight;
 	cocos2d::Vector<Moth *> moth;
 	cocos2d::Vector<Rat *> rat;
 
@@ -91,6 +92,10 @@ public:
 	void update(float dt) override;
 
 	void setKnight(Knight * k) { knight = k; }
+
+	void addTerrain(Block* howCouldDylanNotKnowHowToDoThis) {
+		terrain.pushBack(howCouldDylanNotKnowHowToDoThis);
+	}
 
 	CREATE_FUNC(GameplayScene);
 };

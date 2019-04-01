@@ -1014,3 +1014,47 @@ Rat * Rat::create(const std::string & filename, Entity * Platform)
 	//
 	//	}
 	//}
+
+	void BossKnight::AI(Player * player, float dt)
+	{
+		this->spd.x += 70 * dt;
+	}
+
+	void BossKnight::Hurt(int dmg)
+	{
+	}
+
+	void BossKnight::Hit(Player * p)
+	{
+		p->hurt(6);
+	}
+
+	bool BossKnight::HitDetect(Entity * other)
+	{
+		if (((Player *)other)->getPositionX() <= this->getPositionX()) {
+			Hit((Player*)other);
+			return true;
+		}
+		return false;
+	}
+
+	void BossKnight::Update(float dt)
+	{
+		spd.y += GRAVITY * dt;
+		if (spd.y < T_VELOCITY) {
+			spd.y = T_VELOCITY;
+		}
+
+		//spd.y = 0;
+		spd.x = 0;
+	}
+
+	void BossKnight::Move()
+	{
+		setPosition(getPosition() + spd);
+
+		if (spd.y != 0 && on_ground) {
+			on_ground = false;
+		}
+
+	}
