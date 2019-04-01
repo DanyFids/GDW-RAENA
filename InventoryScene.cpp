@@ -164,11 +164,11 @@ bool InventoryScene::init()
 	BG->setPosition({ origin.x + (visibleSize.width / 2), origin.y + (visibleSize.height / 2) });
 	addChild(BG);
 	
-	pickUpItem(0, "Key", "Key.png","This can be used to open doors", e1);
-	pickUpItem(1, "Bandages", "Bandages.png", "This can be used to heal one heart", e2);
-	pickUpItem(2, "Rose", "Rose.png","Beautiful flower",e3);
-	pickUpItem(3, "Key", "Key.png", "This can be used to open doors", e1);
-	pickUpItem(4, "Bandages", "Bandages.png", "This can be used to heal one heart", e2);
+	//pickUpItem(0, "Key", "Key.png","This can be used to open doors", e1);
+	//pickUpItem(1, "Bandages", "Bandages.png", "This can be used to heal one heart", e2);
+	//pickUpItem(2, "Rose", "Rose.png","Beautiful flower",e3);
+	//pickUpItem(3, "Key", "Key.png", "This can be used to open doors", e1);
+	//pickUpItem(4, "Bandages", "Bandages.png", "This can be used to heal one heart", e2);
 
 	title = Label::createWithTTF("INVENTORY", "fonts/horrendo.ttf", 36);
 	invLabel = Label::createWithTTF("There is nothing in your inventory.", "fonts/horrendo.ttf", 24);

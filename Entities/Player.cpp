@@ -10,7 +10,7 @@ Player * Player::create(const std::string& filename, cocos2d::Scene * s)
 	auto ret = new (std::nothrow) Player;
 	if (ret && ret->initWithFile(filename)) {
 		cocos2d::Vector<cocos2d::SpriteFrame *> stand_frames = { cocos2d::SpriteFrame::create("dragon_idle.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38, 64 }) };
-		cocos2d::Vector<cocos2d::SpriteFrame *> crouch_frames = { cocos2d::SpriteFrame::create( "test_dummy_2.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }) };
+		cocos2d::Vector<cocos2d::SpriteFrame *> crouch_frames = { cocos2d::SpriteFrame::create( "player_crouch.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }) };
 
 		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(stand_frames, 0.1f));
 		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(crouch_frames, 0.1f));
@@ -46,9 +46,10 @@ void Player::moveLightToPlayer()
 }
 
 void Player::hurt(int dmg) {
-	if (state != PS_HURT) {
+	if (state != PS_HURT && invince_timer <= 0) {
 		hp -= dmg;
 		knock_timer = KNOCK_TIME;
+		invince_timer = INVINCE_TIME;
 		state = PS_HURT;
 		stopAllActions();
 		runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
@@ -118,6 +119,20 @@ void Player::Update(float dt)
 			atk = nullptr;
 
 			switchLight();
+		}
+	}
+
+	if (knock_timer > 0) {
+		knock_timer -= dt;
+		state = PS_HURT;
+		if (knock_timer <= 0) {
+			state = PS_Stand;
+		}
+	}
+
+	if (invince_timer > 0) {
+		invince_timer -= dt;
+		if (invince_timer <= 0) {
 		}
 	}
 }
@@ -349,7 +364,7 @@ void Player::DetectObstruction(Entity * other)
 	float o_left = other->getPositionX() - (other->getBoundingBox().size.width * anchorP.x);
 	float o_right = other->getPositionX() + (other->getBoundingBox().size.width - (other->getBoundingBox().size.width * anchorP.x));
 
-	if (t_foot + spd.y < o_head && t_head + spd.y > o_foot && t_left + spd.x < o_right && t_right + spd.x > o_left) {
+	if (t_foot < o_head && t_head > o_foot && t_left < o_right && t_right > o_left) {
 		switch (state) {
 		case PS_Glide:
 		case PS_Crouch:
