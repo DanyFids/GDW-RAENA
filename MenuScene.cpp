@@ -107,7 +107,8 @@ static void problemLoading(const char* filename)
 }
 
 void MenuScene::menuReturnCallback(Ref* pSender) {
-	Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R6));
+
+	Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R6));  //GAME START
 }
 
 void MenuScene::menuCloseCallback(Ref* pSender)
