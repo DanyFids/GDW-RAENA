@@ -8,6 +8,7 @@
 #include "Prompt.h"
 #include "Enums.h"
 
+#include "Entities/CoreEntities.h"
 #include "Entities/Door.h"
 #include "Entities/PuzzleInteractable.h"
 #include "Entities/Pickups.h"
@@ -103,12 +104,20 @@ bool GameplayScene::init() {
 		KeyHandler->onKeyReleased = [this](EventKeyboard::KeyCode key, Event * event) {
 			switch (key) {
 			case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
+				if (player->getState() == PS_Crouch)
+				{
+					player->ChangeAnimation(1);
+				}
 				GAMEPLAY_INPUT.key_left = false;
 				break;
 			case EventKeyboard::KeyCode::KEY_UP_ARROW:
 				GAMEPLAY_INPUT.key_up = false;
 				break;
 			case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
+				if (player->getState() == PS_Crouch)
+				{
+					player->ChangeAnimation(1);
+				}
 				GAMEPLAY_INPUT.key_right = false;
 				break;
 			case EventKeyboard::KeyCode::KEY_DOWN_ARROW:
@@ -308,6 +317,10 @@ void GameplayScene::update(float dt) {
 	if (player->getState() != PS_HURT) {
 		if (GAMEPLAY_INPUT.key_left || TheGamepad->leftStickX <= -0.2 && TheGamepad->CheckConnection()) {
 			if (player->getState() != PS_Climb) {
+				if (player->getState() == PS_Crouch) {
+					player->spd.x = -CROUCH_SPEED * dt;
+					player->ChangeAnimation(2);
+				}
 				player->setFlipX(true);
 				player->spd.x = -PLAYER_SPEED * dt;
 			}
@@ -318,6 +331,7 @@ void GameplayScene::update(float dt) {
 			if (player->getState() != PS_Climb) {
 				if (player->getState() == PS_Crouch) {
 					player->spd.x = CROUCH_SPEED * dt;
+					player->ChangeAnimation(2);
 				}
 				player->setFlipX(false);
 				player->spd.x = PLAYER_SPEED * dt;
