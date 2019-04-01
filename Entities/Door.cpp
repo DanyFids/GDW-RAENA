@@ -226,6 +226,7 @@ SceneDoor * SceneDoor::create(std::string filename, cocos2d::Vec2 p, cocos2d::Ve
 		ret->requiredKey = key;
 		ret->goTo = lvl;
 		ret->movePlayer = pPos;
+		ret->setScale(1.5);
 		//ret->goTo = scn;
 
 		if (key != NONE) { ret->locked = true; } // If this door requires a key it starts as locked.
