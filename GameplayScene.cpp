@@ -50,8 +50,21 @@ bool GameplayScene::init() {
 	player->getTexture()->setTexParameters(tp);
 
 	//creates the audio
-	/*auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-	TheAudio = audio;*/
+	auto audioF = CocosDenshion::SimpleAudioEngine::getInstance();
+	TheAudioF = audioF;
+	auto audioD = CocosDenshion::SimpleAudioEngine::getInstance();
+	TheAudioD = audioD;
+	auto audioB = CocosDenshion::SimpleAudioEngine::getInstance();
+	TheAudioB = audioB;
+	auto audioT = CocosDenshion::SimpleAudioEngine::getInstance();
+	TheAudioT = audioT;
+
+	if (!this->audioinitT)
+	{
+		TheAudioT->preloadBackgroundMusic("RAENA SOUNDSCAPE/Music/RaenaTitle.wav");
+		TheAudioT->playBackgroundMusic("RAENA SOUNDSCAPE/Music/RaenaTitle.wav", true);
+	}
+	audioinitT = true;
 
 	
  	this->addChild(player,10);
@@ -725,13 +738,14 @@ bool A1_R1::init()
 void A1_R1::update(float dt)
 {
 	
-	if (!this->audioinit)
+	if (!this->audioinitF)
 	{
-		auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-		audio->preloadBackgroundMusic("RAENA SOUNDSCAPE/Music/Forest Waltz.mp3");
-		audio->playBackgroundMusic("RAENA SOUNDSCAPE/Music/Forest Waltz.mp3", true);
+		TheAudioT->stopBackgroundMusic("RAENA SOUNDSCAPE/Music/RaenaTitle.wav");
+		TheAudioF->preloadBackgroundMusic("RAENA SOUNDSCAPE/Music/Forest Waltz.mp3");
+		TheAudioF->playBackgroundMusic("RAENA SOUNDSCAPE/Music/Forest Waltz.mp3", true);
+
 	}
-	audioinit = true;
+	audioinitF = true;
 
 	GameplayScene::update(dt);
 }

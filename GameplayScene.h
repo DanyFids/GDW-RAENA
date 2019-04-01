@@ -45,7 +45,10 @@ protected:
 
 	Gamepad* TheGamepad;
 
-	CocosDenshion::SimpleAudioEngine* TheAudio;
+	CocosDenshion::SimpleAudioEngine* TheAudioF;
+	CocosDenshion::SimpleAudioEngine* TheAudioD;
+	CocosDenshion::SimpleAudioEngine* TheAudioB;
+	CocosDenshion::SimpleAudioEngine* TheAudioT;
 
 	cocos2d::Vector<Entity *> terrain;
 	cocos2d::Vector<Ladder *> ladders;
@@ -53,7 +56,10 @@ protected:
 	cocos2d::Vector<Pushable *> Pushables;
 	cocos2d::Vector<Projectile *> Projectiles;
 
-	bool audioinit = false;
+	bool audioinitF = false;
+	bool audioinitD = false;
+	bool audioinitB = false;
+	bool audioinitT = false;
 
 
 	int STAGE_WIDTH = 1000;
