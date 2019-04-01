@@ -11,7 +11,18 @@ Player * Player::create(const std::string& filename, cocos2d::Scene * s)
 	if (ret && ret->initWithFile(filename)) {
 		cocos2d::Vector<cocos2d::SpriteFrame *> stand_frames = { cocos2d::SpriteFrame::create("dragon_idle.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38, 64 }) };
 		//cocos2d::Vector<cocos2d::SpriteFrame *> walk_frames = { cocos2d::SpriteFrame::create(""), cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}) };
-		cocos2d::Vector<cocos2d::SpriteFrame *> crouch_frames = { cocos2d::SpriteFrame::create( "test_dummy_2.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }) };
+		//cocos2d::Vector<cocos2d::SpriteFrame *> crouch_frames = {cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle_anim0000.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+		//	                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle_anim0001.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+		//	                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle_anim0002.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+		//	                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle_anim0003.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+		//	                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle_anim0004.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+		//	                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle_anim0005.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+		//	                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle_anim0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+		//	                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle_anim0007.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+		//	                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle_anim0008.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+		//	                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle_anim0009.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+		//	                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle_anim0010.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+		//	                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle_anim0011.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 })};
 		cocos2d::Vector<cocos2d::SpriteFrame *> crouch_walk_frames = { cocos2d::SpriteFrame::create("player_crouch_walk0000.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
 																	   cocos2d::SpriteFrame::create("player_crouch_walk0001.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
 																	   cocos2d::SpriteFrame::create("player_crouch_walk0002.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
@@ -20,10 +31,9 @@ Player * Player::create(const std::string& filename, cocos2d::Scene * s)
 																	   cocos2d::SpriteFrame::create("player_crouch_walk0005.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
 																	   cocos2d::SpriteFrame::create("player_crouch_walk0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
 																	   cocos2d::SpriteFrame::create("player_crouch_walk0007.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}) };
-
 		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(stand_frames, 0.1f));
 		//ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(walk_frames, 0.1f));
-		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(crouch_frames, 0.1f));
+		//ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(crouch_frames, 0.1f));
 		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(crouch_walk_frames, 0.1f));
 
 		ret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(ret->animations.at(0))));
@@ -57,13 +67,22 @@ void Player::moveLightToPlayer()
 }
 
 void Player::hurt(int dmg) {
-	if (state != PS_HURT) {
+	if (state != PS_HURT && invince_timer <= 0) {
 		hp -= dmg;
 		knock_timer = KNOCK_TIME;
+		invince_timer = INVINCE_TIME;
+		if ((state == PS_Crouch || state == PS_Glide) && can_vert) {
+			Stand();
+		}
 		state = PS_HURT;
 		stopAllActions();
 		runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
 	}
+}
+
+float Player::getInvince()
+{
+	return invince_timer;
 }
 
 bool Player::HitDetect(Entity * other)
@@ -131,6 +150,20 @@ void Player::Update(float dt)
 			switchLight();
 		}
 	}
+
+	if (knock_timer > 0) {
+		knock_timer -= dt;
+		state = PS_HURT;
+		if (knock_timer <= 0) {
+			state = PS_Stand;
+		}
+	}
+
+	if (invince_timer > 0) {
+		invince_timer -= dt;
+		if (invince_timer <= 0) {
+		}
+	}
 }
 
 void Player::Move()
@@ -183,10 +216,20 @@ void Player::Attack()
 
 		cocos2d::Vec2 atk_pos;
 		if (face_right) {
-			atk_pos = cocos2d::Vec2(getPositionX() + (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
+			if (state == PS_Stand) {
+				atk_pos = cocos2d::Vec2(getPositionX() + (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
+			}
+			else {
+				atk_pos = cocos2d::Vec2(getPositionX() + (getBoundingBox().size.width / 2 + 18), getPositionY() + 10);
+			}
 		}
 		else {
-			atk_pos = cocos2d::Vec2(getPositionX() - (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
+			if (state == PS_Stand) {
+				atk_pos = cocos2d::Vec2(getPositionX() - (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
+			}
+			else {
+				atk_pos = cocos2d::Vec2(getPositionX() - (getBoundingBox().size.width / 2 + 18), getPositionY() + 10);
+			}
 		}
 
 		atk = Fireball::create(atk_pos, getEffect());
@@ -360,7 +403,7 @@ void Player::DetectObstruction(Entity * other)
 	float o_left = other->getPositionX() - (other->getBoundingBox().size.width * anchorP.x);
 	float o_right = other->getPositionX() + (other->getBoundingBox().size.width - (other->getBoundingBox().size.width * anchorP.x));
 
-	if (t_foot + spd.y < o_head && t_head + spd.y > o_foot && t_left + spd.x < o_right && t_right + spd.x > o_left) {
+	if (t_foot < o_head && t_head > o_foot && t_left < o_right && t_right > o_left) {
 		switch (state) {
 		case PS_Glide:
 		case PS_Crouch:

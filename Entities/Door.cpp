@@ -257,7 +257,7 @@ void SceneDoor::Effect(Entity * player, player_inventory * p_inv)
 		//Include Each Keytype below
 
 	}
-
+							
 	if (!(this->CoolDownState) && !(this->locked)) {
 
 		this->CoolDownState = true;
@@ -270,12 +270,12 @@ void SceneDoor::Effect(Entity * player, player_inventory * p_inv)
 			case A1_R1:
 				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R1));
 				//GameplayScene::movePlayer();
-				player = nullptr;
+				
 				break;
 			case A1_R2:
 				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R2));
-				player->setPosition(this->movePlayer);
-				player = nullptr;
+				
+				
 				break;
 			case A1_R3:
 				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R3));
@@ -293,13 +293,18 @@ void SceneDoor::Effect(Entity * player, player_inventory * p_inv)
 				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R6));
 				player->setPosition(this->movePlayer);
 				break;
-			case TUT_LVL1:
+			case A2_R1:
 				//cocos2d::Director::getInstance()->pushScene(currScene);
-				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(TUT_LVL1));
+				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A2_R1));
 				player->setPosition(this->movePlayer);
 				break;
-
+			case A2_R2:
+				//cocos2d::Director::getInstance()->pushScene(currScene);
+				cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A2_R2));
+				player->setPosition(this->movePlayer);
+				break;
 			}
+
 			
 
 		}
@@ -379,9 +384,14 @@ void LoadZone::Effect(Entity * player)
 		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R6));
 		LevelManager::GetLevel(A1_R6)->movePlayer(player, movePlayer);
 		break;
-	case TUT_LVL1:
+	case A2_R1:
 		//cocos2d::Director::getInstance()->pushScene(currScene);
-		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(TUT_LVL1));
+		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A2_R1));
+		player->setPosition(this->movePlayer);
+		break;
+	case A2_R2:
+		//cocos2d::Director::getInstance()->pushScene(currScene);	   
+		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A2_R2));
 		player->setPosition(this->movePlayer);
 		break;
 
@@ -407,6 +417,16 @@ bool LoadZone::HitDetect(Entity * other)
 			o_RIGHT + other->spd.x > MIN_X && o_LEFT + other->spd.x < MAX_X) {
 
 			if (other->spd.x >= 0.0f) {
+				this->Effect(other);
+				return true;
+			}
+			else
+			{
+				this->Effect(other);
+				return true;
+			}
+
+			if (other->spd.y >= 0.0f) {
 				this->Effect(other);
 				return true;
 			}
