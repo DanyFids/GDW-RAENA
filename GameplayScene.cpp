@@ -1808,6 +1808,14 @@ bool A2_R1::init()
 
 void A2_R1::update(float dt)
 {
+	if (!this->audioinitD)
+	{
+		TheAudioF->stopBackgroundMusic("RAENA SOUNDSCAPE/Music/Forest Waltz.mp3");
+		TheAudioD->preloadBackgroundMusic("RAENA SOUNDSCAPE/Music/RaenaDungeon.wav");
+		TheAudioD->playBackgroundMusic("RAENA SOUNDSCAPE/Music/RaenaDungeon.wav", true);
+
+	}
+	audioinitD = true;
 	GameplayScene::update(dt);
 }
 

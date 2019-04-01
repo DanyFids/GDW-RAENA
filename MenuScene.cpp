@@ -97,6 +97,12 @@ bool MenuScene::init()
 
 	addChild(BG);
 
+	auto Updatepad = new (std::nothrow) Gamepad;
+	Updatepad->CheckConnection();
+	TheGamepad = Updatepad;
+
+	this->scheduleUpdate();
+
 	return true;
 }
 
@@ -118,4 +124,19 @@ void MenuScene::menuCloseCallback(Ref* pSender)
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
 	exit(0);
 #endif
+}
+
+void MenuScene::update(float dt)
+{
+	TheGamepad->Refresh();
+
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A))
+	{
+		Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R1));  //GAME START
+	}
+
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_B))
+	{
+		Director::getInstance()->end();
+	}
 }
