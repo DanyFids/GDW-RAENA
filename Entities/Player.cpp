@@ -178,13 +178,6 @@ void Player::Move()
 			this->stopAllActions();
 			this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
 		}
-
-		if (spd.x > 0) {
-			face_right = true;
-		}
-		else if (spd.x < 0) {
-			face_right = false;
-		}
 	}
 }
 
