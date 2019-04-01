@@ -28,7 +28,7 @@ Scene* GameplayScene::createScene() {
 //	player->setPosition(movePlayer);
 //}
 
-void GameplayScene::movePlayer(Entity * player,cocos2d::Vec2 move)
+void GameplayScene::movePlayer(cocos2d::Vec2 move)
 {
 	player->setPosition(move);
 }
@@ -611,10 +611,10 @@ bool A1_R1::init()
 
 		
 		paraNode->addChild(_bgColor3, 5, Vec2(0, 0), Vec2(100, 200));		 //Frontmost
-		paraNode->addChild(_bgColor4, 4, Vec2(0.1f, 0), Vec2(60, 200));
-		paraNode->addChild(_bgColor5, 3, Vec2(0.2f, 0), Vec2(5, 200));
-		paraNode->addChild(_bgColor2, 2, Vec2(0.3f, 0), Vec2(1, 200));
-		paraNode->addChild(_bgColor1, 1, Vec2(0.4f, 0), Vec2(0, 200));
+		paraNode->addChild(_bgColor4, 4, Vec2(0.1f, 0), Vec2(-100, 200));
+		paraNode->addChild(_bgColor5, 3, Vec2(0.2f, 0), Vec2(-100, 200));
+		paraNode->addChild(_bgColor2, 2, Vec2(0.3f, 0), Vec2(-100, 200));
+		paraNode->addChild(_bgColor1, 1, Vec2(0.4f, 0), Vec2(-100, 200));
 
 		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R1.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
@@ -762,11 +762,11 @@ bool A1_R2::init()
 		_bgColor5->setScale(1.5);
 
 
-		paraNode->addChild(_bgColor3, 5, Vec2(0, 0), Vec2(0, 200));		 //Frontmost
-		paraNode->addChild(_bgColor4, 4, Vec2(0.1f, 0), Vec2(3, 200));
-		paraNode->addChild(_bgColor5, 3, Vec2(0.2f, 0), Vec2(5, 200));
-		paraNode->addChild(_bgColor2, 2, Vec2(0.3f, 0), Vec2(0, 200));
-		paraNode->addChild(_bgColor1, 1, Vec2(0.4f, 0), Vec2(0, 200));
+		paraNode->addChild(_bgColor3, 5, Vec2(0, 0), Vec2(-100, 200));		 //Frontmost
+		paraNode->addChild(_bgColor4, 4, Vec2(0.1f, 0), Vec2(-150, 200));
+		paraNode->addChild(_bgColor5, 3, Vec2(0.2f, 0), Vec2(-150, 200));
+		paraNode->addChild(_bgColor2, 2, Vec2(0.3f, 0), Vec2(-150, 200));
+		paraNode->addChild(_bgColor1, 1, Vec2(0.4f, 0), Vec2(-150, 200));
 
 		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R2.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
@@ -903,12 +903,33 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 		//Parallax Stuff
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
-		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
 
-		_bgColor->setAnchorPoint(cocos2d::Vec2(0, 0));
-		_bgColor->setScale(1);
+		EffectSprite *_bgColor1 = EffectSprite::create("Parallax Background/BlueBG_Updated.png");
+		EffectSprite *_bgColor2 = EffectSprite::create("Parallax Background/LightBlueBG_Updated.png");
+		EffectSprite *_bgColor3 = EffectSprite::create("Parallax Background/DarkGreenBG_Updated.png");
+		EffectSprite *_bgColor4 = EffectSprite::create("Parallax Background/GreenBG_Updated.png");
+		EffectSprite *_bgColor5 = EffectSprite::create("Parallax Background/LightGreenBG_Updated.png");
 
-		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+		_bgColor1->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor1->setScale(1.2);
+
+		_bgColor2->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor2->setScale(1.2);
+
+		_bgColor3->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor3->setScale(1.2);
+
+		_bgColor4->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor4->setScale(1.2);
+
+		_bgColor5->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor5->setScale(1.2);
+
+		paraNode->addChild(_bgColor3, 5, Vec2(0, 0), Vec2(-100, 100));		 //Frontmost
+		paraNode->addChild(_bgColor4, 4, Vec2(0.1f, 0), Vec2(-150, 100));
+		paraNode->addChild(_bgColor5, 3, Vec2(0.2f, 0), Vec2(-150, 100));
+		paraNode->addChild(_bgColor2, 2, Vec2(0.3f, 0), Vec2(-150, 100));
+		paraNode->addChild(_bgColor1, 1, Vec2(0.4f, 0), Vec2(-150, 100));
 
 		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R3.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
@@ -927,7 +948,7 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 		_effect->setAmbientLightColor(Color3B(255, 255, 255));
 
 		player->setEffect(_effect, "test_NM.png");
-		_bgColor->setEffect(_effect, "test_NM.png");
+		//_bgColor->setEffect(_effect, "test_NM.png");
 
 		player->switchLight();
 
@@ -1057,12 +1078,34 @@ bool A1_R4::init()
 		//Parallax Stuff
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
-		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
 
-		_bgColor->setAnchorPoint(cocos2d::Vec2(0, 0));
-		_bgColor->setScale(1);
+		EffectSprite *_bgColor1 = EffectSprite::create("Parallax Background/BlueBG_Updated.png");
+		EffectSprite *_bgColor2 = EffectSprite::create("Parallax Background/LightBlueBG_Updated.png");
+		EffectSprite *_bgColor3 = EffectSprite::create("Parallax Background/DarkGreenBG_Updated.png");
+		EffectSprite *_bgColor4 = EffectSprite::create("Parallax Background/GreenBG_Updated.png");
+		EffectSprite *_bgColor5 = EffectSprite::create("Parallax Background/LightGreenBG_Updated.png");
 
-		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+		_bgColor1->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor1->setScale(2);
+
+		_bgColor2->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor2->setScale(2);
+
+		_bgColor3->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor3->setScale(2);
+
+		_bgColor4->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor4->setScale(2);
+
+		_bgColor5->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor5->setScale(2);
+
+
+		paraNode->addChild(_bgColor3, 5, Vec2(0, 0), Vec2(-100, 100));		 //Frontmost
+		paraNode->addChild(_bgColor4, 4, Vec2(0.1f, 0), Vec2(-150, 100));
+		paraNode->addChild(_bgColor5, 3, Vec2(0.2f, 0), Vec2(-150, 100));
+		paraNode->addChild(_bgColor2, 2, Vec2(0.3f, 0), Vec2(-150, 100));
+		paraNode->addChild(_bgColor1, 1, Vec2(0.4f, 0), Vec2(-150, 100));
 
 		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R4.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
@@ -1081,7 +1124,6 @@ bool A1_R4::init()
 		_effect->setAmbientLightColor(Color3B(255, 255, 255));
 
 		player->setEffect(_effect, "test_NM.png");
-		_bgColor->setEffect(_effect, "test_NM.png");
 
 		player->switchLight();
 
@@ -1202,12 +1244,33 @@ bool A1_R5::init()
 		//Parallax Stuff
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
-		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
+		EffectSprite *_bgColor1 = EffectSprite::create("Parallax Background/BlueBG_Updated.png");
+		EffectSprite *_bgColor2 = EffectSprite::create("Parallax Background/LightBlueBG_Updated.png");
+		EffectSprite *_bgColor3 = EffectSprite::create("Parallax Background/DarkGreenBG_Updated.png");
+		EffectSprite *_bgColor4 = EffectSprite::create("Parallax Background/GreenBG_Updated.png");
+		EffectSprite *_bgColor5 = EffectSprite::create("Parallax Background/LightGreenBG_Updated.png");
 
-		_bgColor->setAnchorPoint(cocos2d::Vec2(0, 0));
-		_bgColor->setScale(1);
+		_bgColor1->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor1->setScale(2.5);
 
-		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+		_bgColor2->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor2->setScale(2.5);
+
+		_bgColor3->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor3->setScale(2.5);
+
+		_bgColor4->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor4->setScale(2.5);
+
+		_bgColor5->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor5->setScale(2.5);
+
+
+		paraNode->addChild(_bgColor3, 5, Vec2(0, 0), Vec2(-100, 90));		 //Frontmost
+		paraNode->addChild(_bgColor4, 4, Vec2(0.1f, 0), Vec2(-150, 90));
+		paraNode->addChild(_bgColor5, 3, Vec2(0.2f, 0), Vec2(-150, 90));
+		paraNode->addChild(_bgColor2, 2, Vec2(0.3f, 0), Vec2(-150, 90));
+		paraNode->addChild(_bgColor1, 1, Vec2(0.4f, 0), Vec2(-150, 90));
 
 		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R5.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
@@ -1226,7 +1289,7 @@ bool A1_R5::init()
 		_effect->setAmbientLightColor(Color3B(255, 255, 255));
 
 		player->setEffect(_effect, "test_NM.png");
-		_bgColor->setEffect(_effect, "test_NM.png");
+		//_bgColor->setEffect(_effect, "test_NM.png");
 
 		player->switchLight();
 
@@ -1657,7 +1720,7 @@ bool A2_R1::init()
 		}
 
 		//Interactables /////////////////////////////////////////////////////////////////////////////////////////
-		interactables.pushBack(LoadZone::create(1500, 650, 500, 300, A2_R2, Vec2(50, 205)));
+		interactables.pushBack(LoadZone::create(1500, 650, 500, 300, A2_R2, Vec2(100, 200)));
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
 				this->addChild(inter);
@@ -1669,7 +1732,7 @@ bool A2_R1::init()
 		//Actual Platforms ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-	//	ActualPlatforms.pushBack(Platform::create("Platform1.png", cocos2d::Vec2(100, 280)));
+		//actualPlatforms.pushBack(Platform::create("Platform1.png", cocos2d::Vec2(100, 280)));
 		for each (Platform* p in ActualPlatforms) {
 			if (p != nullptr) {
 
@@ -1817,6 +1880,9 @@ bool A2_R2::init()
 
 		//Interactables /////////////////////////////////////////////////////////////////////////////////////////
 		//interactables.pushBack(LoadZone::create(1500, 650, 500, 300, A2_R2, Vec2(50, 205)));
+		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(400, 100), Vec2(100, 100), A2_R3));	//SceneDoor
+		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1270, 100), Vec2(100, 100), A2_R4));
+
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
 				this->addChild(inter);
@@ -1829,6 +1895,159 @@ bool A2_R2::init()
 
 
 	//	ActualPlatforms.pushBack(Platform::create("Platform1.png", cocos2d::Vec2(100, 280)));
+		for each (Platform* p in ActualPlatforms) {
+			if (p != nullptr) {
+
+				/*p->setScale(SCALE);
+				p->getTexture()->setTexParameters(tp);*/
+				p->setEffect(_effect, "layerNorm.png");
+				this->addChild(p);
+			}
+			else
+				return false;
+		}
+
+		//Set Torches;
+		torches.pushBack(Torch::create(cocos2d::Vec2(180, 150), _effect));
+		torches.pushBack(Torch::create(cocos2d::Vec2(650, 150), _effect));
+		torches.pushBack(Torch::create(cocos2d::Vec2(950, 150), _effect));
+		torches.pushBack(Torch::create(cocos2d::Vec2(1454, 150), _effect));
+
+		for each (Torch* t in torches)
+		{
+			if (t != nullptr) {
+				addChild(t, 2);
+			}
+			else {
+				return false;
+			}
+		}
+		player->switchLight();
+		view = this->getDefaultCamera();
+
+		this->scheduleUpdate();
+		return true;
+	}
+
+	return false;
+}
+
+void A2_R2::update(float dt)
+{
+	GameplayScene::update(dt);
+}
+
+bool A2_R3::init()
+{
+	//STAGE_HEIGHT = 600;
+	//STAGE_WIDTH = 1000;		Defaults
+
+	STAGE_HEIGHT = 650;
+	STAGE_WIDTH = 1600;
+
+	removeAllChildren();
+
+
+	if (GameplayScene::init()) {
+
+		//Parallax & Background //////////////////////////////////////////////////////////////////////////////
+		auto paraNode = ParallaxNode::create();
+		PNode = paraNode;
+		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
+
+		_bgColor->setScale(1);
+
+		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+
+		EffectSprite *_bgColor2 = EffectSprite::create("BGP2.png");
+
+		_bgColor2->setScale(1);
+		paraNode->addChild(_bgColor2, -1, Vec2(1.4f, 1.5f), Vec2::ZERO);
+
+		this->addChild(paraNode);
+
+		// Lighting Tests
+		auto _effect = LightEffect::create();
+		_effect->retain();
+
+		Vec3 l_pos(150, 300, 50);
+
+		//_effect->addLight(l_pos);
+		//_effect->addLight(Vec3(400, 250, 50));
+		//_effect->addLight(Vec3(600, 250, 50));
+		//_effect->addLight(Vec3(200, 250, 50));
+		//_effect->addLight(Vec3(0, 250, 50));
+		//_effect->addLight(Vec3(800, 250, 50));
+		_effect->setLightCutoffRadius(250);
+		_effect->setLightHalfRadius(0.5);
+		_effect->setBrightness(0.7);
+		_effect->setAmbientLightColor(Color3B(0, 0, 0));
+
+		player->setEffect(_effect, "layerNorm.png");
+		_bgColor->setEffect(_effect, "layerNorm.png");
+		_bgColor2->setEffect(_effect, "layerNorm.png");
+
+		auto visibleSize = Director::getInstance()->getVisibleSize();
+		//Center of screen ///////////////////////////////////////////////////////////////////////
+		Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+		//Player Loc /////////////////////////////////////////////////////////////////////////
+		if (player != nullptr) {
+			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+
+			//this->addChild(player, 10);
+		}
+		else {
+			return false;
+		}
+
+		//platforms ////////////////////////////////////////////////////////////////////////////////
+		terrain.pushBack(Block::create(0, 0, 64, 700));			//Left Boundary
+
+		terrain.pushBack(Block::create(0, 0, 750, 100));		//Base ground Left
+		terrain.pushBack(Block::create(850, 0, 750, 100));		//Base ground Right
+
+		terrain.pushBack(Block::create(1570, 0, 64, 700));		//Left Boundary
+
+																//terrain.pushBack(Block::create(500, 200, 300, 75));
+																//terrain.pushBack(Block::create(280, 350, 180, 10));
+		for each (Entity* plat in terrain)
+		{
+			if (plat != nullptr) {
+				plat->setEffect(_effect, "layerNorm.png");
+				this->addChild(plat);
+			}
+			else {
+				return false;
+			}
+		}
+		//ladders
+
+		//ladders.pushBack(Ladder::create(1600, 275, 32, 600));
+
+		for each (Ladder* lad in ladders) {
+			if (lad != nullptr) {
+				this->addChild(lad);
+			}
+			else {
+				return false;
+			}
+		}
+
+		//Interactables /////////////////////////////////////////////////////////////////////////////////////////
+		//interactables.pushBack(LoadZone::create(1500, 650, 500, 300, A2_R2, Vec2(50, 205)));
+		for each (Interactable* inter in interactables) {
+			if (inter != nullptr) {
+				this->addChild(inter);
+			}
+			else {
+				return false;
+			}
+		}
+		//Actual Platforms ///////////////////////////////////////////////////////////////////////////////////////////
+
+
+		//	ActualPlatforms.pushBack(Platform::create("Platform1.png", cocos2d::Vec2(100, 280)));
 		for each (Platform* p in ActualPlatforms) {
 			if (p != nullptr) {
 
@@ -1865,7 +2084,155 @@ bool A2_R2::init()
 	return false;
 }
 
-void A2_R2::update(float dt)
+void A2_R3::update(float dt)
 {
 	GameplayScene::update(dt);
+}
+
+bool A2_R4::init()
+{
+	STAGE_HEIGHT = 650;
+	STAGE_WIDTH = 1600;
+
+	removeAllChildren();
+
+
+	if (GameplayScene::init()) {
+
+		//Parallax & Background //////////////////////////////////////////////////////////////////////////////
+		auto paraNode = ParallaxNode::create();
+		PNode = paraNode;
+		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
+
+		_bgColor->setScale(1);
+
+		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+
+		EffectSprite *_bgColor2 = EffectSprite::create("BGP2.png");
+
+		_bgColor2->setScale(1);
+		paraNode->addChild(_bgColor2, -1, Vec2(1.4f, 1.5f), Vec2::ZERO);
+
+		this->addChild(paraNode);
+
+		// Lighting Tests
+		auto _effect = LightEffect::create();
+		_effect->retain();
+
+		Vec3 l_pos(150, 300, 50);
+
+		//_effect->addLight(l_pos);
+		//_effect->addLight(Vec3(400, 250, 50));
+		//_effect->addLight(Vec3(600, 250, 50));
+		//_effect->addLight(Vec3(200, 250, 50));
+		//_effect->addLight(Vec3(0, 250, 50));
+		//_effect->addLight(Vec3(800, 250, 50));
+		_effect->setLightCutoffRadius(250);
+		_effect->setLightHalfRadius(0.5);
+		_effect->setBrightness(0.7);
+		_effect->setAmbientLightColor(Color3B(0, 0, 0));
+
+		player->setEffect(_effect, "layerNorm.png");
+		_bgColor->setEffect(_effect, "layerNorm.png");
+		_bgColor2->setEffect(_effect, "layerNorm.png");
+
+		auto visibleSize = Director::getInstance()->getVisibleSize();
+		//Center of screen ///////////////////////////////////////////////////////////////////////
+		Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+		//Player Loc /////////////////////////////////////////////////////////////////////////
+		if (player != nullptr) {
+			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+
+			//this->addChild(player, 10);
+		}
+		else {
+			return false;
+		}
+
+		//platforms ////////////////////////////////////////////////////////////////////////////////
+		terrain.pushBack(Block::create(0, 0, 64, 700));			//Left Boundary
+
+		terrain.pushBack(Block::create(0, 0, 750, 100));		//Base ground Left
+		terrain.pushBack(Block::create(850, 0, 750, 100));		//Base ground Right
+
+		terrain.pushBack(Block::create(1570, 0, 64, 700));		//Left Boundary
+
+																//terrain.pushBack(Block::create(500, 200, 300, 75));
+																//terrain.pushBack(Block::create(280, 350, 180, 10));
+		for each (Entity* plat in terrain)
+		{
+			if (plat != nullptr) {
+				plat->setEffect(_effect, "layerNorm.png");
+				this->addChild(plat);
+			}
+			else {
+				return false;
+			}
+		}
+		//ladders
+
+		//ladders.pushBack(Ladder::create(1600, 275, 32, 600));
+
+		for each (Ladder* lad in ladders) {
+			if (lad != nullptr) {
+				this->addChild(lad);
+			}
+			else {
+				return false;
+			}
+		}
+
+		//Interactables /////////////////////////////////////////////////////////////////////////////////////////
+		//interactables.pushBack(LoadZone::create(1500, 650, 500, 300, A2_R2, Vec2(50, 205)));
+		for each (Interactable* inter in interactables) {
+			if (inter != nullptr) {
+				this->addChild(inter);
+			}
+			else {
+				return false;
+			}
+		}
+		//Actual Platforms ///////////////////////////////////////////////////////////////////////////////////////////
+
+
+		//	ActualPlatforms.pushBack(Platform::create("Platform1.png", cocos2d::Vec2(100, 280)));
+		for each (Platform* p in ActualPlatforms) {
+			if (p != nullptr) {
+
+				/*p->setScale(SCALE);
+				p->getTexture()->setTexParameters(tp);*/
+				p->setEffect(_effect, "layerNorm.png");
+				this->addChild(p);
+			}
+			else
+				return false;
+		}
+
+		//Set Torches;
+		//torches.pushBack(Torch::create(cocos2d::Vec2(200, 230), _effect));
+		//torches.pushBack(Torch::create(cocos2d::Vec2(350, 400), _effect));
+		//torches.pushBack(Torch::create(cocos2d::Vec2(600, 310), _effect));
+
+		for each (Torch* t in torches)
+		{
+			if (t != nullptr) {
+				addChild(t, 2);
+			}
+			else {
+				return false;
+			}
+		}
+		player->switchLight();
+		view = this->getDefaultCamera();
+
+		this->scheduleUpdate();
+		return true;
+	}
+
+	return false;
+}
+
+void A2_R4::update(float dt)
+{
 }

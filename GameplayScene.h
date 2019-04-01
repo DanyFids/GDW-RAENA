@@ -85,7 +85,7 @@ public:
 	
 	
 	
-	 virtual void movePlayer(Entity * player, cocos2d::Vec2 move);
+	 virtual void movePlayer(cocos2d::Vec2 move);
 	//player_inventory * currInv;
 	virtual bool init();
 
@@ -157,3 +157,16 @@ public:
 	CREATE_FUNC(A2_R2);
 };
 
+class A2_R3 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A2_R3::update(float dt);
+	CREATE_FUNC(A2_R3);
+};
+
+class A2_R4 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A2_R4::update(float dt);
+	CREATE_FUNC(A2_R4);
+};
