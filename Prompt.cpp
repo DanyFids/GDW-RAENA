@@ -4,9 +4,13 @@ Prompt * Prompt::create(int What, GameplayScene * scn)
 {
 	auto ret = new (std::nothrow) Prompt;
 
-	ret->PP = What;
-	ret->scene = scn;
-	return ret;
+	if (ret->initWithFile("Y Prompt.png")) {
+		ret->PP = What;
+		ret->scene = scn;
+		return ret;
+	}
+	CC_SAFE_RELEASE(ret);
+	return nullptr;
 }
 
 void Prompt::Load()
@@ -47,17 +51,17 @@ void Prompt::Close()
 }
 
 void Prompt::Hide() {
-	this->PBox->setOpacity(0);
+	this->setOpacity(0);
 }
 
 void Prompt::Show()
 {
-	this->PBox->setOpacity(255);
+	this->setOpacity(255);
 }
 
 void Prompt::Follow(Player* Target)
 {
-	this->PBox->setPosition(Target->getPosition());
+	this->setPosition(Target->getPosition());
 }
 
 

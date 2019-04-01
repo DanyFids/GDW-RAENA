@@ -180,10 +180,7 @@ bool GameplayScene::init() {
 
 	return true;
 }
-Textbox* ActiveTextbox;
-Prompt* ActivePrompt;
-bool promptInit = false;
-bool overlap = false;
+
 
 void GameplayScene::update(float dt) {
 	player->Update(dt);
@@ -225,14 +222,14 @@ void GameplayScene::update(float dt) {
 			if (i->inRange(player) && i->getType() != LOAD_ZONE) {
 				if (promptInit == false) {
 					auto Prompt1 = Prompt::create(1, (this));
-					addChild(Prompt1, 10);
-					Prompt1->Load();
+					//Prompt1->Load();
 					if (ActivePrompt)
 					{
 						ActivePrompt->Close();
 					}
 					ActivePrompt = Prompt1;
 					promptInit = true;
+					addChild(ActivePrompt, 10);
 				}
 				overlap = true;
 				promptInit = true;
@@ -591,34 +588,6 @@ void GameplayScene::update(float dt) {
 	}
 }
 
-void GameplayScene::clearKeys()
-{
-	GAMEPLAY_INPUT.key_up = false;
-	GAMEPLAY_INPUT.key_right = false;
-	GAMEPLAY_INPUT.key_down = false;
-	GAMEPLAY_INPUT.key_left = false;
-	GAMEPLAY_INPUT.key_space = false;
-	GAMEPLAY_INPUT.key_space_p = false;
-	GAMEPLAY_INPUT.key_jump = false;
-	GAMEPLAY_INPUT.key_jump_p = false;
-	GAMEPLAY_INPUT.key_crouch = false;
-	GAMEPLAY_INPUT.key_crouch_p = false;
-	GAMEPLAY_INPUT.key_interact = false;
-
-
-	GAMEPLAY_INPUT.key_one = false;
-	GAMEPLAY_INPUT.key_oneP = false;
-	GAMEPLAY_INPUT.key_F = false;
-	GAMEPLAY_INPUT.key_FP = false;
-	GAMEPLAY_INPUT.key_two = false;
-	GAMEPLAY_INPUT.key_twoP = false;
-
-	GAMEPLAY_INPUT.key_P1 = false;
-	GAMEPLAY_INPUT.key_P1P = false;
-	GAMEPLAY_INPUT.key_P2 = false;
-	GAMEPLAY_INPUT.key_P2P = false;
-}
-
 bool A1_R1::init()
 {
 	//STAGE_HEIGHT = 600;
@@ -727,7 +696,6 @@ bool A1_R1::init()
 		interactables.pushBack(Pickup::create("Rose.png", cocos2d::Vec2(240, 200), ROSE));
 		//interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(700,270),A1_R2)); // Scene Door
 		interactables.pushBack(LoadZone::create(905,270,30,1000, A1_R2,cocos2d::Vec2(50,230))); // LoadZone
-
 		
 
 		for each (Interactable* inter in interactables) {
@@ -1072,7 +1040,7 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 		}
 
 		interactables.pushBack(LoadZone::create(-10, 205, 10, 900, A1_R2, Vec2(900, 735))); // LoadZone
-		interactables.pushBack(SceneDoor::create("terrain/inner_cave_door.png", Vec2(1050, 250), Vec2(70,600), A1_R4));	//SceneDoor
+		interactables.pushBack(SceneDoor::create("terrain/inner_cave_door.png", Vec2(1000, 250), Vec2(70,600), A1_R4));	//SceneDoor
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -1113,7 +1081,7 @@ void A1_R3::update(float dt)
 {
 	GameplayScene::update(dt);
 }
-
+														  
 
 // A1_R4
 
@@ -1378,7 +1346,7 @@ bool A1_R5::init()
 
 		terrain.pushBack(Block::create(1403, 100, 290, 442)); //Ground 4
 
-		Projectiles.pushBack(Projectile::create(100, 45, 0, 100, 500, this));
+		//Projectiles.pushBack(Projectile::create(100, 45, 0, 100, 500, this));
 
 		for each (Entity* plat in terrain)
 		{
@@ -1807,7 +1775,7 @@ bool A2_R1::init()
 		}
 
 		//Interactables /////////////////////////////////////////////////////////////////////////////////////////
-		interactables.pushBack(LoadZone::create(1500, 650, 500, 300, A2_R2, Vec2(100, 200)));
+		interactables.pushBack(LoadZone::create(1500, 650, 500, 300, A2_R2, Vec2(500, 130)));
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
 				this->addChild(inter);
@@ -1935,8 +1903,11 @@ bool A2_R2::init()
 		//platforms ////////////////////////////////////////////////////////////////////////////////
 		terrain.pushBack(Block::create(0, 0, 64, 700));			//Left Boundary
 
-		terrain.pushBack(Block::create(0, 0, 750, 100));		//Base ground Left
-		terrain.pushBack(Block::create(850, 0, 750, 100));		//Base ground Right
+		terrain.pushBack(Block::create(0, 0, 770, 100));		//Base ground Left
+		
+		terrain.pushBack(Block::create(770, 68, 100, 32));		//Middle Block
+
+		terrain.pushBack(Block::create(830, 0, 770, 100));		//Base ground Right
 
 		terrain.pushBack(Block::create(1570, 0, 64, 700));		//Left Boundary
 
@@ -1981,7 +1952,7 @@ bool A2_R2::init()
 		//Actual Platforms ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-	//	ActualPlatforms.pushBack(Platform::create("Platform1.png", cocos2d::Vec2(100, 280)));
+		//ActualPlatforms.pushBack(Platform::create("terrain/Wooden_Platform.png", cocos2d::Vec2(800,85)));
 		for each (Platform* p in ActualPlatforms) {
 			if (p != nullptr) {
 
@@ -2094,10 +2065,12 @@ bool A2_R3::init()
 		terrain.pushBack(Block::create(0, 0, 800, 100));		//Base ground Left
 		terrain.pushBack(Block::create(0, 500, 800, 100));		//roof ground Right
 
+		terrain.pushBack(Block::create(0, 500, 800, 100));   // Middle Section
+
 		terrain.pushBack(Block::create(780, 0, 25, 700));		//Left Boundary
 
-																//terrain.pushBack(Block::create(500, 200, 300, 75));
-																//terrain.pushBack(Block::create(280, 350, 180, 10));
+		//terrain.pushBack(Block::create(500, 200, 300, 75));
+		//terrain.pushBack(Block::create(280, 350, 180, 10));
 		for each (Entity* plat in terrain)
 		{
 			if (plat != nullptr) {

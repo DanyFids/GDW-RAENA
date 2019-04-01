@@ -19,12 +19,18 @@
 #include "SimpleAudioEngine.h"
 
 
-
 //#include "HelloWorldScene.h"
 //#include "MenuScene.h"
 
+class Textbox;
+class Prompt;
+
 class GameplayScene : public cocos2d::Scene {
 protected:
+	Textbox* ActiveTextbox;
+	Prompt* ActivePrompt;
+	bool promptInit = false;
+	bool overlap = false;
 
 	cocos2d::Vector<Rat *> rat;
 
@@ -140,7 +146,7 @@ public:
 
 	void setKnight(Knight * k) { knight = k; }
 
-	void clearKeys();
+	
 
 	std::vector<inventoryItem>* getInvRef() {
 		return &(currInv->items);
