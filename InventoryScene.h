@@ -13,24 +13,6 @@
 class Interactables;
 class PuzzleInteract;
 
-enum Combining {
-	e1 = 1,
-	e2 = 2,
-	e3 = 3,
-	e4 = 4,
-	e5 = 5
-};
-
-
-struct inventoryItem
-{
-	int itemId = 0;
-	std::string itemName = "NA";
-	std::string itemPic = "NA";
-	std::string itemDescription = "NA";
-	Combining Val;
-};
-
 class InventoryScene : public cocos2d::Scene {
 protected:
 	SceneDoor * sd;
@@ -56,10 +38,11 @@ private:
 	GameplayScene * play;
 
 public:
-	std::vector<inventoryItem> inventory;
-	void pickUpItem(int id, std::string name, std::string pic, std::string des, Combining V);
-	void dropItem(int id, std::string name, std::string pic, std::string des,Combining V);
+	std::vector<inventoryItem>* inventory;
+	void pickUpItem(int id, std::string name, std::string pic, std::string des, itemEnum V);
+	void dropItem(int id);
 	static Scene* InventoryScene::createScene(GameplayScene * playScene);
+	static InventoryScene* InventoryScene::create(GameplayScene * playScene);
 	void useItem(std::string usename);
 	virtual bool init();
 	virtual void update(float dt);

@@ -148,7 +148,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 		A2_R2::create()
 	};
 
+	player_inventory* inv = new player_inventory(0);
+
 	LevelManager::AddLevels(levels);
+	LevelManager::setGlobalInv(inv);
 
     return true;
 }

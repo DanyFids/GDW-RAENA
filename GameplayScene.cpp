@@ -577,7 +577,7 @@ bool A1_R1::init()
 
 	STAGE_WIDTH = 900;
 
-	removeAllChildren();
+	//removeAllChildren();
 
 	if (GameplayScene::init()) {
 
@@ -590,11 +590,11 @@ bool A1_R1::init()
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
 
-		EffectSprite *_bgColor1 = EffectSprite::create("Parallax/LightBlueBG.png");
-		EffectSprite *_bgColor2 = EffectSprite::create("Parallax/BlueBG.png");
-		EffectSprite *_bgColor3 = EffectSprite::create("Parallax/LightGreenBG.png");
-		EffectSprite *_bgColor4 = EffectSprite::create("Parallax/GreenBG.png");
-		EffectSprite *_bgColor5 = EffectSprite::create("Parallax/DarkGreenBG.png");
+		EffectSprite *_bgColor1 = EffectSprite::create("Parallax Background/LightBlueBG_Updated.png");
+		EffectSprite *_bgColor2 = EffectSprite::create("Parallax Background/BlueBG_Updated.png");
+		EffectSprite *_bgColor3 = EffectSprite::create("Parallax Background/LightGreenBG_Updated.png");
+		EffectSprite *_bgColor4 = EffectSprite::create("Parallax Background/GreenBG_Updated.png");
+		EffectSprite *_bgColor5 = EffectSprite::create("Parallax Background/DarkGreenBG_Updated.png");
 
 
 		_bgColor1->setAnchorPoint(cocos2d::Vec2(0, 0));
@@ -743,11 +743,11 @@ bool A1_R2::init()
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
 		
-		EffectSprite *_bgColor1 = EffectSprite::create("Parallax/LightBlueBG.png");
-		EffectSprite *_bgColor2 = EffectSprite::create("Parallax/BlueBG.png");
-		EffectSprite *_bgColor3 = EffectSprite::create("Parallax/LightGreenBG.png");
-		EffectSprite *_bgColor4 = EffectSprite::create("Parallax/GreenBG.png");
-		EffectSprite *_bgColor5 = EffectSprite::create("Parallax/DarkGreenBG.png");
+		EffectSprite *_bgColor1 = EffectSprite::create("Parallax Background/LightBlueBG_Updated.png");
+		EffectSprite *_bgColor2 = EffectSprite::create("Parallax Background/BlueBG_Updated.png");
+		EffectSprite *_bgColor3 = EffectSprite::create("Parallax Background/LightGreenBG_Updated.png");
+		EffectSprite *_bgColor4 = EffectSprite::create("Parallax Background/GreenBG_Updated.png");
+		EffectSprite *_bgColor5 = EffectSprite::create("Parallax Background/DarkGreenBG_Updated.png");
 
 
 		_bgColor1->setAnchorPoint(cocos2d::Vec2(0, 0));

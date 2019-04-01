@@ -96,6 +96,14 @@ public:
 
 	void clearKeys();
 
+	std::vector<inventoryItem>* getInvRef() {
+		return &(currInv->items);
+	}
+
+	void SetInventory(player_inventory* inv) {
+		currInv = inv;
+	};
+
 	CREATE_FUNC(GameplayScene);
 };
 
