@@ -269,7 +269,6 @@ void SceneDoor::Effect(Entity * player, player_inventory * p_inv)
 			cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(this->goTo));
 			LevelManager::GetLevel(goTo)->movePlayer(movePlayer);
 			LevelManager::GetLevel(goTo)->scheduleUpdate();
-	
 
 		}
 		else {

@@ -12,6 +12,8 @@
 #include "Entities/Platforms.h"
 #include "Entities/Ladder.h"
 
+#include "Projectile.h"
+
 #include "GameOver.h"
 
 
@@ -43,6 +45,7 @@ protected:
 	cocos2d::Vector<Ladder *> ladders;
 	cocos2d::Vector<Torch *> torches;
 	cocos2d::Vector<Pushable *> Pushables;
+	cocos2d::Vector<Projectile *> Projectiles;
 
 
 	int STAGE_WIDTH = 1000;
@@ -182,3 +185,23 @@ public:
 	CREATE_FUNC(A2_R2);
 };
 
+class A2_R3 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A2_R3::update(float dt);
+	CREATE_FUNC(A2_R3);
+};
+
+class A2_R4 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A2_R4::update(float dt);
+	CREATE_FUNC(A2_R4);
+};
+
+class A2_R5 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A2_R5::update(float dt);
+	CREATE_FUNC(A2_R5);
+};
