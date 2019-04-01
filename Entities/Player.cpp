@@ -144,7 +144,7 @@ void Player::Move()
 
 		if (spd.y != 0 && on_ground && state != PS_HURT && can_vert) {
 			on_ground = false;
-			state == PS_Jump;
+			state = PS_Jump;
 			this->stopAllActions();
 			this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
 		}

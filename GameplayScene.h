@@ -46,6 +46,7 @@ protected:
 	CocosDenshion::SimpleAudioEngine* TheAudioD;
 	CocosDenshion::SimpleAudioEngine* TheAudioB;
 	CocosDenshion::SimpleAudioEngine* TheAudioT;
+	CocosDenshion::SimpleAudioEngine* TheAudioSFX;
 
 	cocos2d::Vector<Entity *> terrain;
 	cocos2d::Vector<Ladder *> ladders;
@@ -57,6 +58,7 @@ protected:
 	bool audioinitD = false;
 	bool audioinitB = false;
 	bool audioinitT = false;
+	bool audioinitSFX = false;
 
 
 	int STAGE_WIDTH = 1000;
@@ -139,8 +141,6 @@ public:
 	void update(float dt) override;
 
 	void setKnight(Knight * k) { knight = k; }
-
-	void clearKeys();
 
 	std::vector<inventoryItem>* getInvRef() {
 		return &(currInv->items);
