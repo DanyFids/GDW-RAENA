@@ -46,22 +46,22 @@ public :
 	//CREATE_FUNC(cocos2d::Scene);
 	
 	virtual void Land() override;
-
-protected:
-
-	//Scene * currScene;
-
+	bool locked = false;
 	bool Active = false;
 	bool CoolDownState = false;
 
 	float CD;
 	float temp_CD;
 
-	KeyType requiredKey; // If this is a locked door what key does it use?
+	KeyType requiredKey;
+protected:
+
+	//Scene * currScene;
+ // If this is a locked door what key does it use?
 
 	//Door Variables;
 	// Active == Open/Close , True == Open 
-	bool locked = false;
+	
 
 
 	// Inherited via Entity

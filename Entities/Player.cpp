@@ -251,12 +251,12 @@ void Player::ClimbDown(Ladder * lad)
 
 int Player::getHP()
 {
-	return this->hp;
+	return hp;
 }
 
 void Player::setHP(int i)
 {
-	this->hp = i;
+	hp = i;
 }
 
 void Player::Land() {

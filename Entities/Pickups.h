@@ -1,5 +1,6 @@
 #pragma once
 #include "Entities/Interactable.h"
+#include "InventoryScene.h"
 
 class Pickup : public Interactable
 {

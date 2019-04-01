@@ -30,7 +30,7 @@ private:
 	const int DMG = 1;
 	int player_light;
 	bool light_on = false;
-	int hp = 6;
+	
 	bool attacking = false;
 	bool glide_used = false;
 
@@ -47,12 +47,13 @@ private:
 
 	//Number of Keys 
 	int genKeys = 0; //General Key (can be used on most doors)
-
+	
 	cocos2d::Scene * scn = nullptr;
 
 	Fireball * atk = nullptr;
 	Ladder * climb_lad = nullptr;
 public:
+	
 	static Player * create(const std::string& filename, cocos2d::Scene * s);
 
 	void switchLight();
@@ -85,7 +86,8 @@ public:
 	void Climb(Ladder * lad);
 
 	void ClimbDown(Ladder * lad);
-
+	int hp = 2;
+	//std::string equip;
 	int getHP();
 	void setHP(int i);
 

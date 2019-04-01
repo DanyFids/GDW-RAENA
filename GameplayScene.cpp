@@ -29,7 +29,9 @@ Scene* GameplayScene::createScene() {
 
 void GameplayScene::movePlayer(cocos2d::Vec2 move)
 {
+	this->clearKeys();
 	player->setPosition(move);
+	
 }
 
 
@@ -105,8 +107,8 @@ bool GameplayScene::init() {
 					GAMEPLAY_INPUT.key_crouch = true;
 					break;
 				case EventKeyboard::KeyCode::KEY_ENTER:
-					GAMEPLAY_INPUT.key_inv = true;
-					//Director::getInstance()->pushScene(InventoryScene::create());
+					this->clearKeys();
+					Director::getInstance()->pushScene(InventoryScene::createScene(this));
 					break;
 			//	case EventKeyboard::KeyCode::KEY_1:
 			//		GAMEPLAY_INPUT.key_one = true;
@@ -260,7 +262,6 @@ void GameplayScene::update(float dt) {
 			for (int i = 0; i < interactables.size(); i++) {
 				if (interactables.at(i)->inRange(player)) {
 					InteractType curr_thing = interactables.at(i)->getType(); //Getting the type
-
 					switch (curr_thing) {
 					case DOOR:
 						((Door*)i)->Effect(player, currInv);
@@ -590,6 +591,33 @@ void GameplayScene::update(float dt) {
 	}
 }
 
+void GameplayScene::clearKeys()
+{
+	GAMEPLAY_INPUT.key_up = false;
+	GAMEPLAY_INPUT.key_right = false;
+	GAMEPLAY_INPUT.key_down = false;
+	GAMEPLAY_INPUT.key_left = false;
+	GAMEPLAY_INPUT.key_space = false;
+	GAMEPLAY_INPUT.key_space_p = false;
+	GAMEPLAY_INPUT.key_jump = false;
+	GAMEPLAY_INPUT.key_jump_p = false;
+	GAMEPLAY_INPUT.key_crouch = false;
+	GAMEPLAY_INPUT.key_crouch_p = false;
+	GAMEPLAY_INPUT.key_interact = false;
+
+
+	GAMEPLAY_INPUT.key_one = false;
+	GAMEPLAY_INPUT.key_oneP = false;
+	GAMEPLAY_INPUT.key_F = false;
+	GAMEPLAY_INPUT.key_FP = false;
+	GAMEPLAY_INPUT.key_two = false;
+	GAMEPLAY_INPUT.key_twoP = false;
+
+	GAMEPLAY_INPUT.key_P1 = false;
+	GAMEPLAY_INPUT.key_P1P = false;
+	GAMEPLAY_INPUT.key_P2 = false;
+	GAMEPLAY_INPUT.key_P2P = false;
+}
 
 bool A1_R1::init()
 {
@@ -598,7 +626,7 @@ bool A1_R1::init()
 
 	STAGE_WIDTH = 900;
 
-	removeAllChildren();
+	//removeAllChildren();
 
 	if (GameplayScene::init()) {
 
@@ -698,7 +726,7 @@ bool A1_R1::init()
 
 		interactables.pushBack(Pickup::create("Rose.png", cocos2d::Vec2(240, 200), ROSE));
 		//interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(700,270),A1_R2)); // Scene Door
-		interactables.pushBack(LoadZone::create(905,270,30,400, A1_R2,cocos2d::Vec2(50,190))); // LoadZone
+		interactables.pushBack(LoadZone::create(905,270,30,1000, A1_R2,cocos2d::Vec2(50,230))); // LoadZone
 
 		
 
@@ -742,6 +770,7 @@ void A1_R1::update(float dt)
 	{
 		TheAudioT->stopBackgroundMusic("RAENA SOUNDSCAPE/Music/RaenaTitle.wav");
 		TheAudioF->preloadBackgroundMusic("RAENA SOUNDSCAPE/Music/Forest Waltz.mp3");
+		TheAudioF->setBackgroundMusicVolume(0.5);
 		TheAudioF->playBackgroundMusic("RAENA SOUNDSCAPE/Music/Forest Waltz.mp3", true);
 
 	}
@@ -760,7 +789,7 @@ bool A1_R2::init()
 
 	STAGE_HEIGHT = 900;
 
-	removeAllChildren();
+	//removeAllChildren();
 
 	if (GameplayScene::init()) {
 
@@ -793,7 +822,7 @@ bool A1_R2::init()
 		_bgColor5->setAnchorPoint(cocos2d::Vec2(0, 0));
 		_bgColor5->setScale(1.5);
 
-		paraNode->addChild(_bgColor3, 5, Vec2(0, 0), Vec2(-100, 200));		 //Frontmost
+		paraNode->addChild(_bgColor3, 5, Vec2(0, 0), Vec2(-300, 200));		 //Frontmost
 		paraNode->addChild(_bgColor4, 4, Vec2(0.1f, 0), Vec2(-150, 200));
 		paraNode->addChild(_bgColor5, 3, Vec2(0.2f, 0), Vec2(-150, 200));
 		paraNode->addChild(_bgColor2, 2, Vec2(0.3f, 0), Vec2(-150, 200));
@@ -822,7 +851,7 @@ bool A1_R2::init()
 
 		//Entities
 		if (player != nullptr) {
-			player->setPosition(Vec2(50,245));
+			//player->setPosition(Vec2(50,245));
 
 			//this->addChild(player, 10);
 		}
@@ -856,8 +885,8 @@ bool A1_R2::init()
 		//	}
 		//}
 
-		interactables.pushBack(LoadZone::create(-10, 205, 10, 400, A1_R1, Vec2(150, 230))); // LoadZone
-		interactables.pushBack(LoadZone::create(1000, 670, 10, 400, A1_R3, Vec2(50, 205))); // LoadZone
+		interactables.pushBack(LoadZone::create(-10, 205, 10, 1000, A1_R1, Vec2(800, 280))); // LoadZone
+		interactables.pushBack(LoadZone::create(1000, 670, 10, 1000, A1_R3, Vec2(50, 248))); // LoadZone
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -879,7 +908,7 @@ bool A1_R2::init()
 
 		ActualPlatforms.pushBack(Platform::create("terrain/leafy_platform.png", cocos2d::Vec2(240, 580)));
 
-		ActualPlatforms.pushBack(Platform::create("terrain/leafy_platform.png", cocos2d::Vec2(510, 605)));
+		ActualPlatforms.pushBack(Platform::create("terrain/leafy_platform.png", cocos2d::Vec2(500, 600)));
 
 		for each (Platform* p in ActualPlatforms) {
 			if (p != nullptr) {
@@ -887,7 +916,7 @@ bool A1_R2::init()
 				/*p->setScale(SCALE);
 				p->getTexture()->setTexParameters(tp);*/
 		
-				this->addChild(p);
+				this->addChild(p,6);
 			}
 		}
 
@@ -909,7 +938,7 @@ void A1_R2::update(float dt)
 {
 	GameplayScene::update(dt);
 }
-
+																							   
 
 //A1_R3
 bool A1_R3::init()	//Pushable And Crouch Tutorial
@@ -1042,8 +1071,8 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 			
 		}
 
-		interactables.pushBack(LoadZone::create(-10, 205, 10, 400, A1_R2, Vec2(50, 205))); // LoadZone
-		interactables.pushBack(SceneDoor::create("terrain/inner_cave_door.png", Vec2(1050, 250), Vec2(50,200), A1_R4));	//SceneDoor
+		interactables.pushBack(LoadZone::create(-10, 205, 10, 900, A1_R2, Vec2(900, 735))); // LoadZone
+		interactables.pushBack(SceneDoor::create("terrain/inner_cave_door.png", Vec2(1050, 250), Vec2(70,600), A1_R4));	//SceneDoor
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -1207,8 +1236,8 @@ bool A1_R4::init()
 		}
 
 		
-		interactables.pushBack(LoadZone::create(1000, 300, 10, 400, A1_R5, Vec2(50, 205))); // LoadZone
-		interactables.pushBack(SceneDoor::create("terrain/outer_cave_door.png", Vec2(50, 550), Vec2(50, 200), A1_R3));	//SceneDoor
+		interactables.pushBack(LoadZone::create(1000, 300, 10, 900, A1_R5, Vec2(50, 245))); // LoadZone
+		interactables.pushBack(SceneDoor::create("terrain/outer_cave_door.png", Vec2(50, 550), Vec2(980,280), A1_R3));	//SceneDoor
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -1388,8 +1417,8 @@ bool A1_R5::init()
 			}
 		}
 
-		interactables.pushBack(LoadZone::create(-10, 165, 10, 400, A1_R4, Vec2(50, 205))); // LoadZone
-		interactables.pushBack(LoadZone::create(1620, 550, 10, 400, A1_R6, Vec2(50, 205))); // LoadZone
+		interactables.pushBack(LoadZone::create(-10, 165, 10, 1000, A1_R4, Vec2(940, 495))); // LoadZone
+		interactables.pushBack(LoadZone::create(1620, 550, 10, 1000, A1_R6, Vec2(50, 250))); // LoadZone
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -1411,7 +1440,7 @@ bool A1_R5::init()
 
 		ActualPlatforms.pushBack(Platform::create("terrain/leafy_platform.png", cocos2d::Vec2(975, 660)));
 
-		ActualPlatforms.pushBack(Platform::create("terrain/leafy_platform.png", cocos2d::Vec2(1175, 500)));
+		ActualPlatforms.pushBack(Platform::create("terrain/leafy_platform.png", cocos2d::Vec2(1175, 520)));
 
 
 		for each (Platform* p in ActualPlatforms) {
@@ -1420,7 +1449,7 @@ bool A1_R5::init()
 				/*p->setScale(SCALE);
 				p->getTexture()->setTexParameters(tp);*/
 		
-				this->addChild(p);
+				this->addChild(p,6);
 			}
 		}
 
@@ -1467,12 +1496,40 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 		//Parallax Stuff
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
-		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
+		EffectSprite *_bgColor1 = EffectSprite::create("Parallax Background/Flower_BlueBG.png");
+		EffectSprite *_bgColor2 = EffectSprite::create("Parallax Background/Flower_LightBlueBG.png");
+		EffectSprite *_bgColor3 = EffectSprite::create("Parallax Background/Flower_DarkGreenBG.png");
+		EffectSprite *_bgColor4 = EffectSprite::create("Parallax Background/Flower_GreenBG.png");
+		EffectSprite *_bgColor5 = EffectSprite::create("Parallax Background/Flower_LightGreenBG.png");
+		EffectSprite *_bgColor6 = EffectSprite::create("Parallax Background/Flower_TowerBG.png");
 
-		_bgColor->setAnchorPoint(cocos2d::Vec2(0, 0));
-		_bgColor->setScale(1);
 
-		paraNode->addChild(_bgColor, 1, Vec2(0,0.5), Vec2::ZERO);
+		_bgColor1->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor1->setScale(1);
+
+		_bgColor2->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor2->setScale(1);
+
+		_bgColor3->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor3->setScale(1);
+
+		_bgColor4->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor4->setScale(1);
+
+		_bgColor5->setAnchorPoint(cocos2d::Vec2(0, 0));	
+		_bgColor5->setScale(1);
+
+		_bgColor6->setAnchorPoint(cocos2d::Vec2(0, 0));
+		_bgColor6->setScale(1);
+
+		paraNode->addChild(_bgColor3, 6, Vec2(0, 0), Vec2(-100, 165));		 //Frontmost
+		paraNode->addChild(_bgColor4, 5, Vec2(0.1f, 0), Vec2(-150, 180));
+		paraNode->addChild(_bgColor5, 4, Vec2(0.2f, 0), Vec2(-150, 180));
+		paraNode->addChild(_bgColor2, 1, Vec2(0.3f, 0), Vec2(-150, 180));
+		paraNode->addChild(_bgColor1, 2, Vec2(0.4f, 0), Vec2(-150, 180));
+		paraNode->addChild(_bgColor6, 3, Vec2(0.3f, 0), Vec2(-280, 180));
+
+
 
 		EffectSprite * tileSet = EffectSprite::create("Levels/A1_R6.png");
 		tileSet->setAnchorPoint(Vec2(0, 0));
@@ -1487,12 +1544,11 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 
 		_effect->setLightCutoffRadius(250);
 		_effect->setLightHalfRadius(0.5);
-		_effect->setBrightness(0.7);
+		_effect->setBrightness(0.7);												
 		_effect->setAmbientLightColor(Color3B(255, 255, 255));
 
 		player->setEffect(_effect, "test_NM.png");
-		_bgColor->setEffect(_effect, "test_NM.png");
-
+		
 		player->switchLight();
 
 		//Entities
@@ -1566,9 +1622,9 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 		//
 		//}
 
-		interactables.pushBack(LoadZone::create(-10, 200, 10, 400, A1_R5, Vec2(50, 205))); // LoadZone
+		interactables.pushBack(LoadZone::create(-10, 200, 10, 400, A1_R5, Vec2(1500, 605))); // LoadZone
 		//interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1050, 275), Vec2(50, 200), A1_R4));	//SceneDoor
-		interactables.pushBack(PuzzleInteract::create("princess_iso.png", Vec2(1275, 200),Princess1, ROSE));
+		interactables.pushBack(PuzzleInteract::create("Princess_Standing.png", Vec2(1275, 200),Princess1, ROSE));
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
 				this->addChild(inter);

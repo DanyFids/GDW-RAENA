@@ -25,9 +25,7 @@
 
 class GameplayScene : public cocos2d::Scene {
 protected:
-	Player * player;
-	Knight * knight;
-	Moth * moth;
+
 	cocos2d::Vector<Rat *> rat;
 
 	player_inventory * currInv;
@@ -35,7 +33,6 @@ protected:
 	cocos2d::ParallaxNode * PNode;
 	cocos2d::Camera * view;
 	
-	cocos2d::Vector<Interactable *> interactables;
 	cocos2d::Vector<Platform *> ActualPlatforms;
 	
 	bool cutScene = false;
@@ -65,6 +62,11 @@ protected:
 	int STAGE_WIDTH = 1000;
 	int STAGE_HEIGHT = 600;
 public:
+	Player * player;
+	Knight * knight = nullptr;
+	Moth * moth = nullptr;
+	cocos2d::Vector<Interactable *> interactables;
+
 
 	struct {
 		bool key_up = false;
@@ -104,11 +106,49 @@ public:
 	//player_inventory * currInv;
 	virtual bool init();
 
+	void clearKeys() { 
+	
+		GAMEPLAY_INPUT.key_up = false;
+		GAMEPLAY_INPUT.key_right = false;
+		GAMEPLAY_INPUT.key_down = false;
+		GAMEPLAY_INPUT.key_left = false;
+		GAMEPLAY_INPUT.key_space = false;
+		GAMEPLAY_INPUT.key_space_p = false;
+		GAMEPLAY_INPUT.key_jump = false;
+		GAMEPLAY_INPUT.key_jump_p = false;
+		GAMEPLAY_INPUT.key_crouch = false;
+		GAMEPLAY_INPUT.key_crouch_p = false;
+		GAMEPLAY_INPUT.key_interact = false;
+	
+		GAMEPLAY_INPUT.key_one = false;
+		GAMEPLAY_INPUT.key_oneP = false;
+		GAMEPLAY_INPUT.key_F = false;
+		GAMEPLAY_INPUT.key_FP = false;
+		GAMEPLAY_INPUT.key_two = false;
+		GAMEPLAY_INPUT.key_twoP = false;
+		
+		GAMEPLAY_INPUT.key_P1 = false;
+		GAMEPLAY_INPUT.key_P1P = false;
+		GAMEPLAY_INPUT.key_P2 = false;
+		GAMEPLAY_INPUT.key_P2P = false;
+
+	}
+
 	//void menuCloseCallback(cocos2d::Ref* pSender);
 
 	void update(float dt) override;
 
 	void setKnight(Knight * k) { knight = k; }
+
+	void clearKeys();
+
+	std::vector<inventoryItem>* getInvRef() {
+		return &(currInv->items);
+	}
+
+	void SetInventory(player_inventory* inv) {
+		currInv = inv;
+	};
 
 	CREATE_FUNC(GameplayScene);
 };
