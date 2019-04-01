@@ -82,7 +82,7 @@ public:
 	
 	
 	
-	 virtual void movePlayer(Entity * player, cocos2d::Vec2 move);
+	 virtual void movePlayer(cocos2d::Vec2 move);
 	//player_inventory * currInv;
 	virtual bool init();
 

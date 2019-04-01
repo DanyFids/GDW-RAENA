@@ -28,7 +28,7 @@ Scene* GameplayScene::createScene() {
 //	player->setPosition(movePlayer);
 //}
 
-void GameplayScene::movePlayer(Entity * player,cocos2d::Vec2 move)
+void GameplayScene::movePlayer(cocos2d::Vec2 move)
 {
 	player->setPosition(move);
 }
@@ -562,11 +562,11 @@ bool A1_R1::init()
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
 
-		EffectSprite *_bgColor1 = EffectSprite::create("Parallax/LightBlueBG.png");
-		EffectSprite *_bgColor2 = EffectSprite::create("Parallax/BlueBG.png");
-		EffectSprite *_bgColor3 = EffectSprite::create("Parallax/LightGreenBG.png");
-		EffectSprite *_bgColor4 = EffectSprite::create("Parallax/GreenBG.png");
-		EffectSprite *_bgColor5 = EffectSprite::create("Parallax/DarkGreenBG.png");
+		EffectSprite *_bgColor1 = EffectSprite::create("Parallax/LightBlueBG_Updated.png");
+		EffectSprite *_bgColor2 = EffectSprite::create("Parallax/BlueBG_Updated.png");
+		EffectSprite *_bgColor3 = EffectSprite::create("Parallax/LightGreenBG_Updated.png");
+		EffectSprite *_bgColor4 = EffectSprite::create("Parallax/GreenBG_Updated.png");
+		EffectSprite *_bgColor5 = EffectSprite::create("Parallax/DarkGreenBG_Updated.png");
 
 
 		_bgColor1->setAnchorPoint(cocos2d::Vec2(0, 0));
@@ -650,7 +650,7 @@ bool A1_R1::init()
 
 		interactables.pushBack(Pickup::create("Rose.png", cocos2d::Vec2(240, 200), ROSE));
 		//interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(700,270),A1_R2)); // Scene Door
-		interactables.pushBack(LoadZone::create(905,270,30,400, A1_R2,cocos2d::Vec2(50,190))); // LoadZone
+		interactables.pushBack(LoadZone::create(905,270,30,400, A1_R2,cocos2d::Vec2(50,230))); // LoadZone
 
 		
 
@@ -702,7 +702,7 @@ bool A1_R2::init()
 
 	STAGE_HEIGHT = 900;
 
-	removeAllChildren();
+	//removeAllChildren();
 
 	if (GameplayScene::init()) {
 
@@ -801,7 +801,7 @@ bool A1_R2::init()
 		//	}
 		//}
 
-		interactables.pushBack(LoadZone::create(-10, 205, 10, 400, A1_R1, Vec2(150, 230))); // LoadZone
+		interactables.pushBack(LoadZone::create(-10, 205, 10, 1000, A1_R1, Vec2(150, 230))); // LoadZone
 		interactables.pushBack(LoadZone::create(1000, 670, 10, 400, A1_R3, Vec2(50, 205))); // LoadZone
 
 		for each (Interactable* inter in interactables) {
