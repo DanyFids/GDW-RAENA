@@ -16,8 +16,7 @@
 #include "PauseMenu.h"
 #include "LevelManager/LevelManager.h"
 USING_NS_CC;
-			  
-Gamepad* TheGamepad;
+			 
 
 Scene* GameplayScene::createScene() {
 	return GameplayScene::create();
@@ -52,9 +51,26 @@ bool GameplayScene::init() {
 	player->setScale(SCALE);
 	player->getTexture()->setTexParameters(tp);
 
-	
-	this->addChild(player,10);
+	//creates the audio
+	auto audioF = CocosDenshion::SimpleAudioEngine::getInstance();
+	TheAudioF = audioF;
+	auto audioD = CocosDenshion::SimpleAudioEngine::getInstance();
+	TheAudioD = audioD;
+	auto audioB = CocosDenshion::SimpleAudioEngine::getInstance();
+	TheAudioB = audioB;
+	auto audioT = CocosDenshion::SimpleAudioEngine::getInstance();
+	TheAudioT = audioT;
 
+	if (!this->audioinitT)
+	{
+		TheAudioT->preloadBackgroundMusic("RAENA SOUNDSCAPE/Music/RaenaTitle.wav");
+		TheAudioT->playBackgroundMusic("RAENA SOUNDSCAPE/Music/RaenaTitle.wav", true);
+	}
+	audioinitT = true;
+
+	
+ 	this->addChild(player,10);
+	
 	currInv = new player_inventory(1);
 
 	auto KeyHandler = EventListenerKeyboard::create();
@@ -91,7 +107,8 @@ bool GameplayScene::init() {
 					GAMEPLAY_INPUT.key_crouch = true;
 					break;
 				case EventKeyboard::KeyCode::KEY_ENTER:
-					Director::getInstance()->pushScene(InventoryScene::create());
+					GAMEPLAY_INPUT.key_inv = true;
+					//Director::getInstance()->pushScene(InventoryScene::create());
 					break;
 			//	case EventKeyboard::KeyCode::KEY_1:
 			//		GAMEPLAY_INPUT.key_one = true;
@@ -307,6 +324,11 @@ void GameplayScene::update(float dt) {
 			player->setFlipX(false);
 			player->spd.x = PLAYER_SPEED * dt;
 		}
+	}
+
+	if (GAMEPLAY_INPUT.key_inv || TheGamepad->IsPressed(XINPUT_GAMEPAD_START))
+	{
+		Director::getInstance()->pushScene(InventoryScene::create());
 	}
 
 	if (GAMEPLAY_INPUT.key_down || TheGamepad->leftStickY <= -0.2 && TheGamepad->CheckConnection()) {
@@ -581,7 +603,7 @@ bool A1_R1::init()
 
 	if (GameplayScene::init()) {
 
-
+		//RAENA SOUNDSCAPE
 		auto visibleSize = Director::getInstance()->getVisibleSize();
 		//Center of screen ///////////////////////////////////////////////////////////////////////
 		Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -716,6 +738,16 @@ bool A1_R1::init()
 
 void A1_R1::update(float dt)
 {
+	
+	if (!this->audioinitF)
+	{
+		TheAudioT->stopBackgroundMusic("RAENA SOUNDSCAPE/Music/RaenaTitle.wav");
+		TheAudioF->preloadBackgroundMusic("RAENA SOUNDSCAPE/Music/Forest Waltz.mp3");
+		TheAudioF->playBackgroundMusic("RAENA SOUNDSCAPE/Music/Forest Waltz.mp3", true);
+
+	}
+	audioinitF = true;
+
 	GameplayScene::update(dt);
 }
 

@@ -15,6 +15,8 @@
 #include "Projectile.h"
 
 #include "GameOver.h"
+#include "GamePad.h"
+#include "SimpleAudioEngine.h"
 
 
 
@@ -41,11 +43,23 @@ protected:
 	bool Bpress1 = false;
 	bool Bpress2 = false;
 
+	Gamepad* TheGamepad;
+
+	CocosDenshion::SimpleAudioEngine* TheAudioF;
+	CocosDenshion::SimpleAudioEngine* TheAudioD;
+	CocosDenshion::SimpleAudioEngine* TheAudioB;
+	CocosDenshion::SimpleAudioEngine* TheAudioT;
+
 	cocos2d::Vector<Entity *> terrain;
 	cocos2d::Vector<Ladder *> ladders;
 	cocos2d::Vector<Torch *> torches;
 	cocos2d::Vector<Pushable *> Pushables;
 	cocos2d::Vector<Projectile *> Projectiles;
+
+	bool audioinitF = false;
+	bool audioinitD = false;
+	bool audioinitB = false;
+	bool audioinitT = false;
 
 
 	int STAGE_WIDTH = 1000;
@@ -64,6 +78,7 @@ public:
 		bool key_crouch = false;
 		bool key_crouch_p = false;
 		bool key_interact = false;
+		bool key_inv = false;
 
 
 		bool key_one = false;
