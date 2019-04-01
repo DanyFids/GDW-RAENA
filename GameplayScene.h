@@ -25,9 +25,7 @@
 
 class GameplayScene : public cocos2d::Scene {
 protected:
-	Player * player;
-	Knight * knight;
-	Moth * moth;
+
 	cocos2d::Vector<Rat *> rat;
 
 	player_inventory * currInv;
@@ -35,7 +33,6 @@ protected:
 	cocos2d::ParallaxNode * PNode;
 	cocos2d::Camera * view;
 	
-	cocos2d::Vector<Interactable *> interactables;
 	cocos2d::Vector<Platform *> ActualPlatforms;
 	
 	bool cutScene = false;
@@ -65,6 +62,11 @@ protected:
 	int STAGE_WIDTH = 1000;
 	int STAGE_HEIGHT = 600;
 public:
+	Player * player;
+	Knight * knight = nullptr;
+	Moth * moth = nullptr;
+	cocos2d::Vector<Interactable *> interactables;
+
 
 	struct {
 		bool key_up = false;
@@ -137,6 +139,16 @@ public:
 	void update(float dt) override;
 
 	void setKnight(Knight * k) { knight = k; }
+
+	void clearKeys();
+
+	std::vector<inventoryItem>* getInvRef() {
+		return &(currInv->items);
+	}
+
+	void SetInventory(player_inventory* inv) {
+		currInv = inv;
+	};
 
 	CREATE_FUNC(GameplayScene);
 };

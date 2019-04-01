@@ -16,3 +16,11 @@ void LevelManager::AddLevels(cocos2d::Vector<GameplayScene*> l)
 		levels.pushBack(l);
 	}
 }
+
+void LevelManager::setGlobalInv(player_inventory * inv)
+{
+	for each (GameplayScene* scn in levels)
+	{
+		scn->SetInventory(inv);
+	}
+}

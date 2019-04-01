@@ -3,6 +3,7 @@
 #include"cocos2d.h"
 
 class GameplayScene;
+class player_inventory;
 
 class LevelManager {
 private:
@@ -10,4 +11,5 @@ private:
 public:
 	static GameplayScene* GetLevel(levelEnum id);
 	static void AddLevels(cocos2d::Vector<GameplayScene *> l);
+	static void setGlobalInv(player_inventory* inv);
 };

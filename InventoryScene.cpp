@@ -1,15 +1,20 @@
 #include "InventoryScene.h"
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
-USING_NS_CC;
+#include "Entities/CoreEntities.h"
+#include <iostream>
 
-void InventoryScene::pickUpItem(int id, std::string name, std::string pic){
-	inventory.push_back({int(id), name, pic});
+
+USING_NS_CC;
+using namespace std;
+
+void InventoryScene::pickUpItem(int id, std::string name, std::string pic, std::string des, itemEnum V){
+	inventory->push_back({int(id), name, pic, des, V});
 	currInvNum += 1;
 }
 
-void InventoryScene::dropItem(int id, std::string name, std::string pic){
-	inventory.erase(inventory.begin()+id);
+void InventoryScene::dropItem(int id){
+	inventory->erase(inventory->begin()+id);
 	currInvNum -= 1;
 	pointer--;
 	if (pointer < 0) {
@@ -17,9 +22,146 @@ void InventoryScene::dropItem(int id, std::string name, std::string pic){
 	}
 }
 
-Scene * InventoryScene::createScene(){
-	return InventoryScene::create();
+Scene * InventoryScene::createScene(GameplayScene * playScene){
+	auto ret = InventoryScene::create(playScene);
+
+	return ret;
 }
+
+InventoryScene * InventoryScene::create(GameplayScene * playScene)
+{
+	auto ret = new (std::nothrow) InventoryScene;
+	if (ret != nullptr) {
+		ret->play = playScene;
+		ret->player = playScene->player;
+		ret->puzzles = playScene->interactables;
+		ret->inventory = playScene->getInvRef();
+		ret->currInvNum = ret->inventory->size();
+
+		if (ret->init()) {
+			return ret;
+		}
+
+		CC_SAFE_RELEASE(ret);
+		return nullptr;
+	}
+	CC_SAFE_RELEASE(ret);
+	return nullptr;
+}
+
+void InventoryScene::useItem(std::string usename)
+{
+	if (usename == "Bandages") {
+
+		if ((player->getHP()) <= 4) {
+			player->setHP(player->getHP() + 2);
+		}
+		else {
+			player->setHP(6);
+		}
+		dropItem((*inventory)[pointer].itemId);
+	}
+
+	for (int i = 0; i < puzzles.size(); i++) {
+		if (usename == "Rose" && ((PuzzleInteract*)puzzles.at(i))->checkPuzzle(Princess1) && ((Interactable*)puzzles.at(i))->inRange(player) ) {
+			Knight * newKnight = Knight::create("knightwalkyboi0000.png");
+			newKnight->setScale(1);
+			newKnight->setPosition(cocos2d::Vec2(850, 200 + (newKnight->getBoundingBox().size.height / 2)));
+			play->setKnight(newKnight);
+			play->addChild(play->knight);
+			dropItem((*inventory)[pointer].itemId);
+			Director::getInstance()->popScene();
+		}
+		InteractType type =(puzzles.at(i))->getType();
+		if (usename == "Key" && type == DOOR && ((Interactable*)puzzles.at(i))->inRange(player)) {
+			if (d->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
+
+				if (d->requiredKey == GEN_KEY) {
+					
+					dropItem((*inventory)[pointer].itemId);
+					d->locked = false;
+	
+					}
+				}
+				//Include Each Keytype below
+
+			if (!(d->CoolDownState) && !(d->locked)) {
+
+				d->CoolDownState = true;
+
+				if (d->Active == false) {
+
+					d->Active = true;
+
+				}
+				else {
+					d->Active = false;
+				}
+			}
+		}
+		if (usename == "Key" && type == S_DOOR && ((Interactable*)puzzles.at(i))->inRange(player)) {
+			if (sd->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
+
+				if (sd->requiredKey == GEN_KEY) {
+					dropItem((*inventory)[pointer].itemId);
+					sd->locked = false;
+				}
+			}
+				//Include Each Keytype below
+
+			if (!(sd->CoolDownState) && !(sd->locked)) {
+
+				sd->CoolDownState = true;
+
+				if (sd->Active == false) {
+
+					sd->Active = true;
+
+					switch (sd->goTo) {
+					case A1_R1:
+						cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R1));
+						//GameplayScene::movePlayer();
+						player = nullptr;
+						break;
+					case A1_R2:
+						cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R2));
+						player->setPosition(sd->movePlayer);
+						player = nullptr;
+						break;
+					case A1_R3:
+						cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R3));
+						player->setPosition(sd->movePlayer);
+						break;
+					case A1_R4:
+						cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R4));
+						player->setPosition(sd->movePlayer);
+						break;
+					case A1_R5:
+						cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R5));
+						player->setPosition(sd->movePlayer);
+						break;
+					case A1_R6:
+						cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R6));
+						player->setPosition(sd->movePlayer);
+						break;
+					
+
+					}
+
+
+				}
+				else {
+					sd->Active = false;
+				}
+			}
+
+		}
+
+	}
+
+}
+
+
 
 bool InventoryScene::init()
 {
@@ -37,16 +179,12 @@ bool InventoryScene::init()
 	BG->setPosition({ origin.x + (visibleSize.width / 2), origin.y + (visibleSize.height / 2) });
 	addChild(BG);
 	
-	//pickUpItem(0, "Key", "Key.png");
-	//pickUpItem(1, "Bandages", "Bandages.png");
-	//pickUpItem(2, "Rose", "Rose.png");
-	//pickUpItem(0, "Key", "Key.png");
-	//pickUpItem(1, "Bandages", "Bandages.png");
+	
 
-	title = Label::createWithTTF("INVENTORY", "fonts/horrendo.ttf", 36);
-	invLabel = Label::createWithTTF("There is nothing in your inventory.", "fonts/horrendo.ttf", 24);
-	title->setColor(Color3B(200, 180, 150));
+	title = Label::createWithTTF("INVENTORY", "fonts/fofbb_reg.ttf", 36);
+	invLabel = Label::createWithTTF("There is nothing in your inventory.", "fonts/fofbb_reg.ttf", 24);
 	title->enableGlow(Color4B::RED);
+	title->setColor(Color3B(200, 180, 150));
 	title->enableBold();
 	invLabel->setColor(Color3B(200, 180, 150));
 	pic = Sprite::create();
@@ -58,25 +196,25 @@ bool InventoryScene::init()
 
 	if (currInvNum >= 1)
 	{
-		invLabel->setString(inventory[pointer].itemName);
-		pic->setTexture(inventory[pointer].itemPic);
-		pic->setPosition(cocos2d::Vec2(400.0f, 350.0f));
+		invLabel->setString((*inventory)[pointer].itemName);
+		pic->setTexture((*inventory)[pointer].itemPic);
 	}
+	pic->setPosition(cocos2d::Vec2(400.0f, 350.0f));
 
 	if (currInvNum >= 2)
 
 	{
 		int next_id = (pointer - 1 < 0) ? currInvNum - 1 : pointer - 1;
-		nextPic->setTexture(inventory[next_id].itemPic);
-		nextPic->setPosition(cocos2d::Vec2(600.0f, 350.0f));
+		nextPic->setTexture((*inventory)[next_id].itemPic);
 	}
+	nextPic->setPosition(cocos2d::Vec2(600.0f, 350.0f));
 
 	if (currInvNum >= 3)
 	{
 		int prev_id = (pointer + 1 >= currInvNum) ? 0 : pointer + 1;
-		prevPic->setTexture(inventory[prev_id].itemPic);
-		prevPic->setPosition(cocos2d::Vec2(200.0f, 350.0f));
+		prevPic->setTexture((*inventory)[prev_id].itemPic);
 	}
+	prevPic->setPosition(cocos2d::Vec2(200.0f, 350.0f));
 
 
 	invLabel->setPosition(cocos2d::Vec2(400.0f, 250.0f));
@@ -84,6 +222,11 @@ bool InventoryScene::init()
 	if (currInvNum == 0)
 	{
 		addChild(invLabel, 1);
+
+		pic->setScale(2);
+		addChild(pic, 1);
+		addChild(prevPic, 1);
+		addChild(nextPic, 1);
 	}
 	else {
 		invLabel->setScale(2);
@@ -96,17 +239,17 @@ bool InventoryScene::init()
 
 
 
-	auto use = cocos2d::ui::Button::create("CloseNormal.png", "CloseSelected.png");
+	auto use = cocos2d::ui::Button::create("Use.png", "CloseSelected.png");
 
 	use->setTitleText("");
 
-	use->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
+	use->addTouchEventListener([this](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			//Player::use = pointer;
+			useItem((*inventory)[pointer].itemName);
 			break;
 		default:
 			break;
@@ -133,22 +276,58 @@ bool InventoryScene::init()
 	//	}
 	//});
 
+	auto KeyHandle = EventListenerKeyboard::create();
 
+	KeyHandle->onKeyPressed = [this](EventKeyboard::KeyCode key, Event * event) {
+		switch (key) {
+		case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
+			this->INPUT.left = true;
+			break;
+		case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
+			this->INPUT.right = true;
+			break;
+		case EventKeyboard::KeyCode::KEY_ENTER:
+			if (enter_released) {
+				Director::getInstance()->popScene();
+			}
+			break;
+		}
+	};
 
+	KeyHandle->onKeyReleased = [this](EventKeyboard::KeyCode key, Event * event) {
+		switch (key) {
+		case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
+			this->INPUT.left = false;
+			break;
+		case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
+			this->INPUT.right = false;
+			break;
+		case EventKeyboard::KeyCode::KEY_ENTER:
+			enter_released = true;
+			break;
+		}
+	};
 
-	auto examine = cocos2d::ui::Button::create("CloseNormal.png", "CloseSelected.png");
+	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(KeyHandle, this);
+
+	auto examine = cocos2d::ui::Button::create("Examine.png", "CloseSelected.png");
 
 	examine->setTitleText("");
+	examine->addTouchEventListener([this](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
+		if (lastLabel != nullptr)
+		{
+			removeChild(lastLabel);
+		}
+		description = Label::createWithTTF((*inventory)[pointer].itemDescription, "fonts/fofbb_reg.ttf", 16);
+		lastLabel = description;
 
-	examine->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
-		auto description = Textbox::create(1, { 1 }, { "This is used to unlock a door." }, InventoryScene::create());
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			description->setPosition(400.0f, 300.0f);
-			description->Load();
+
+			description->setPosition(400, 200);
 			addChild(description, 2);
 			break;
 		default:
@@ -156,12 +335,9 @@ bool InventoryScene::init()
 		}
 	});
 
-	//this->addChild(examine);
+	
 
-	std::string combine1;
-	std::string combine2;
-
-	auto combine = cocos2d::ui::Button::create("CloseNormal.png", "CloseSelected.png");
+	auto combine = cocos2d::ui::Button::create("Combine.png", "CloseSelected.png");
 
 	combine->setTitleText("");
 
@@ -171,14 +347,43 @@ bool InventoryScene::init()
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			if (combine1 == "") {
-				combine1 = inventory[pointer].itemName;
+			if (combine1 == 0) {
+				combine1 = pointer;
+				combinewith = Label::createWithTTF("What would you like to combine the "+ (*inventory)[combine1].itemName+" with?", "fonts/fofbb_reg.ttf", 16);
+				combinewith->setPosition(400, 200);
+				addChild(combinewith, 2);
 			}
 			else {
-				combine2 = inventory[pointer].itemName;
-				if (canCombine)
-				{
-					InventoryScene::combine(combine1, combine2);
+				if(!(pointer == combine1)){
+					combine2 = pointer;
+					removeChild(combinewith);
+
+					int yolo = (*inventory)[combine1].Val + (*inventory)[combine2].Val;
+
+					if (combine1 < combine2) {
+						int temp = combine1;
+						combine1 = combine2;
+						combine2 = temp;
+
+					}
+
+					itemEnum newItem;
+					try {
+						newItem = (itemEnum)yolo;
+					}
+					catch(exception e){
+						newItem = I_NONE;
+					}
+
+					if (newItem != I_NONE)
+					{
+						dropItem(combine1);
+						dropItem(combine2);
+						pickUpItem(inventory->size() - 1, "newItem", "CloseSelected.png", "This is the new item", newItem);
+						combine1 = 0;
+						combine2 = 0;
+						pointer = inventory->size() - 1;
+					}
 				}
 			}
 			break;
@@ -191,7 +396,7 @@ bool InventoryScene::init()
 
 
 
-	auto left = cocos2d::ui::Button::create("CloseNormal.png", "CloseSelected.png");
+	auto left = cocos2d::ui::Button::create("Left.png", "CloseSelected.png");
 
 	left->setTitleText("");
 
@@ -202,6 +407,7 @@ bool InventoryScene::init()
 			break;
 		case ui::Widget::TouchEventType::ENDED:
 			pointer += 1;
+			removeChild(description);
 			if (pointer == currInvNum)
 			{
 				pointer = 0;
@@ -215,7 +421,7 @@ bool InventoryScene::init()
 
 
 
-	auto right = cocos2d::ui::Button::create("CloseNormal.png", "CloseSelected.png");
+	auto right = cocos2d::ui::Button::create("Right.png", "CloseSelected.png");
 
 	right->setTitleText("");
 
@@ -226,6 +432,7 @@ bool InventoryScene::init()
 			break;
 		case ui::Widget::TouchEventType::ENDED:
 			pointer -= 1;
+			removeChild(description);
 			if (pointer == -1)
 			{
 				pointer = currInvNum - 1;
@@ -368,51 +575,13 @@ bool InventoryScene::init()
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 	//currinv.at(i);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	//auto inv7 = Menu::create(returnToTheGame, NULL);
-	//auto inv8 = Menu::create(quitTheGame, NULL);
-	//inv7->setPosition(Vec2::ZERO);
-	//inv8->setPosition(Vec2::ZERO);
+	auto inv7 = Menu::create(returnToTheGame, NULL);
+	auto inv8 = Menu::create(quitTheGame, NULL);
+	inv7->setPosition(Vec2::ZERO);
+	inv8->setPosition(Vec2::ZERO);
 	use->setPosition(Vec2(400.0f, 100.0f));
 	examine->setPosition(Vec2(600.0f, 100.0f));
 	combine->setPosition(Vec2(200.0f, 100.0f));
@@ -422,8 +591,8 @@ bool InventoryScene::init()
 	this->addChild(combine, 1);
 	this->addChild(left, 1);
 	this->addChild(right, 1);
-	//this->addChild(inv7, 1);
-	//this->addChild(inv8, 1);
+	this->addChild(inv7, 1);
+	this->addChild(inv8, 1);
 
 
 
@@ -434,38 +603,31 @@ bool InventoryScene::init()
 void InventoryScene::update(float dt)
 {
 	timer -= dt;
-	exitTimer -= dt;
 	if (currInvNum != 0) {
 		if (timer == 0)
 		{
 			timer = 10;
-			if (GetAsyncKeyState(VK_LEFT) != 0)
+			if (INPUT.left)
 			{
+				removeChild(description);
 				pointer += 1;
 				if (pointer == currInvNum)
 				{
 					pointer = 0;
 				}
 			}
-			else if (GetAsyncKeyState(VK_RIGHT) != 0)
-			{
+			else if (INPUT.right)
+			{	
+				removeChild(description);
 				pointer -= 1;
 				if (pointer == -1)
 				{
 					pointer = currInvNum - 1;
 				}
 			}
-			else if (GetAsyncKeyState(VK_RETURN) != 0)
-			{
-				if (exitTimer == 0)
-				{
-					exitTimer = 20;
-					Director::getInstance()->popScene();
-				}
-			}
 
-			if (inventory.size() != 0) {
-				invLabel->setString(inventory[pointer].itemName);
+			if (inventory->size() != 0) {
+				invLabel->setString((*inventory)[pointer].itemName);
 			}
 			else {
 				invLabel->setString("There is nothing in your inventory");
@@ -487,35 +649,24 @@ void InventoryScene::update(float dt)
 			}
 			if (currInvNum >= 1)
 			{
-				pic->setTexture(inventory[pointer].itemPic);
+				pic->setTexture((*inventory)[pointer].itemPic);
 			}
 			if (pointer - 1 == -1 && currInvNum >= 2)
 			{
-				nextPic->setTexture(inventory[currInvNum - 1].itemPic);
+				nextPic->setTexture((*inventory)[currInvNum - 1].itemPic);
 			}
 			else if (pointer - 1 != -1 && currInvNum >= 2)
 			{
-				nextPic->setTexture(inventory[pointer - 1].itemPic);
+				nextPic->setTexture((*inventory)[pointer - 1].itemPic);
 			}
 
 			if (pointer + 1 == currInvNum && currInvNum >= 3)
 			{
-				prevPic->setTexture(inventory[0].itemPic);
+				prevPic->setTexture((*inventory)[0].itemPic);
 			}
 			else if (pointer + 1 != currInvNum && currInvNum >= 3)
 			{
-				prevPic->setTexture(inventory[pointer + 1].itemPic);
-			}
-		}
-	}
-	else
-	{
-		if (GetAsyncKeyState(VK_RETURN) != 0)
-		{
-			if (exitTimer == 0)
-			{ 
-				exitTimer = 20;
-				Director::getInstance()->popScene();
+				prevPic->setTexture((*inventory)[pointer + 1].itemPic);
 			}
 		}
 	}
@@ -523,9 +674,9 @@ void InventoryScene::update(float dt)
 
 
 
-void InventoryScene::combine(std::string cOne, std::string cTwo)
-{
-}
+//void InventoryScene::combine(std::string cOne, std::string cTwo)
+//{
+//}
 
 void InventoryScene::invReturnCallback(Ref* pSender) {
 	Director::getInstance()->popScene();
