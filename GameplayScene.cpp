@@ -190,6 +190,27 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
+	if (knight != nullptr) {
+		if (knight->getHp() <= 0) {
+
+		}
+	}
+
+	
+	for (int m = 0; m < moth.size(); m++) {
+		if (moth.at(m)->getHp() <= 0) {
+			this->removeChild(moth.at(m));
+			moth.erase(m);
+		}
+	}
+
+	for (int r = 0; r < rat.size(); r++) {
+		if (rat.at(r)->getHp() <= 0) {
+			this->removeChild(rat.at(r));
+			rat.erase(r);
+		}
+	}
+
 	PNode->setPosition(view->getPosition());
 
 	if (interactables.size() > 0) {
@@ -473,6 +494,24 @@ void GameplayScene::update(float dt) {
 	{
 		for each (Torch* t in torches) {
 			player->HitDetectEnem(t);
+		}
+	}
+
+	if (knight != nullptr) {
+		player->HitDetectEnem(knight);
+	}
+
+	if (moth.size() > 0)
+	{
+		for each (Moth* m in moth) {
+			player->HitDetectEnem(m);
+		}
+	}
+
+	if (rat.size() > 0)
+	{
+		for each (Rat* r in rat) {
+			player->HitDetectEnem(r);
 		}
 	}
 

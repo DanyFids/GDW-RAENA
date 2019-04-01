@@ -16,6 +16,8 @@ private:
 	const float TURNT_TIME = 3;
 	const float CHOP_TIME = 1;
 	const float HIT_TIME = 0.5;
+	const float INVINCE_TIME = 1;
+	float invinceTime = 0;
 	float timer = TURNT_TIME;
 	float swing = CHOP_TIME;
 	float hitTimer = HIT_TIME;
@@ -49,8 +51,10 @@ private:
 	bool paused = false;
 	int turn;
 	const float TURNT_TIME = 3;
+	const float INVINCE_TIME = 1;
+	float invinceTime = 0;
 	float timer = TURNT_TIME;
-	int hp = 2;
+	int hp = 1;
 	cocos2d::Vector<Torch *> * torches;
 public:
 	static Moth * create(const std::string& filename, cocos2d::Vector<Torch *> * t);
@@ -81,6 +85,8 @@ private:
 	bool paused = false;
 	int turn;
 	const float TURNT_TIME = 3;
+	const float INVINCE_TIME = 1;
+	float invinceTime = 0;
 	float timer = TURNT_TIME;
 	int hp = 2;
 	Entity * platform;

@@ -195,10 +195,20 @@ void Player::Attack()
 
 		cocos2d::Vec2 atk_pos;
 		if (face_right) {
-			atk_pos = cocos2d::Vec2(getPositionX() + (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
+			if (state == PS_Stand) {
+				atk_pos = cocos2d::Vec2(getPositionX() + (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
+			}
+			else {
+				atk_pos = cocos2d::Vec2(getPositionX() + (getBoundingBox().size.width / 2 + 18), getPositionY() + 10);
+			}
 		}
 		else {
-			atk_pos = cocos2d::Vec2(getPositionX() - (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
+			if (state == PS_Stand) {
+				atk_pos = cocos2d::Vec2(getPositionX() - (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
+			}
+			else {
+				atk_pos = cocos2d::Vec2(getPositionX() - (getBoundingBox().size.width / 2 + 18), getPositionY() + 10);
+			}
 		}
 
 		atk = Fireball::create(atk_pos, getEffect());
