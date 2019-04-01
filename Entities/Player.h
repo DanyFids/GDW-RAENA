@@ -102,6 +102,14 @@ public:
 		return knock_timer > 0;
 	}
 
+	void setFacingRight(bool f) {
+		face_right = f;
+	}
+
+	bool isAttacking() {
+		return attacking;
+	}
+
 	void ResetObstruction() {
 		can_vert = true;
 		can_horz = true;

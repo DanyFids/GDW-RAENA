@@ -308,8 +308,10 @@ void GameplayScene::update(float dt) {
 	if (player->getState() != PS_HURT) {
 		if (GAMEPLAY_INPUT.key_left || TheGamepad->leftStickX <= -0.2 && TheGamepad->CheckConnection()) {
 			if (player->getState() != PS_Climb) {
-				player->setFlipX(true);
 				player->spd.x = -PLAYER_SPEED * dt;
+				if (player->getState() == PS_Crouch) {
+					player->spd.x = -CROUCH_SPEED * dt;
+				}
 			}
 		}
 
@@ -319,7 +321,6 @@ void GameplayScene::update(float dt) {
 				if (player->getState() == PS_Crouch) {
 					player->spd.x = CROUCH_SPEED * dt;
 				}
-				player->setFlipX(false);
 				player->spd.x = PLAYER_SPEED * dt;
 			}
 		}
@@ -334,6 +335,17 @@ void GameplayScene::update(float dt) {
 			if (player->getState() == PS_Climb) {
 				player->spd.y = PLAYER_SPEED * dt;
 			}
+		}
+	}
+
+	if (GAMEPLAY_INPUT.key_right != GAMEPLAY_INPUT.key_left && player->getState() != PS_HURT && !player->isAttacking() ) {
+		if (GAMEPLAY_INPUT.key_right) {
+			player->setFacingRight(true);
+			player->setFlipX(false);
+		}
+		else if (GAMEPLAY_INPUT.key_left) {
+			player->setFacingRight(false);
+			player->setFlipX(true);
 		}
 	}
 
@@ -407,7 +419,7 @@ void GameplayScene::update(float dt) {
 						i->HitDetect(m);
 					}
 				}
-
+				
 				if (rat.size() > 0) {
 					for each (Rat* r in rat) {
 						i->HitDetect(r);
