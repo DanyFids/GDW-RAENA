@@ -348,6 +348,7 @@ void GameplayScene::update(float dt) {
 				player->spd.x = PLAYER_SPEED * dt;
 			}
 		}
+	}
 
 	if (GAMEPLAY_INPUT.key_inv || TheGamepad->IsPressed(XINPUT_GAMEPAD_START))
 	{
@@ -464,20 +465,21 @@ void GameplayScene::update(float dt) {
 	}
 
 	if (player->getState() != PS_HURT) {
-	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space)
-	{
-		GAMEPLAY_INPUT.key_space_p = false;
-	}
-	//if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p)) {
+		if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space)
+		{
+			GAMEPLAY_INPUT.key_space_p = false;
+		}
+		//if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p)) {
 
-	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space && TheGamepad->CheckConnection())
-	{
-		GAMEPLAY_INPUT.key_space_p = false;
-	}
-	if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p) && TheGamepad->CheckConnection()) {
+		if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space && TheGamepad->CheckConnection())
+		{
+			GAMEPLAY_INPUT.key_space_p = false;
+		}
+		if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p) && TheGamepad->CheckConnection()) {
 
-		player->Attack();
-		GAMEPLAY_INPUT.key_space_p = true;
+			player->Attack();
+			GAMEPLAY_INPUT.key_space_p = true;
+		}
 	}
 
 	for each (Block* platform in terrain)

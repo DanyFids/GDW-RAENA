@@ -32,10 +32,6 @@ protected:
 	bool promptInit = false;
 	bool overlap = false;
 
-	cocos2d::Vector<Moth *> moth;
-	BossKnight * bossKnight;
-	cocos2d::Vector<Rat *> rat;
-
 	player_inventory * currInv;
 
 	cocos2d::ParallaxNode * PNode;
@@ -72,7 +68,10 @@ protected:
 public:
 	Player * player;
 	Knight * knight = nullptr;
-	Moth * moth = nullptr;
+	BossKnight * bossKnight;
+	
+	cocos2d::Vector<Moth *> moth;
+	cocos2d::Vector<Rat *> rat;
 	cocos2d::Vector<Interactable *> interactables;
 
 
