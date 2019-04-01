@@ -22,6 +22,8 @@ private:
 	cocos2d::Sprite* pic;
 	cocos2d::Sprite* nextPic;
 	cocos2d::Sprite* prevPic;
+
+	Gamepad* TheGamepad;
 public:
 	std::vector<inventoryItem> inventory;
 	void pickUpItem(int id, std::string name, std::string pic);
