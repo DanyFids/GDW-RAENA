@@ -743,6 +743,7 @@ void A1_R1::update(float dt)
 	{
 		TheAudioT->stopBackgroundMusic("RAENA SOUNDSCAPE/Music/RaenaTitle.wav");
 		TheAudioF->preloadBackgroundMusic("RAENA SOUNDSCAPE/Music/Forest Waltz.mp3");
+		TheAudioF->setBackgroundMusicVolume(0.5);
 		TheAudioF->playBackgroundMusic("RAENA SOUNDSCAPE/Music/Forest Waltz.mp3", true);
 
 	}
