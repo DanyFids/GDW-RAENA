@@ -1,19 +1,26 @@
 #pragma once
 #include "Effects/EffectSprite.h"
 #include "cocos2d.h"
+#include "Enums.h"
+
+struct inventoryItem
+{
+	int itemId = 0;
+	std::string itemName = "NA";
+	std::string itemPic = "NA";
+	std::string itemDescription = "NA";
+	itemEnum Val = I_NONE;
+};
 
 struct player_inventory {
-	
 public:
 	player_inventory(int gen_keys) : general_keys(gen_keys) {
 
 	}
 
+	std::vector<inventoryItem> items;
+
 	int general_keys;
-
-private:
-	
-
 };
 
 class Entity : public EffectSprite {
@@ -27,6 +34,7 @@ public:
 	virtual void Move() = 0;
 	virtual bool HitDetect(Entity * other) = 0;
 	virtual void Update(float dt) = 0;
+	//bool getonground();
 
 	void SetOnGround(bool b) {on_ground = b;}
 

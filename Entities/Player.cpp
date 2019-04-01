@@ -3,13 +3,14 @@
 #include "Constants.h"
 #include "Fireball.h"
 #include "Ladder.h"
+#include "Torch.h"
 
 Player * Player::create(const std::string& filename, cocos2d::Scene * s)
 {
 	auto ret = new (std::nothrow) Player;
 	if (ret && ret->initWithFile(filename)) {
-		cocos2d::Vector<cocos2d::SpriteFrame *> stand_frames = { cocos2d::SpriteFrame::create("test_dummy.png", cocos2d::Rect(0,0,38,60), false, {0,0}, {38, 60 }) };
-		cocos2d::Vector<cocos2d::SpriteFrame *> crouch_frames = { cocos2d::SpriteFrame::create( "test_dummy_2.png", cocos2d::Rect(0,0,60,38), false, {0,0}, {60, 38 }) };
+		cocos2d::Vector<cocos2d::SpriteFrame *> stand_frames = { cocos2d::SpriteFrame::create("dragon_idle.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38, 64 }) };
+		cocos2d::Vector<cocos2d::SpriteFrame *> crouch_frames = { cocos2d::SpriteFrame::create( "player_crouch.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }) };
 
 		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(stand_frames, 0.1f));
 		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(crouch_frames, 0.1f));
@@ -45,7 +46,22 @@ void Player::moveLightToPlayer()
 }
 
 void Player::hurt(int dmg) {
-	hp -= dmg;
+	if (state != PS_HURT && invince_timer <= 0) {
+		hp -= dmg;
+		knock_timer = KNOCK_TIME;
+		invince_timer = INVINCE_TIME;
+		if ((state == PS_Crouch || state == PS_Glide) && can_vert) {
+			Stand();
+		}
+		state = PS_HURT;
+		stopAllActions();
+		runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
+	}
+}
+
+float Player::getInvince()
+{
+	return invince_timer;
 }
 
 bool Player::HitDetect(Entity * other)
@@ -57,6 +73,16 @@ void Player::Update(float dt)
 {
 	if (state == PS_Climb && climb_lad != nullptr) {
 		if (!climb_lad->HitDetect(this)) {
+			state = PS_Stand;
+		}
+		glide_used = false;
+		glide_timer = GLIDE_TIME;
+	}
+
+	if (knock_timer > 0) {
+		knock_timer -= dt;
+		state = PS_HURT;
+		if (knock_timer <= 0) {
 			state = PS_Stand;
 		}
 	}
@@ -86,7 +112,9 @@ void Player::Update(float dt)
 		spd.y = 0;
 	}
 
-	spd.x = 0;
+	if (knock_timer <= 0) {
+		spd.x = 0;
+	}
 
 	if (attacking) {
 		if (atk_timer > 0) {
@@ -101,6 +129,20 @@ void Player::Update(float dt)
 			switchLight();
 		}
 	}
+
+	if (knock_timer > 0) {
+		knock_timer -= dt;
+		state = PS_HURT;
+		if (knock_timer <= 0) {
+			state = PS_Stand;
+		}
+	}
+
+	if (invince_timer > 0) {
+		invince_timer -= dt;
+		if (invince_timer <= 0) {
+		}
+	}
 }
 
 void Player::Move()
@@ -108,18 +150,11 @@ void Player::Move()
 	if (!attacking) {
 		setPosition(getPosition() + spd);
 
-		if (spd.y != 0 && on_ground) {
+		if (spd.y != 0 && on_ground && state != PS_HURT && can_vert) {
 			on_ground = false;
-			state == PS_Jump;
+			state = PS_Jump;
 			this->stopAllActions();
 			this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
-		}
-
-		if (spd.x > 0) {
-			face_right = true;
-		}
-		else if (spd.x < 0) {
-			face_right = false;
 		}
 	}
 }
@@ -127,6 +162,9 @@ void Player::Move()
 void Player::Jump()
 {
 	if (state == PS_Crouch) {
+		if (!can_vert) {
+			return;
+		}
 		Stand();
 	}
 	if ((on_ground || state == PS_Climb) && !attacking) {
@@ -150,14 +188,31 @@ void Player::Attack()
 
 		cocos2d::Vec2 atk_pos;
 		if (face_right) {
-			atk_pos = cocos2d::Vec2(getPositionX() + (getBoundingBox().size.width / 2 + 30), getPositionY() + 5);
+			if (state == PS_Stand) {
+				atk_pos = cocos2d::Vec2(getPositionX() + (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
+			}
+			else {
+				atk_pos = cocos2d::Vec2(getPositionX() + (getBoundingBox().size.width / 2 + 18), getPositionY() + 10);
+			}
 		}
 		else {
-			atk_pos = cocos2d::Vec2(getPositionX() - (getBoundingBox().size.width / 2 + 30), getPositionY() + 5);
+			if (state == PS_Stand) {
+				atk_pos = cocos2d::Vec2(getPositionX() - (getBoundingBox().size.width / 2 + 18), getPositionY() + 18);
+			}
+			else {
+				atk_pos = cocos2d::Vec2(getPositionX() - (getBoundingBox().size.width / 2 + 18), getPositionY() + 10);
+			}
 		}
 
 		atk = Fireball::create(atk_pos, getEffect());
-
+		if (face_right)
+		{
+			atk->setFlipX(false);
+		}
+		else
+		{
+			atk->setFlipX(true);
+		}
 		scn->addChild(atk, 10);
 	}
 
@@ -197,9 +252,22 @@ void Player::ClimbDown(Ladder * lad)
 	this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
 	spd = { 0, 0 };
 	state = PS_Climb;
+	
+
+
 	climb_lad = lad;
 	setPositionX(lad->getPositionX() + (lad->getBoundingBox().size.width / 2));
 	setPositionY(this->getPositionY() - (this->getBoundingBox().size.height / 2));
+}
+
+int Player::getHP()
+{
+	return hp;
+}
+
+void Player::setHP(int i)
+{
+	hp = i;
 }
 
 void Player::Land() {
@@ -267,6 +335,7 @@ void Player::Glide()
 		state = PS_Glide;
 		spd.y = 0;
 		glide_timer = GLIDE_TIME;
+		glide_used = true;
 	}
 	else if (state == PS_Glide && can_vert) {
 		this->stopAllActions();
@@ -306,7 +375,7 @@ void Player::DetectObstruction(Entity * other)
 	float o_left = other->getPositionX() - (other->getBoundingBox().size.width * anchorP.x);
 	float o_right = other->getPositionX() + (other->getBoundingBox().size.width - (other->getBoundingBox().size.width * anchorP.x));
 
-	if (t_foot + spd.y < o_head && t_head + spd.y > o_foot && t_left + spd.x < o_right && t_right + spd.x > o_left) {
+	if (t_foot < o_head && t_head > o_foot && t_left < o_right && t_right > o_left) {
 		switch (state) {
 		case PS_Glide:
 		case PS_Crouch:
@@ -323,3 +392,5 @@ void Player::DetectObstruction(Entity * other)
 		}
 	}
 }
+
+

@@ -25,6 +25,13 @@
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
 #include "MenuScene.h"
+#include "GameplayScene.h"
+#include "LevelManager/LevelManager.h"
+//#include "TutorialScene.h"
+#include "InventoryScene.h"
+
+MenuScene * menuscene;
+GameplayScene * level1scene;
 
 #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -50,6 +57,7 @@ static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
 
 AppDelegate::AppDelegate()
 {
+
 }
 
 AppDelegate::~AppDelegate() 
@@ -119,10 +127,34 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-    auto scene = MenuScene::createScene();
+    auto menu = MenuScene::createScene();
+	//auto scene = MenuScene::createScene();
+
+	//auto TutorialRoom1 = TutRoom1::createScene();
+	//director->getInstance()->pushScene(TransitionFade::create(1,TutorialRoom1));
 
     // run
-    director->runWithScene(scene);
+	director->runWithScene(menu);
+	
+												//LEVELS
+	cocos2d::Vector<GameplayScene*> levels = {
+		A1_R1::create(),
+		A1_R2::create(),
+		A1_R3::create(),
+		A1_R4::create(),
+		A1_R5::create(),
+		A1_R6::create(),
+		A2_R1::create(),
+		A2_R2::create(),
+		A2_R3::create(),
+		A2_R4::create(),
+		A2_R5::create()
+	};
+
+	player_inventory* inv = new player_inventory(0);
+
+	LevelManager::AddLevels(levels);
+	LevelManager::setGlobalInv(inv);
 
     return true;
 }

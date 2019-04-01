@@ -10,7 +10,7 @@ protected:
 public:
 	Fireball(cocos2d::Vec2 pos, LightEffect * l);
 	static Fireball * create(cocos2d::Vec2 pos, LightEffect * l);
-
+	cocos2d::Vector<cocos2d::Animation * > animations;
 	bool HitDetect(Entity * other);
 	void Die();
 	void SetLight(LightEffect * l) {_light = l;}

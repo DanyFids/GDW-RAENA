@@ -72,11 +72,11 @@ void EffectSprite::setEffect(LightEffect *effect, const std::string &normalMapFi
 
 void EffectSprite::draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags)
 {
-    if (_effect != nullptr)
-    {
-        _effect->prepareForRender(this, _normalmap);
-    }
     Sprite::draw(renderer, transform, flags);
+	if (_effect != nullptr)
+	{
+		_effect->prepareForRender(this, _normalmap);
+	}
     renderer->render();
     
 }

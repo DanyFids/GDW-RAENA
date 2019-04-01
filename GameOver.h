@@ -2,13 +2,14 @@
 #include "2d/CCScene.h"
 
 
-class MenuScene : public cocos2d::Scene {
+class ENDScene : public cocos2d::Scene {
+private:
 public:
-	static Scene* MenuScene::createScene();
+	static Scene* ENDScene::createScene();
 	virtual bool init();
 	// Closes function
 	void menuReturnCallback(cocos2d::Ref* pSender);
 	void menuCloseCallback(cocos2d::Ref* pSender);
 
-	CREATE_FUNC(MenuScene);
+	CREATE_FUNC(ENDScene);
 };

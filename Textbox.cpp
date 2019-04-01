@@ -3,7 +3,7 @@
 #include "GameplayScene.h"
 
 
-Textbox * Textbox::create(int P, std::vector<int> C, std::vector<std::string> T, GameplayScene * scn)
+Textbox * Textbox::create(int P, std::vector<int> C, std::vector<std::string> T, cocos2d::Scene * scn)
 {
 	auto ret = new (std::nothrow) Textbox;
 

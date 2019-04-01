@@ -1,18 +1,16 @@
 #include "cocos2d.h"
-#include "MenuScene.h"
+#include "GameOver.h"
 #include "GameplayScene.h"
-#include "InventoryScene.h"
-#include "LevelManager/LevelManager.h"
 
 USING_NS_CC;
 
 static void problemLoading(const char* filename);
 
-Scene* MenuScene::createScene() {
-	return MenuScene::create();
+Scene* ENDScene::createScene() {
+	return ENDScene::create();
 }
 
-bool MenuScene::init()
+bool ENDScene::init()
 {
 	if (!Scene::init()) {
 		return false;
@@ -26,36 +24,23 @@ bool MenuScene::init()
 	cocos2d::Texture2D::TexParams tp = { GL_NEAREST, GL_NEAREST, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE };
 
 	auto BG = Sprite::create();
-	BG->initWithFile("Raena.png");
-	BG->getTexture()->setTexParameters(tp);
-	BG->initWithFile("Raena2.png");
-	BG->getTexture()->setTexParameters(tp);
-	BG->initWithFile("Raena3.png");
-	BG->getTexture()->setTexParameters(tp);
-	cocos2d::Vector<cocos2d::SpriteFrame *> title_frames = {
-		cocos2d::SpriteFrame::create("Raena.png", {0,0, 94, 39}, false, {0,0},{94, 39}),
-		cocos2d::SpriteFrame::create("Raena2.png", {0,0, 94, 39}, false, {0,0},{94, 39}),
-		cocos2d::SpriteFrame::create("Raena3.png", {0,0, 94, 39}, false, {0,0},{94, 39}),
-	};
-
-	auto anim = cocos2d::Animation::createWithSpriteFrames(title_frames, 0.2);
-	BG->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(anim)));
-
+	BG->initWithFile("title2.png");
 	// Center of the image
-	BG->setPosition({origin.x + (visibleSize.width/2), origin.y + (visibleSize.height / 2)});
+	BG->setPosition({ origin.x + (visibleSize.width / 2), origin.y + (visibleSize.height / 2) });
 	// Resize if picture is too small
-	BG->setScale(5);
+	BG->setScale(4);
+	BG->getTexture()->setTexParameters(tp);
 
 	// Return to different menu
 	auto play = MenuItemImage::create(
 		"Play.png",
 		"PlayClicked.png",
-		CC_CALLBACK_1(MenuScene::menuReturnCallback, this));
+		CC_CALLBACK_1(ENDScene::menuReturnCallback, this));
 
 	auto quit = MenuItemImage::create(
 		"Quit.png",
 		"QuitClicked.png",
-		CC_CALLBACK_1(MenuScene::menuCloseCallback, this));
+		CC_CALLBACK_1(ENDScene::menuCloseCallback, this));
 
 	if (play == nullptr ||
 		play->getContentSize().width <= 0 ||
@@ -106,13 +91,11 @@ static void problemLoading(const char* filename)
 	printf("Depending on how you compiled you might have to add 'Resources/' in front of filenames in HelloWorldScene.cpp\n");
 }
 
-void MenuScene::menuReturnCallback(Ref* pSender) {
-
-	Director::getInstance()->replaceScene(LevelManager::GetLevel(A1_R1));  //GAME START
-
+void ENDScene::menuReturnCallback(Ref* pSender) {
+	Director::getInstance()->replaceScene(GameplayScene::create());
 }
 
-void MenuScene::menuCloseCallback(Ref* pSender)
+void ENDScene::menuCloseCallback(Ref* pSender)
 {
 	//Close the cocos2d-x game scene and quit the application
 	Director::getInstance()->end();

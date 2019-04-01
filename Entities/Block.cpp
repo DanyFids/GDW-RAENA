@@ -15,7 +15,7 @@ Block * Block::create(int x, int y, int w, int h)
 		ret->setContentSize(cocos2d::Size(w, h));
 
 		auto rect = cocos2d::DrawNode::create();
-		rect->drawSolidRect(cocos2d::Vec2(0, 0), cocos2d::Vec2(w, h), cocos2d::Color4F::BLACK);
+		rect->drawSolidRect(cocos2d::Vec2(0, 0), cocos2d::Vec2(w, h), cocos2d::Color4F::GRAY);
 		ret->addChild(rect);
 
 		return ret;

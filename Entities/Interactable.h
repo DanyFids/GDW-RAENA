@@ -23,7 +23,7 @@ public :
 	virtual void Update(float dt) = 0;
 	virtual void Move() override;
 
-	virtual void Effect(InteractType t, Entity * player, player_inventory * p_inv) = 0;	 //For Doors
+	virtual void Effect(Entity * player, player_inventory * p_inv);	
 
 	virtual void setCooldown() {
 		if (CoolDownState == false) { CoolDownState = true; }
@@ -34,7 +34,7 @@ public :
 
 	virtual InteractType getType() = 0;
 
-	bool getActive() {
+	virtual bool getActive() {
 		return Active;
 	}
 
@@ -46,16 +46,23 @@ public :
 	//CREATE_FUNC(cocos2d::Scene);
 	
 	virtual void Land() override;
-
-protected:
-
-	//Scene * currScene;
-
+	bool locked = false;
 	bool Active = false;
 	bool CoolDownState = false;
 
 	float CD;
 	float temp_CD;
+
+	KeyType requiredKey;
+protected:
+
+	//Scene * currScene;
+ // If this is a locked door what key does it use?
+
+	//Door Variables;
+	// Active == Open/Close , True == Open 
+	
+
 
 	// Inherited via Entity
 
