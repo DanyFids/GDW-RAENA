@@ -1,7 +1,7 @@
 #pragma once
 #include "Enums.h"
 #include "Entities/Interactable.h"
-
+#include "cocos2d.h"
 #include "InventoryScene.h";
 
 class GameplayScene;
@@ -39,10 +39,10 @@ public:
 
 	bool checkItem(itemEnum i);
 	bool checkPuzzle(PuzzleType p);
-
+	PuzzleType puzzle;
 private:
 	itemEnum requiredItem;
-	PuzzleType puzzle;
+	
 };
 
 

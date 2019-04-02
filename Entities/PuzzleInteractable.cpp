@@ -67,13 +67,17 @@ bool PuzzleInteract::inRange(Entity * other)
 void PuzzleInteract::Effect(Entity * player, player_inventory * p_inv,GameplayScene* scn)
 {
 	if (puzzle == Princess1 && this->getCooldown() == false) {
-		cocos2d::Vector<cocos2d::SpriteFrame*> idle_frames = { cocos2d::SpriteFrame::create("PrincessIdleFrame0000.png", cocos2d::Rect(0,0,50,86), false, {0,0}, {50,86}),
-															   cocos2d::SpriteFrame::create("PrincessIdleFrame0001.png", cocos2d::Rect(0,0,50,86), false, {0,0}, {50,86}),
-															   cocos2d::SpriteFrame::create("PrincessIdleFrame0002.png", cocos2d::Rect(0,0,50,86), false, {0,0}, {50,86}),
-															   cocos2d::SpriteFrame::create("PrincessIdleFrame0003.png", cocos2d::Rect(0,0,50,86), false, {0,0}, {50,86}) };
+		scn->clearKeys();
+		cocos2d::Director::getInstance()->pushScene(InventoryScene::createScene(scn));
 		Knight * knight = Knight::create("knightwalkyboi0000.png");
 		knight->setScale(1);
 		knight->setPosition(cocos2d::Vec2(850, 200 + (knight->getBoundingBox().size.height / 2)));
+		scn->boss = true;
+
+		Block * blk = Block::create(0, 0, 598, 650);
+
+		scn->addTerrain(blk); //wall
+		scn->addChild(blk);
 		scn->addChild(knight);
 		scn->setKnight(knight);
 	}

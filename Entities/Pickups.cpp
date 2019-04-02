@@ -1,5 +1,6 @@
 #include "Pickups.h"  
 #include "InventoryScene.h"
+#include "Entities/CoreEntities.h"
 
 Pickup * Pickup::create(std::string filename, cocos2d::Vec2 p, itemEnum i)
 {
@@ -61,5 +62,12 @@ bool Pickup::inRange(Entity * other)
 
 void Pickup::Effect(Entity * player, player_inventory * p_inv)
 {
-	//InventoryScene::pickUpItem(2, "Rose", "Rose.png");
+	switch (this->ItemType) {
+	case ROSE:
+		inventoryItem newItem = { 0, "Rose", "Rose.png","Beautiful Flower", ROSE };
+
+		p_inv->items.push_back(newItem);
+		break;
+	}
+	
 }
