@@ -172,6 +172,8 @@ public:
 		currInv = inv;
 	};
 
+	virtual void GameOver();
+
 	CREATE_FUNC(GameplayScene);
 };
 

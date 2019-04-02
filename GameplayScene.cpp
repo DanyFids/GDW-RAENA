@@ -228,7 +228,7 @@ void GameplayScene::update(float dt) {
 			}
 		}
 
-	PNode->setPosition(view->getPosition());
+		PNode->setPosition(view->getPosition());
 
 		if (interactables.size() > 0) {
 			for each (Interactable* i in interactables) { //Showing Prompts?
@@ -274,7 +274,7 @@ void GameplayScene::update(float dt) {
 						InteractType curr_thing = interactables.at(i)->getType(); //Getting the type
 						switch (curr_thing) {
 						case DOOR:
-							((Door*)i)->Effect(player, currInv);
+							((Door*)interactables.at(i))->Effect(player, currInv);
 							interactables.at(i)->setCooldown();
 							break;
 						case SWITCH:
@@ -323,13 +323,14 @@ void GameplayScene::update(float dt) {
 						player->spd.x = -CROUCH_SPEED * dt;
 					}
 				}
-
+			}
 
 				if ((GAMEPLAY_INPUT.key_right && !GAMEPLAY_INPUT.key_left) || TheGamepad->leftStickX >= 0.2 && TheGamepad->CheckConnection()) {
 					if (player->getState() != PS_Climb) {
 						if (player->getState() == PS_Crouch) {
 							player->spd.x = CROUCH_SPEED * dt;
 						}
+						player->spd.x = PLAYER_SPEED * dt;
 					}
 				}
 
@@ -342,11 +343,11 @@ void GameplayScene::update(float dt) {
 					if (player->getState() == PS_Climb) {
 						player->spd.y = -PLAYER_SPEED * dt;
 					}
+				}
 
-					if (GAMEPLAY_INPUT.key_up || TheGamepad->leftStickY >= 0.2 && TheGamepad->CheckConnection()) {
-						if (player->getState() == PS_Climb) {
-							player->spd.y = PLAYER_SPEED * dt;
-						}
+				if (GAMEPLAY_INPUT.key_up || TheGamepad->leftStickY >= 0.2 && TheGamepad->CheckConnection()) {
+					if (player->getState() == PS_Climb) {
+						player->spd.y = PLAYER_SPEED * dt;
 					}
 				}
 
@@ -361,7 +362,6 @@ void GameplayScene::update(float dt) {
 					}
 				}
 			}
-		}
 
 		//////////////////////////////////////////////////////////////////////////////////
 
@@ -382,6 +382,7 @@ void GameplayScene::update(float dt) {
 				GAMEPLAY_INPUT.key_oneP = true;
 			}
 		}
+
 		if (player->getState() != PS_HURT) {
 			if (GAMEPLAY_INPUT.key_F && !GAMEPLAY_INPUT.key_FP)
 			{
@@ -436,7 +437,7 @@ void GameplayScene::update(float dt) {
 			}
 		}
 
-		if (!player->moving) {
+		if (GAMEPLAY_INPUT.key_left != GAMEPLAY_INPUT.key_right && !player->moving) {
 			player->moving = true;
 			switch (player->getState()) {
 			case PS_Crouch:
@@ -459,10 +460,6 @@ void GameplayScene::update(float dt) {
 				break;
 			}
 		}
-	}
-	else {
-		player->ChangeAnimation(6);
-	}
 
 		player->ResetObstruction();
 
@@ -586,27 +583,27 @@ void GameplayScene::update(float dt) {
 			}
 		}
 
-	if (player->getState() != PS_HURT) {
+		if (player->getState() != PS_HURT) {
 
-		if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space)
-		{
-			GAMEPLAY_INPUT.key_space_p = false;
+			if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space)
+			{
+				GAMEPLAY_INPUT.key_space_p = false;
+			}
+			//if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p)) {
+
+			if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space && TheGamepad->CheckConnection())
+			{
+				GAMEPLAY_INPUT.key_space_p = false;
+			}
+				
+			if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p) && TheGamepad->CheckConnection()) {
+
+				TheAudioSFX->playEffect("RAENA SOUNDSCAPE/FIRE/Fireball or Ember.mp3");
+
+				player->Attack();
+				GAMEPLAY_INPUT.key_space_p = true;
+			}
 		}
-		//if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p)) {
-
-		if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space && TheGamepad->CheckConnection())
-		{
-			GAMEPLAY_INPUT.key_space_p = false;
-		}
-			
-		if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p) && TheGamepad->CheckConnection()) {
-
-			TheAudioSFX->playEffect("RAENA SOUNDSCAPE/FIRE/Fireball or Ember.mp3");
-
-			player->Attack();
-			GAMEPLAY_INPUT.key_space_p = true;
-		}
-	}
 
 		for each (Block* platform in terrain)
 		{
@@ -683,44 +680,44 @@ void GameplayScene::update(float dt) {
 			bossKnight->Move();
 		}
 
-	if (knight != nullptr) {
-		if (knight->getHp() <= 0) {
-			knight->setDeath(true);
-			knight->ChangeAnimation(2);
+		if (knight != nullptr) {
+			if (knight->getHp() <= 0) {
+				knight->setDeath(true);
+				knight->ChangeAnimation(2);
+			}
 		}
-	}
 
 
-	for (int m = 0; m < moth.size(); m++) {
-		if (moth.at(m)->getHp() <= 0) {
-			this->removeChild(moth.at(m));
-			moth.erase(m);
+		for (int m = 0; m < moth.size(); m++) {
+			if (moth.at(m)->getHp() <= 0) {
+				this->removeChild(moth.at(m));
+				moth.erase(m);
+			}
 		}
-	}
 
-	for (int r = 0; r < rat.size(); r++) {
-		if (rat.at(r)->getHp() <= 0) {
-			this->removeChild(rat.at(r));
-			rat.erase(r);
+		for (int r = 0; r < rat.size(); r++) {
+			if (rat.at(r)->getHp() <= 0) {
+				this->removeChild(rat.at(r));
+				rat.erase(r);
+			}
 		}
-	}
 
-	if (player->getState() != PS_HURT) {
-		if (ladders.size())
-		{
-			for each (Ladder* lad in ladders)
+		if (player->getState() != PS_HURT) {
+			if (ladders.size())
 			{
-				if ((lad->HitDetect(player) && player->getState() != PS_Climb)) {
-					if ((GAMEPLAY_INPUT.key_up && !lad->PlayerOnTop()) || (TheGamepad->leftStickY >= 0.2 && player->getState() != PS_Climb)) {
-						player->Climb(lad);
-					}
-					else if (GAMEPLAY_INPUT.key_down && lad->PlayerOnTop() || (TheGamepad->leftStickY <= -0.2 && player->getState() != PS_Climb)) {
-						player->ClimbDown(lad);
+				for each (Ladder* lad in ladders)
+				{
+					if ((lad->HitDetect(player) && player->getState() != PS_Climb)) {
+						if ((GAMEPLAY_INPUT.key_up && !lad->PlayerOnTop()) || (TheGamepad->leftStickY >= 0.2 && player->getState() != PS_Climb)) {
+							player->Climb(lad);
+						}
+						else if (GAMEPLAY_INPUT.key_down && lad->PlayerOnTop() || (TheGamepad->leftStickY <= -0.2 && player->getState() != PS_Climb)) {
+							player->ClimbDown(lad);
+						}
 					}
 				}
 			}
 		}
-	}
 
 		if (rat.size() > 0) {
 			for each (Rat* r in rat) {
@@ -766,6 +763,21 @@ void GameplayScene::update(float dt) {
 				}
 			}
 		}
+	
+	
+
+	// Move Camera
+		if (!cutScene) {
+			if (!boss) {
+				if (player->getPositionX() >= (Director::getInstance()->getVisibleSize().width / 2) && player->getPositionX() <= STAGE_WIDTH - (Director::getInstance()->getVisibleSize().width / 2)) {
+					view->setPositionX(player->getPositionX());
+				}
+
+				if (player->getPositionY() >= (Director::getInstance()->getVisibleSize().height / 3) && player->getPositionY() <= STAGE_HEIGHT - (Director::getInstance()->getVisibleSize().height * 2 / 3)) {
+					view->setPositionY(player->getPositionY() + (Director::getInstance()->getVisibleSize().height / 6));
+				}
+			}
+		}
 	}
 	else {
 		if ((GAMEPLAY_INPUT.key_interact && !GAMEPLAY_INPUT.key_interact_p ) || (TheGamepad->CheckConnection()  && TheGamepad->IsPressed(XINPUT_GAMEPAD_Y)) ) {
@@ -773,19 +785,15 @@ void GameplayScene::update(float dt) {
 			ActiveTextbox->Flippage();
 		}
 	}
+}
 
-	// Move Camera
-	if (!cutScene) {
-		if (!boss) {
-			if (player->getPositionX() >= (Director::getInstance()->getVisibleSize().width / 2) && player->getPositionX() <= STAGE_WIDTH - (Director::getInstance()->getVisibleSize().width / 2)) {
-				view->setPositionX(player->getPositionX());
-			}
+void GameplayScene::GameOver()
+{
+	cocos2d::Director::getInstance()->replaceScene(ENDScene::create());
 
-			if (player->getPositionY() >= (Director::getInstance()->getVisibleSize().height / 3) && player->getPositionY() <= STAGE_HEIGHT - (Director::getInstance()->getVisibleSize().height * 2 / 3)) {
-				view->setPositionY(player->getPositionY() + (Director::getInstance()->getVisibleSize().height / 6));
-			}
-		}
-	}
+	LevelManager::ResetLevels();
+
+
 }
 
 bool A1_R1::init()
@@ -851,7 +859,7 @@ bool A1_R1::init()
 		_effect->setLightCutoffRadius(250);
 		_effect->setLightHalfRadius(0.5);
 		_effect->setBrightness(0.7);
-		_effect->setAmbientLightColor(Color3B(255, 255, 255));  //255 = no shadow, 0 = black
+		_effect->setAmbientLightColor(Color3B(200, 200, 200));  //255 = no shadow, 0 = black
 
 		player->setEffect(_effect, "test_NM.png");
 		
@@ -1014,7 +1022,7 @@ bool A1_R2::init()
 		_effect->setLightCutoffRadius(250);
 		_effect->setLightHalfRadius(0.5);
 		_effect->setBrightness(0.7);
-		_effect->setAmbientLightColor(Color3B(255, 255, 255));
+		_effect->setAmbientLightColor(Color3B(200, 200, 200));
 
 		player->setEffect(_effect, "test_NM.png");
 
@@ -1188,7 +1196,7 @@ bool A1_R3::init()	//Pushable And Crouch Tutorial
 		_effect->setLightCutoffRadius(250);
 		_effect->setLightHalfRadius(0.5);
 		_effect->setBrightness(0.7);
-		_effect->setAmbientLightColor(Color3B(255, 255, 255));
+		_effect->setAmbientLightColor(Color3B(200, 200, 200));
 
 		player->setEffect(_effect, "test_NM.png");
 		//_bgColor->setEffect(_effect, "test_NM.png");
@@ -1364,7 +1372,7 @@ bool A1_R4::init()
 		_effect->setLightCutoffRadius(250);
 		_effect->setLightHalfRadius(0.5);
 		_effect->setBrightness(0.7);
-		_effect->setAmbientLightColor(Color3B(255, 255, 255));
+		_effect->setAmbientLightColor(Color3B(200, 200, 200));
 
 		player->setEffect(_effect, "test_NM.png");
 
@@ -1527,7 +1535,7 @@ bool A1_R5::init()
 		_effect->setLightCutoffRadius(250);
 		_effect->setLightHalfRadius(0.5);
 		_effect->setBrightness(0.7);
-		_effect->setAmbientLightColor(Color3B(255, 255, 255));
+		_effect->setAmbientLightColor(Color3B(200, 200, 200));
 
 		player->setEffect(_effect, "test_NM.png");
 		//_bgColor->setEffect(_effect, "test_NM.png");
@@ -1726,7 +1734,7 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 		_effect->setLightCutoffRadius(250);
 		_effect->setLightHalfRadius(0.5);
 		_effect->setBrightness(0.7);												
-		_effect->setAmbientLightColor(Color3B(255, 255, 255));
+		_effect->setAmbientLightColor(Color3B(200, 200, 200));
 
 		player->setEffect(_effect, "test_NM.png");
 		
@@ -1804,7 +1812,7 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 
 		interactables.pushBack(LoadZone::create(-10, 200, 10, 400, A1_R5, Vec2(1500, 605))); // LoadZone
 		//interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1050, 275), Vec2(50, 200), A1_R4));	//SceneDoor
-		interactables.pushBack(PuzzleInteract::create("PrincessIdleFrame0000.png", Vec2(1275, 200),Princess1, ROSE));
+		interactables.pushBack(PuzzleInteract::create("Princess_Standing.png", Vec2(1275, 200),Princess1, ROSE));
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
 				this->addChild(inter);
@@ -2600,7 +2608,7 @@ bool A2_R5::init()
 
 		//Player Loc /////////////////////////////////////////////////////////////////////////
 		if (player != nullptr) {
-			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y));
+			player->setPosition(Vec2((visibleSize.width / 2) - player->getBoundingBox().size.width / 2 + origin.x, (visibleSize.height / 2) - player->getBoundingBox().size.height / 2 + origin.y - 100));
 
 			//this->addChild(player, 10);
 		}
@@ -2645,6 +2653,7 @@ bool A2_R5::init()
 		//Interactables /////////////////////////////////////////////////////////////////////////////////////////
 		interactables.pushBack(LoadZone::create(1500, 650, 500, 300, A2_R2, Vec2(100, 200)));
 		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(400, 100), Vec2(1270, 140), A2_R2));
+		interactables.pushBack(Pickup::create("Key.png", { 1000, 100 }, KEY));
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
@@ -3070,6 +3079,8 @@ bool BOSS_R1::init()
 				return false;
 		}
 
+		
+
 		//Set Torches;
 		torches.pushBack(Torch::create(cocos2d::Vec2(600, 200), _effect));
 		torches.pushBack(Torch::create(cocos2d::Vec2(1200, 450), _effect));
@@ -3102,6 +3113,59 @@ bool BOSS_R1::init()
 				return false;
 			}
 		}
+
+
+		//rat.pushBack(Rat::create("Rat Death Animation/Rat_Death_Animation1.png", ActualPlatforms.at(3)));
+		//rat.at(0)->setPosition(ActualPlatforms.at(3)->getPositionX(), ActualPlatforms.at(3)->getPositionY() + 32);
+		//
+		//for each (Rat* r in rat) {
+		//	if (r != nullptr) {
+		//
+		//		this->addChild(r);
+		//
+		//	}
+		//}
+
+		Moth * m1 = Moth::create("Mothboi.png", &torches);
+		m1->setPosition(Vec2(1200, 200));
+		moth.pushBack(m1);
+
+		Moth * a1 = Moth::create("Mothboi.png", &torches);
+		a1->setPosition(Vec2(1200, 200));
+		moth.pushBack(a1);
+
+		Moth * m2 = Moth::create("Mothboi.png", &torches);
+		m1->setPosition(Vec2(1800, 200));
+		moth.pushBack(m2);
+
+		Moth * a2 = Moth::create("Mothboi.png", &torches);
+		a1->setPosition(Vec2(1800, 200));
+		moth.pushBack(a2);
+
+		Moth * m3 = Moth::create("Mothboi.png", &torches);
+		m3->setPosition(Vec2(2400, 200));
+		moth.pushBack(m3);
+
+		Moth * a3 = Moth::create("Mothboi.png", &torches);
+		a3->setPosition(Vec2(3000, 200));
+		moth.pushBack(a3);
+
+		Moth * m4 = Moth::create("Mothboi.png", &torches);
+		m4->setPosition(Vec2(3600, 200));
+		moth.pushBack(m4);
+
+		Moth * m5 = Moth::create("Mothboi.png", &torches);
+		m5->setPosition(Vec2(4200, 200));
+		moth.pushBack(m5);
+
+		for each (Moth* m in moth) {
+			if (m != nullptr) {
+		
+				//this->addChild(m);
+		
+			}
+		}
+
 		player->switchLight();
 		view = this->getDefaultCamera();
 

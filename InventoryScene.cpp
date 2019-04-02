@@ -66,7 +66,7 @@ void InventoryScene::useItem(std::string usename)
 		if (usename == "Rose" && ((PuzzleInteract*)puzzles.at(i))->checkPuzzle(Princess1) && ((Interactable*)puzzles.at(i))->inRange(player) ) {
 			Knight * newKnight = Knight::create("knightwalkyboi0000.png");
 			newKnight->setScale(1);
-			newKnight->setPosition(cocos2d::Vec2(850, 200 + (newKnight->getBoundingBox().size.height / 2)));
+			newKnight->setPosition(cocos2d::Vec2(850, 250 + (newKnight->getBoundingBox().size.height / 2)));
 			play->setKnight(newKnight);
 			play->addChild(play->knight);
 			dropItem((*inventory)[pointer].itemId);
@@ -80,6 +80,7 @@ void InventoryScene::useItem(std::string usename)
 		}
 		InteractType type =(puzzles.at(i))->getType();
 		if (usename == "Key" && type == DOOR && ((Interactable*)puzzles.at(i))->inRange(player)) {
+			Door* d =(Door*) puzzles.at(i);
 			if (d->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
 
 				if (d->requiredKey == GEN_KEY) {
@@ -338,7 +339,7 @@ bool InventoryScene::init()
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			if(p_inv->items.size()>0)
+			if(inventory->size()>0)
 			{
 			description->setPosition(400, 200);
 			addChild(description, 2);
@@ -624,7 +625,7 @@ void InventoryScene::update(float dt)
 	TheGamepad->Refresh();
 	
 	timer -= dt;
-	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_START) && enter_released)
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_START) && enter_released  && TheGamepad->CheckConnection())
 	{
 		Director::getInstance()->popScene();
 		enter_released = false;
@@ -657,7 +658,7 @@ void InventoryScene::update(float dt)
 		right = true;
 	}*/
 
-	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && B)
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && B && TheGamepad->CheckConnection())
 	{
 		if (p_inv->items.size() > 0)
 		{
@@ -708,7 +709,7 @@ void InventoryScene::update(float dt)
 		B = true;
 	}
 
-	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && A)
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && A && TheGamepad->CheckConnection())
 	{
 		if (this->inventory->size() > 0)
 		{
@@ -720,7 +721,7 @@ void InventoryScene::update(float dt)
 	{
 		A = true;
 	}
-	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && X)
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && X && TheGamepad->CheckConnection())
 	{
 		if (lastLabel != nullptr)
 		{
@@ -729,7 +730,7 @@ void InventoryScene::update(float dt)
 		description = Label::createWithTTF((*inventory)[pointer].itemDescription, "fonts/fofbb_reg.ttf", 16);
 		lastLabel = description;
 
-		if (p_inv->items.size()>0)
+		if (inventory->size()>0)
 		{
 			description->setPosition(400, 200);
 			addChild(description, 2);
@@ -747,7 +748,7 @@ void InventoryScene::update(float dt)
 		if (timer == 0)
 		{
 			timer = 10;
-			if (INPUT.left || TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT))
+			if (INPUT.left || (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT) && TheGamepad->CheckConnection()))
 			{
 				removeChild(description);
 				pointer += 1;
@@ -756,7 +757,7 @@ void InventoryScene::update(float dt)
 					pointer = 0;
 				}
 			}
-			else if (INPUT.right || TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
+			else if (INPUT.right || (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT) && TheGamepad->CheckConnection()))
 			{	
 				removeChild(description);
 				pointer -= 1;

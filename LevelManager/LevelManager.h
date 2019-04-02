@@ -12,4 +12,5 @@ public:
 	static GameplayScene* GetLevel(levelEnum id);
 	static void AddLevels(cocos2d::Vector<GameplayScene *> l);
 	static void setGlobalInv(player_inventory* inv);
+	static void ResetLevels();
 };

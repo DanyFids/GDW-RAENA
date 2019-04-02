@@ -87,7 +87,7 @@ public:
 	void Climb(Ladder * lad);
 
 	void ClimbDown(Ladder * lad);
-	int hp = 100;
+	int hp = 6;
 	//std::string equip;
 	int getHP();
 	void setHP(int i);
