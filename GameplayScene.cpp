@@ -426,6 +426,12 @@ void GameplayScene::update(float dt) {
 			}
 		}
 
+		if (bossKnight != nullptr)
+		{
+			bossKnight->HitDetect(player);
+		
+		}
+
 		if (GAMEPLAY_INPUT.key_right != GAMEPLAY_INPUT.key_left && player->getState() != PS_HURT && !player->isAttacking()) {
 			if (GAMEPLAY_INPUT.key_right) {
 				player->setFacingRight(true);
@@ -2601,6 +2607,11 @@ bool A2_R5::init()
 
 	if (GameplayScene::init()) {
 
+		EffectSprite * tileSet = EffectSprite::create("Levels/A2_R5.png");
+		tileSet->setScale(1.4);
+		//tileSet->setPositionY(tileSet->getPositionY() - 25);
+		tileSet->setAnchorPoint(Vec2(0, 0));
+
 		//Parallax & Background //////////////////////////////////////////////////////////////////////////////
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
@@ -2637,6 +2648,9 @@ bool A2_R5::init()
 		player->setEffect(_effect, "layerNorm.png");
 		_bgColor->setEffect(_effect, "layerNorm.png");
 		_bgColor2->setEffect(_effect, "layerNorm.png");
+		//tileSet->setEffect(_effect, "layerNorm.png");
+
+		this->addChild(tileSet, 2);
 
 		auto visibleSize = Director::getInstance()->getVisibleSize();
 		//Center of screen ///////////////////////////////////////////////////////////////////////
@@ -2667,7 +2681,7 @@ bool A2_R5::init()
 		{
 			if (plat != nullptr) {
 				plat->setEffect(_effect, "layerNorm.png");
-				this->addChild(plat);
+				this->addChild(plat, 6);
 			}
 			else {
 				return false;
@@ -2693,7 +2707,7 @@ bool A2_R5::init()
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
-				this->addChild(inter);
+				this->addChild(inter, 7);
 			}
 			else {
 				return false;
@@ -2709,7 +2723,7 @@ bool A2_R5::init()
 				/*p->setScale(SCALE);
 				p->getTexture()->setTexParameters(tp);*/
 				p->setEffect(_effect, "layerNorm.png");
-				this->addChild(p);
+				this->addChild(p, 7);
 			}
 			else
 				return false;
@@ -2734,7 +2748,7 @@ bool A2_R5::init()
 
 		for each (Pushable* push in Pushables) {
 			if (push != nullptr) {
-				this->addChild(push);
+				this->addChild(push, 8);
 			}
 			else
 				return false;
@@ -2857,6 +2871,7 @@ bool A2_AT1::init()
 				return false;
 			}
 		}
+
 
 		//Interactables /////////////////////////////////////////////////////////////////////////////////////////
 		//interactables.pushBack(LoadZone::create(1500, 650, 500, 300, A2_R2, Vec2(50, 205)));
@@ -3053,6 +3068,12 @@ bool BOSS_R1::init()
 			}
 		}
 
+		bossKnight = BossKnight::create("knightwalkyboi0000.png");
+		bossKnight->setScale(1);
+		bossKnight->setPosition(cocos2d::Vec2(850, 250 + (bossKnight->getBoundingBox().size.height / 2)));
+		bossKnight->setPosition(250, 250);
+		this->addChild(bossKnight);
+
 		//Interactables /////////////////////////////////////////////////////////////////////////////////////////
 		//interactables.pushBack(LoadZone::create(1500, 650, 500, 300, A2_R2, Vec2(50, 205)));
 		interactables.pushBack(SceneDoor::create("inner_cave_door.png", Vec2(4850, 250), Vec2(500, 120), END));	//SceneDoor
@@ -3118,24 +3139,49 @@ bool BOSS_R1::init()
 		
 
 		//Set Torches;
-		torches.pushBack(Torch::create(cocos2d::Vec2(600, 200), _effect));
-		torches.pushBack(Torch::create(cocos2d::Vec2(1200, 450), _effect));
-		torches.pushBack(Torch::create(cocos2d::Vec2(1200, 200), _effect));
 
-		torches.pushBack(Torch::create(cocos2d::Vec2(1800, 450), _effect));
-		torches.pushBack(Torch::create(cocos2d::Vec2(1800, 200), _effect));
 
-		torches.pushBack(Torch::create(cocos2d::Vec2(2400, 450), _effect));
-		torches.pushBack(Torch::create(cocos2d::Vec2(2400, 200), _effect));
 
-		torches.pushBack(Torch::create(cocos2d::Vec2(3000, 450), _effect));
-		torches.pushBack(Torch::create(cocos2d::Vec2(3000, 200), _effect));
 
-		torches.pushBack(Torch::create(cocos2d::Vec2(3600, 450), _effect));
-		torches.pushBack(Torch::create(cocos2d::Vec2(3600, 200), _effect));
+		moth.pushBack(Moth::create("MothBoi.png", &torches));
+		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(0)->getBoundingBox().size.height / 2)));
+		moth.at(0)->setPosition(600, 200);
+		moth.pushBack(Moth::create("MothBoi.png", &torches));
+		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(1)->getBoundingBox().size.height / 2)));
+		moth.at(0)->setPosition(1200, 450);
+		moth.pushBack(Moth::create("MothBoi.png", &torches));
+		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(2)->getBoundingBox().size.height / 2)));
+		moth.at(0)->setPosition(1200, 200);
 
-		torches.pushBack(Torch::create(cocos2d::Vec2(4200, 450), _effect));
-		torches.pushBack(Torch::create(cocos2d::Vec2(4200, 200), _effect));
+
+		moth.pushBack(Moth::create("MothBoi.png", &torches));
+		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(3)->getBoundingBox().size.height / 2)));
+		moth.at(0)->setPosition(1800, 450);
+		moth.pushBack(Moth::create("MothBoi.png", &torches));
+		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(4)->getBoundingBox().size.height / 2)));
+		moth.at(0)->setPosition(1800, 200);
+
+		moth.pushBack(Moth::create("MothBoi.png", &torches));
+		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(5)->getBoundingBox().size.height / 2)));
+		moth.at(0)->setPosition(3000, 450);
+		moth.pushBack(Moth::create("MothBoi.png", &torches));
+		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(6)->getBoundingBox().size.height / 2)));
+		moth.at(0)->setPosition(3000, 200);
+
+
+		moth.pushBack(Moth::create("MothBoi.png", &torches));
+		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(7)->getBoundingBox().size.height / 2)));
+		moth.at(0)->setPosition(4200, 450);
+		moth.pushBack(Moth::create("MothBoi.png", &torches));
+		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(8)->getBoundingBox().size.height / 2)));
+		moth.at(0)->setPosition(4200, 200);
+
+
+		
+
+
+
+
 
 
 

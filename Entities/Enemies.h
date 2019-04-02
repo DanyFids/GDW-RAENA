@@ -130,6 +130,8 @@ class BossKnight : public Enemy {
 private:
 
 public:
+	static BossKnight * create(const std::string& filename);
+
 	// Inherited via Enemy
 	void AI(Player* player, float dt);
 	void Hurt(int dmg);

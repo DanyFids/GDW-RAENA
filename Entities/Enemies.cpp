@@ -129,27 +129,27 @@ void Knight::AI(Player* player, float dt) {
 				this->setFlipX(true);
 				//attack left
 				if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 60)) {
-					if (player->getPosition().y <= this->getPosition().y + 80 || player->getPosition().y <= this->getPosition().y - 80) {
+					//if (player->getPosition().y <= this->getPosition().y + 80 || player->getPosition().y <= this->getPosition().y - 80) {
 						swipe = true;
 						attacking = true;
-					}
+					//}
 				}
 
-				else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 500)) {
+				else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 10000)) {
 
-					if (player->getPosition().y <= this->getPosition().y + 100 || player->getPosition().y <= this->getPosition().y - 100) {
+					//if (player->getPosition().y <= this->getPosition().y + 100 || player->getPosition().y <= this->getPosition().y - 200) {
 						this->spd.x -= charge * dt;
 						attacking = true;
-					}
+					//}
 				}
 
 				//Turn Go Right
 				else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 100)) {
-					if (player->getPosition().y <= this->getPosition().y + 60 || player->getPosition().y <= this->getPosition().y - 60) {
+					//if (player->getPosition().y <= this->getPosition().y + 60 || player->getPosition().y <= this->getPosition().y - 60) {
 						face_right = true;
 						this->spd.x += charge * dt;
 						attacking = true;
-					}
+					//}
 				}
 
 				else {
@@ -164,27 +164,27 @@ void Knight::AI(Player* player, float dt) {
 				this->setFlipX(false);
 				//attack right
 				if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 60)) {
-					if (player->getPosition().y <= this->getPosition().y + 80 || player->getPosition().y <= this->getPosition().y - 80) {
+					//if (player->getPosition().y <= this->getPosition().y + 80 || player->getPosition().y <= this->getPosition().y - 80) {
 						swipe = true;
 						attacking = true;
-					}
+					//}
 				}
 
-				else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 500)) {
+				else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 10000)) {
 
-					if (player->getPosition().y <= this->getPosition().y + 100 || player->getPosition().y <= this->getPosition().y - 100) {
+					//if (player->getPosition().y <= this->getPosition().y + 100 || player->getPosition().y <= this->getPosition().y - 100) {
 						this->spd.x += charge * dt;
 						attacking = true;
-					}
+					//}
 				}
 
 				//Turn Go Left
 				else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 50)) {
-					if (player->getPosition().y <= this->getPosition().y + 60 || player->getPosition().y <= this->getPosition().y - 60) {
+					//if (player->getPosition().y <= this->getPosition().y + 60 || player->getPosition().y <= this->getPosition().y - 60) {
 						face_right = false;
 						this->spd.x -= charge * dt;
 						attacking = true;
-					}
+					//}
 				}
 
 				else {
@@ -1056,6 +1056,45 @@ Rat * Rat::create(const std::string & filename, Entity * Platform)
 	{
 		setPosition(getPosition() + spd);
 	}
+
+	BossKnight * BossKnight::create(const std::string& filename)
+	{
+		auto ret = new (std::nothrow) BossKnight;
+		float h = 101;
+		float w = 57;
+
+		if (ret && ret->initWithFile(filename)) {
+			cocos2d::Vector<cocos2d::SpriteFrame *> walk_frames = { cocos2d::SpriteFrame::create("Knight_Walk_Anim_Resized1.png", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	cocos2d::SpriteFrame::create("Knight_Walk_Anim_Resized2.png", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	cocos2d::SpriteFrame::create("Knight_Walk_Anim_Resized3.png", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	cocos2d::SpriteFrame::create("Knight_Walk_Anim_Resized4.png", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}) };
+			cocos2d::Vector<cocos2d::SpriteFrame *> attack_frames = { cocos2d::SpriteFrame::create("Knight_Attack_Anim_Resized1.png", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Attack_Anim_Resized2.png", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Attack_Anim_Resized3.png", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Attack_Anim_Resized4.png", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Attack_Anim_Resized5.png", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Attack_Anim_Resized6.png", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}),
+																	  cocos2d::SpriteFrame::create("Knight_Attack_Anim_Resized7.png", cocos2d::Rect(0,0,96,164), false, {0,0}, {96,164}) };
+			
+
+			ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(walk_frames, 0.3f));
+			ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(attack_frames, 0.1f));
+
+			ret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(ret->animations.at(0))));
+			ret->autorelease();
+			ret->setScale(2);
+
+			//auto prim = cocos2d::DrawNode::create();
+			//prim->drawRect({ -(w/2),-(h/2) }, { w/2, h/2 }, cocos2d::Color4F::GREEN);
+			//prim->drawRect({ 0,0 }, { w, h }, cocos2d::Color4F::GREEN);
+
+			//ret->addChild(prim);
+			return ret;
+		}
+		CC_SAFE_RELEASE(ret);
+		return nullptr;
+	}
+
 
 	void BossKnight::AI(Player * player, float dt)
 	{
