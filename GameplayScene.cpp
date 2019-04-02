@@ -8,6 +8,7 @@
 #include "Prompt.h"
 #include "Enums.h"
 
+#include "Entities/CoreEntities.h"
 #include "Entities/Door.h"
 #include "Entities/PuzzleInteractable.h"
 #include "Entities/Pickups.h"
@@ -124,6 +125,7 @@ bool GameplayScene::init() {
 		KeyHandler->onKeyReleased = [this](EventKeyboard::KeyCode key, Event * event) {
 			switch (key) {
 			case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
+				
 				GAMEPLAY_INPUT.key_left = false;
 				break;
 			case EventKeyboard::KeyCode::KEY_UP_ARROW:
@@ -226,28 +228,7 @@ void GameplayScene::update(float dt) {
 			}
 		}
 
-		if (knight != nullptr) {
-			if (knight->getHp() <= 0) {
-
-			}
-		}
-
-
-		for (int m = 0; m < moth.size(); m++) {
-			if (moth.at(m)->getHp() <= 0) {
-				this->removeChild(moth.at(m));
-				moth.erase(m);
-			}
-		}
-
-		for (int r = 0; r < rat.size(); r++) {
-			if (rat.at(r)->getHp() <= 0) {
-				this->removeChild(rat.at(r));
-				rat.erase(r);
-			}
-		}
-
-		PNode->setPosition(view->getPosition());
+	PNode->setPosition(view->getPosition());
 
 		if (interactables.size() > 0) {
 			for each (Interactable* i in interactables) { //Showing Prompts?
@@ -444,6 +425,45 @@ void GameplayScene::update(float dt) {
 			}
 		}
 
+		if (GAMEPLAY_INPUT.key_right != GAMEPLAY_INPUT.key_left && player->getState() != PS_HURT && !player->isAttacking()) {
+			if (GAMEPLAY_INPUT.key_right) {
+				player->setFacingRight(true);
+				player->setFlipX(false);
+			}
+			else if (GAMEPLAY_INPUT.key_left) {
+				player->setFacingRight(false);
+				player->setFlipX(true);
+			}
+		}
+
+		if (!player->moving) {
+			player->moving = true;
+			switch (player->getState()) {
+			case PS_Crouch:
+				player->ChangeAnimation(2);
+				break;
+			case PS_Stand:
+				player->ChangeAnimation(4);
+				break;
+			}
+		}
+
+		if (GAMEPLAY_INPUT.key_left == GAMEPLAY_INPUT.key_right && player->moving) {
+			player->moving = false;
+			switch (player->getState()) {
+			case PS_Crouch:
+				player->ChangeAnimation(1);
+				break;
+			case PS_Stand:
+				player->ChangeAnimation(0);
+				break;
+			}
+		}
+	}
+	else {
+		player->ChangeAnimation(6);
+	}
+
 		player->ResetObstruction();
 
 		if (interactables.size() > 0)	//Are there interactables on this map?
@@ -566,10 +586,12 @@ void GameplayScene::update(float dt) {
 			}
 		}
 
+	if (player->getState() != PS_HURT) {
+
 		if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space)
 		{
 			GAMEPLAY_INPUT.key_space_p = false;
-		}	
+		}
 		//if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p)) {
 
 		if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space && TheGamepad->CheckConnection())
@@ -584,6 +606,7 @@ void GameplayScene::update(float dt) {
 			player->Attack();
 			GAMEPLAY_INPUT.key_space_p = true;
 		}
+	}
 
 		for each (Block* platform in terrain)
 		{
@@ -660,11 +683,44 @@ void GameplayScene::update(float dt) {
 			bossKnight->Move();
 		}
 
-		if (moth.size() > 0) {
-			for each (Moth* m in moth) {
-				m->Move();
+	if (knight != nullptr) {
+		if (knight->getHp() <= 0) {
+			knight->setDeath(true);
+			knight->ChangeAnimation(2);
+		}
+	}
+
+
+	for (int m = 0; m < moth.size(); m++) {
+		if (moth.at(m)->getHp() <= 0) {
+			this->removeChild(moth.at(m));
+			moth.erase(m);
+		}
+	}
+
+	for (int r = 0; r < rat.size(); r++) {
+		if (rat.at(r)->getHp() <= 0) {
+			this->removeChild(rat.at(r));
+			rat.erase(r);
+		}
+	}
+
+	if (player->getState() != PS_HURT) {
+		if (ladders.size())
+		{
+			for each (Ladder* lad in ladders)
+			{
+				if ((lad->HitDetect(player) && player->getState() != PS_Climb)) {
+					if ((GAMEPLAY_INPUT.key_up && !lad->PlayerOnTop()) || (TheGamepad->leftStickY >= 0.2 && player->getState() != PS_Climb)) {
+						player->Climb(lad);
+					}
+					else if (GAMEPLAY_INPUT.key_down && lad->PlayerOnTop() || (TheGamepad->leftStickY <= -0.2 && player->getState() != PS_Climb)) {
+						player->ClimbDown(lad);
+					}
+				}
 			}
 		}
+	}
 
 		if (rat.size() > 0) {
 			for each (Rat* r in rat) {
@@ -715,6 +771,19 @@ void GameplayScene::update(float dt) {
 		if ((GAMEPLAY_INPUT.key_interact && !GAMEPLAY_INPUT.key_interact_p ) || (TheGamepad->CheckConnection()  && TheGamepad->IsPressed(XINPUT_GAMEPAD_Y)) ) {
 			GAMEPLAY_INPUT.key_interact_p = true;
 			ActiveTextbox->Flippage();
+		}
+	}
+
+	// Move Camera
+	if (!cutScene) {
+		if (!boss) {
+			if (player->getPositionX() >= (Director::getInstance()->getVisibleSize().width / 2) && player->getPositionX() <= STAGE_WIDTH - (Director::getInstance()->getVisibleSize().width / 2)) {
+				view->setPositionX(player->getPositionX());
+			}
+
+			if (player->getPositionY() >= (Director::getInstance()->getVisibleSize().height / 3) && player->getPositionY() <= STAGE_HEIGHT - (Director::getInstance()->getVisibleSize().height * 2 / 3)) {
+				view->setPositionY(player->getPositionY() + (Director::getInstance()->getVisibleSize().height / 6));
+			}
 		}
 	}
 }
@@ -1347,7 +1416,7 @@ bool A1_R4::init()
 			}
 		}
 
-		
+	
 		interactables.pushBack(LoadZone::create(1000, 300, 10, 900, A1_R5, Vec2(50, 245))); // LoadZone
 		interactables.pushBack(SceneDoor::create("terrain/outer_cave_door.png", Vec2(50, 550), Vec2(980,280), A1_R3));	//SceneDoor
 
@@ -1735,7 +1804,7 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 
 		interactables.pushBack(LoadZone::create(-10, 200, 10, 400, A1_R5, Vec2(1500, 605))); // LoadZone
 		//interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1050, 275), Vec2(50, 200), A1_R4));	//SceneDoor
-		interactables.pushBack(PuzzleInteract::create("Princess_Standing.png", Vec2(1275, 200),Princess1, ROSE));
+		interactables.pushBack(PuzzleInteract::create("PrincessIdleFrame0000.png", Vec2(1275, 200),Princess1, ROSE));
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
 				this->addChild(inter);
@@ -1789,6 +1858,10 @@ void A1_R6::update(float dt)
 		GAMEPLAY_INPUT.key_crouch = false;
 		GAMEPLAY_INPUT.key_crouch_p = false;
 	}
+	else if (player->getPosition().x <= 800 && cutSceneC) {
+		cutScene = false;
+		cutSceneC = false;
+	}
 
 	if (view->getPositionX() <= 1000 && cutScene) {
 		view->setPositionX(view->getPositionX() + 75 * dt);
@@ -1803,6 +1876,7 @@ void A1_R6::update(float dt)
 		player->setHP(6);
 	}
 }
+
 
 bool A2_R1::init()
 {
@@ -1956,18 +2030,6 @@ bool A2_R1::init()
 			}
 			else {
 				return false;
-			}
-		}
-
-		moth.pushBack(Moth::create("MothBoi.png", &torches));
-		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(0)->getBoundingBox().size.height / 2)));
-		moth.at(0)->setPosition(500, 300);
-
-		for each (Moth* m in moth) {
-			if (m != nullptr) {
-
-				this->addChild(m);
-
 			}
 		}
 

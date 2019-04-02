@@ -79,6 +79,8 @@ public:
 
 	Textbox* ActiveTextbox;
 	bool inDialogue = false;
+	bool boss = false;
+
 
 	struct {
 		bool key_up = false;
