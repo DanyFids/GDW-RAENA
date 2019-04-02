@@ -2402,7 +2402,7 @@ bool A2_R4::init()
 			}
 		}
 
-		Pushables.pushBack(Pushable::create("PushableRock.png", Vec2(100, 140), Vec2(100, 140), Vec2(650, 140)));
+		Pushables.pushBack(Pushable::create("CratePushable.png", Vec2(100, 140), Vec2(100, 140), Vec2(650, 140)));
 
 		for each (Pushable* push in Pushables) {
 			if (push != nullptr) {
@@ -2566,7 +2566,7 @@ bool A2_R5::init()
 			}
 		}
 
-		Pushables.pushBack(Pushable::create("PushableRock.png", Vec2(100, 140), Vec2(100, 140), Vec2(650, 140)));
+		//Pushables.pushBack(Pushable::create("PushableRock.png", Vec2(100, 140), Vec2(100, 140), Vec2(650, 140)));
 
 		for each (Pushable* push in Pushables) {
 			if (push != nullptr) {
