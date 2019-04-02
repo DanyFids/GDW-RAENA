@@ -281,7 +281,7 @@ void SceneDoor::Effect(Entity * player, player_inventory * p_inv)
 
 }
 
-
+//////////////whats up gamer nation
 // LOAD ZONE
 
 LoadZone * LoadZone::create(int x, int y, int w, int h, levelEnum dest,cocos2d::Vec2 pPos)

@@ -30,11 +30,12 @@ Projectile::Projectile(float vel, float ang, int gro)
 void Projectile::shootProjectile()
 {
 	//We are now shooting
+	this->projectile->setPosition(this->start);
 	this->isShooting = true;
 
 	//Reset the time since the last projectile was shot
 	this->timeSinceLastShot = 0.0f;
-	this->projectile->setPosition(this->start);
+	
 
 	//Set the velocity initially when shot
 	this->spd = cocos2d::Vec2(this->initialVelocity * cos(this->angle * degToRad), this->initialVelocity * sin(this->angle * degToRad));

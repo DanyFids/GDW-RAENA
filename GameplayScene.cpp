@@ -60,6 +60,8 @@ bool GameplayScene::init() {
 	TheAudioB = audioB;
 	auto audioT = CocosDenshion::SimpleAudioEngine::getInstance();
 	TheAudioT = audioT;
+	auto audioSFX = CocosDenshion::SimpleAudioEngine::getInstance();
+	TheAudioSFX = audioSFX;
 
 	if (!this->audioinitT)
 	{
@@ -405,6 +407,17 @@ void GameplayScene::update(float dt) {
 
 				GAMEPLAY_INPUT.key_FP = true;
 			}
+	if (GAMEPLAY_INPUT.key_inv || TheGamepad->IsPressed(XINPUT_GAMEPAD_START) && GAMEPLAY_INPUT.key_inv_p)
+	{
+		this->clearKeys();
+		Director::getInstance()->pushScene(InventoryScene::create(this));
+
+		GAMEPLAY_INPUT.key_inv_p = false;
+	}
+	else if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_START))
+	{
+		GAMEPLAY_INPUT.key_inv_p = true;
+	}
 
 			if (ActivePrompt)
 			{
@@ -551,6 +564,28 @@ void GameplayScene::update(float dt) {
 			}
 		}
 
+	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space)
+	{
+		GAMEPLAY_INPUT.key_space_p = false;
+	}
+	//if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p)) {
+
+	if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space && TheGamepad->CheckConnection())
+	{
+	}
+		GAMEPLAY_INPUT.key_space_p = false;
+	if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p) && TheGamepad->CheckConnection()) {
+
+		TheAudioSFX->playEffect("RAENA SOUNDSCAPE/FIRE/Fireball or Ember.mp3");
+
+		player->Attack();
+		GAMEPLAY_INPUT.key_space_p = true;
+	}
+
+	for each (Block* platform in terrain)
+	{
+		player->DetectObstruction(platform);
+		platform->HitDetect(player);
 		if (knight != nullptr) {
 			player->HitDetectEnem(knight);
 		}
@@ -1736,7 +1771,6 @@ void A1_R6::update(float dt)
 {
 	GameplayScene::update(dt);
 
-
 	if (player->getPosition().x >= 800 && !cutSceneC) {
 		cutScene = true;
 		GAMEPLAY_INPUT.key_left = false;
@@ -1945,6 +1979,15 @@ bool A2_R1::init()
 
 void A2_R1::update(float dt)
 {
+	if (!this->audioinitD)
+	{
+		TheAudioF->stopBackgroundMusic("RAENA SOUNDSCAPE/Music/Forest Waltz.mp3");
+		TheAudioB->stopBackgroundMusic("RAENA SOUNDSCAPE/Music/RaenaBoss.wav");
+		TheAudioD->preloadBackgroundMusic("RAENA SOUNDSCAPE/Music/RaenaDungeon.wav");
+		TheAudioD->playBackgroundMusic("RAENA SOUNDSCAPE/Music/RaenaDungeon.wav", true);
+
+	}
+	audioinitD = true;
 	GameplayScene::update(dt);
 }
 

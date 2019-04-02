@@ -49,6 +49,7 @@ protected:
 	CocosDenshion::SimpleAudioEngine* TheAudioD;
 	CocosDenshion::SimpleAudioEngine* TheAudioB;
 	CocosDenshion::SimpleAudioEngine* TheAudioT;
+	CocosDenshion::SimpleAudioEngine* TheAudioSFX;
 
 	cocos2d::Vector<Entity *> terrain;
 	cocos2d::Vector<Ladder *> ladders;
@@ -60,6 +61,7 @@ protected:
 	bool audioinitD = false;
 	bool audioinitB = false;
 	bool audioinitT = false;
+	bool audioinitSFX = false;
 
 
 	int STAGE_WIDTH = 1000;
@@ -92,6 +94,7 @@ public:
 		bool key_interact = false;
 		bool key_interact_p = false;
 		bool key_inv = false;
+		bool key_inv_p = false;
 
 
 		bool key_one = false;
