@@ -1797,6 +1797,8 @@ bool A2_R1::init()
 
 		this->addChild(paraNode);
 
+		auto FG = EffectSprite::create("Levels/A2_R1.png");
+
 		// Lighting Tests
 		auto _effect = LightEffect::create();
 		_effect->retain();
@@ -1863,6 +1865,7 @@ bool A2_R1::init()
 				return false;
 			}
 		}
+
 		//ladders
 		ladders.pushBack(Ladder::create(1600, 275, 32, 600));
 
@@ -1874,6 +1877,9 @@ bool A2_R1::init()
 				return false;
 			}
 		}
+
+		FG->setAnchorPoint({ 0,0 });
+		this->addChild(FG, 9);
 
 		//Interactables /////////////////////////////////////////////////////////////////////////////////////////
 		interactables.pushBack(LoadZone::create(1500, 650, 500, 300, A2_R2, Vec2(500, 130)));
@@ -2138,6 +2144,8 @@ bool A2_R3::init()
 
 		this->addChild(paraNode);
 
+		auto FG = EffectSprite::create("Levels/A2_R3.png");
+
 		// Lighting Tests
 		auto _effect = LightEffect::create();
 		_effect->retain();
@@ -2162,6 +2170,9 @@ bool A2_R3::init()
 		auto visibleSize = Director::getInstance()->getVisibleSize();
 		//Center of screen ///////////////////////////////////////////////////////////////////////
 		Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+		FG->setAnchorPoint({ 0,0 });
+		this->addChild(FG, 4);
 
 		//Player Loc /////////////////////////////////////////////////////////////////////////
 		if (player != nullptr) {

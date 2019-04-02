@@ -16,12 +16,12 @@ Textbox * Textbox::create(int P, std::vector<int> C, std::vector<std::string> T,
 		ret->CurrPage = 0;
 
 		ret->setAnchorPoint(cocos2d::Vec2(0, 0));
-		ret->setPosition(cocos2d::Vec2(scn->getDefaultCamera()->getPositionX() - 250, 20));
+		ret->setPosition(cocos2d::Vec2(scn->getDefaultCamera()->getPositionX() - 250, scn->getDefaultCamera()->getPositionY() - 260));
 
 		auto TheText = cocos2d::Label::createWithSystemFont(ret->Text[ret->CurrPage], "Arial", 24);
 		TheText->enableShadow();
-		TheText->setAnchorPoint(cocos2d::Vec2(0, 0));
-		TheText->setPosition(cocos2d::Vec2(50, 100));
+		TheText->setAnchorPoint(cocos2d::Vec2(0, 1));
+		TheText->setPosition(cocos2d::Vec2(50, 130));
 		ret->Yeet = TheText;
 		ret->addChild(TheText);
 
