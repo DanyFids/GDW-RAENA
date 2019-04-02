@@ -27,7 +27,7 @@ private:
 	float timer = TURNT_TIME;
 	float swing = CHOP_TIME;
 	float hitTimer = HIT_TIME;
-	int hp = 5;
+	int hp = 1;
 	int charge = 20;
 public:
 	static Knight * create(const std::string& filename);
