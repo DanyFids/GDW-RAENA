@@ -69,7 +69,6 @@ void PuzzleInteract::Effect(Entity * player, player_inventory * p_inv,GameplaySc
 	if (puzzle == Princess1 && this->getCooldown() == false) {
 		scn->clearKeys();
 		cocos2d::Director::getInstance()->pushScene(InventoryScene::createScene(scn));
-		
 		Knight * knight = Knight::create("knightwalkyboi0000.png");
 		knight->setScale(1);
 		knight->setPosition(cocos2d::Vec2(850, 200 + (knight->getBoundingBox().size.height / 2)));

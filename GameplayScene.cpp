@@ -8,6 +8,7 @@
 #include "Prompt.h"
 #include "Enums.h"
 
+#include "Entities/CoreEntities.h"
 #include "Entities/Door.h"
 #include "Entities/PuzzleInteractable.h"
 #include "Entities/Pickups.h"
@@ -122,12 +123,20 @@ bool GameplayScene::init() {
 		KeyHandler->onKeyReleased = [this](EventKeyboard::KeyCode key, Event * event) {
 			switch (key) {
 			case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
+				if (player->getState() == PS_Crouch)
+				{
+					player->ChangeAnimation(1);
+				}
 				GAMEPLAY_INPUT.key_left = false;
 				break;
 			case EventKeyboard::KeyCode::KEY_UP_ARROW:
 				GAMEPLAY_INPUT.key_up = false;
 				break;
 			case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
+				if (player->getState() == PS_Crouch)
+				{
+					player->ChangeAnimation(1);
+				}
 				GAMEPLAY_INPUT.key_right = false;
 				break;
 			case EventKeyboard::KeyCode::KEY_DOWN_ARROW:
@@ -224,6 +233,7 @@ void GameplayScene::update(float dt) {
 
 	if (knight != nullptr) {
 		if (knight->getHp() <= 0) {
+			knight->ChangeAnimation(2);
 			knight->setDeath(true);
 		}
 	}
@@ -372,6 +382,31 @@ void GameplayScene::update(float dt) {
 			else if (GAMEPLAY_INPUT.key_left) {
 				player->setFacingRight(false);
 				player->setFlipX(true);
+			}
+		}
+
+		if (!player->moving) {
+			player->moving = true;
+			switch (player->getState()) {
+			case PS_Crouch:
+				player->ChangeAnimation(2);
+				break;
+			case PS_Stand:
+				player->ChangeAnimation(4);
+				break;
+			}
+		}
+	}
+	else {
+		if (GAMEPLAY_INPUT.key_left == GAMEPLAY_INPUT.key_right && player->moving) {
+			player->moving = false;
+			switch (player->getState()) {
+			case PS_Crouch:
+				player->ChangeAnimation(1);
+				break;
+			case PS_Stand:
+				player->ChangeAnimation(0);
+				break;
 			}
 		}
 	}
@@ -1686,7 +1721,7 @@ bool A1_R6::init()	//Pushable And Crouch Tutorial
 
 		interactables.pushBack(LoadZone::create(-10, 200, 10, 400, A1_R5, Vec2(1500, 605))); // LoadZone
 		//interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1050, 275), Vec2(50, 200), A1_R4));	//SceneDoor
-		interactables.pushBack(PuzzleInteract::create("Princess_Standing.png", Vec2(1275, 200),Princess1, ROSE));
+		interactables.pushBack(PuzzleInteract::create("PrincessIdleFrame0000.png", Vec2(1275, 200),Princess1, ROSE));
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
 				this->addChild(inter);
@@ -1759,6 +1794,7 @@ void A1_R6::update(float dt)
 		player->setHP(6);
 	}
 }
+
 
 bool A2_R1::init()
 {

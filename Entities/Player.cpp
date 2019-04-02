@@ -9,11 +9,92 @@ Player * Player::create(const std::string& filename, cocos2d::Scene * s)
 {
 	auto ret = new (std::nothrow) Player;
 	if (ret && ret->initWithFile(filename)) {
-		cocos2d::Vector<cocos2d::SpriteFrame *> stand_frames = { cocos2d::SpriteFrame::create("dragon_idle.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38, 64 }) };
-		cocos2d::Vector<cocos2d::SpriteFrame *> crouch_frames = { cocos2d::SpriteFrame::create( "player_crouch.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }) };
-
+		cocos2d::Vector<cocos2d::SpriteFrame *> stand_frames = { cocos2d::SpriteFrame::create("dragon_idle0001.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38, 64 }), 
+		                                                         cocos2d::SpriteFrame::create("dragon_idle0002.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38, 64 }), 
+		                                                         cocos2d::SpriteFrame::create("dragon_idle0003.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38, 64 }), 
+		                                                         cocos2d::SpriteFrame::create("dragon_idle0004.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38, 64 })};
+		cocos2d::Vector<cocos2d::SpriteFrame *> crouch_frames = {cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle0000.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+			                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle0001.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+			                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle0002.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+			                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle0003.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+			                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle0004.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+			                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle0005.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+			                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+			                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle0007.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+			                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle0008.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+			                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle0009.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+			                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle0010.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 }),
+			                                                     cocos2d::SpriteFrame::create("crouch_raena_idle_anim/player_crouch_idle0011.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38 })};
+		cocos2d::Vector<cocos2d::SpriteFrame *> crouch_walk_frames = { cocos2d::SpriteFrame::create("player_crouch_walk0000.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
+																	   cocos2d::SpriteFrame::create("player_crouch_walk0001.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
+																	   cocos2d::SpriteFrame::create("player_crouch_walk0002.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
+																	   cocos2d::SpriteFrame::create("player_crouch_walk0003.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
+																	   cocos2d::SpriteFrame::create("player_crouch_walk0004.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
+																	   cocos2d::SpriteFrame::create("player_crouch_walk0005.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
+																	   cocos2d::SpriteFrame::create("player_crouch_walk0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}),
+																	   cocos2d::SpriteFrame::create("player_crouch_walk0007.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 38}) };
+		cocos2d::Vector<cocos2d::SpriteFrame *> climb_frames = { cocos2d::SpriteFrame::create("Dragon_Climb_Anim0000.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}), 
+																 cocos2d::SpriteFrame::create("Dragon_Climb_Anim0001.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64})};
+		cocos2d::Vector<cocos2d::SpriteFrame *> walk_frames = { cocos2d::SpriteFrame::create("dragon_walk0001.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}),
+			                                                    cocos2d::SpriteFrame::create("dragon_walk0002.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}),
+			                                                    cocos2d::SpriteFrame::create("dragon_walk0003.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}),
+			                                                    cocos2d::SpriteFrame::create("dragon_walk0004.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}),
+			                                                    cocos2d::SpriteFrame::create("dragon_walk0005.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}),
+			                                                    cocos2d::SpriteFrame::create("dragon_walk0006.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}),
+			                                                    cocos2d::SpriteFrame::create("dragon_walk0007.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}),
+			                                                    cocos2d::SpriteFrame::create("dragon_walk0008.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}) };
+		cocos2d::Vector<cocos2d::SpriteFrame *> glide_frames = { cocos2d::SpriteFrame::create("dragon_glide0001.png", cocos2d::Rect(0,0,64,64), false, {0,0}, {64, 64}),
+			                                                     cocos2d::SpriteFrame::create("dragon_glide0002.png", cocos2d::Rect(0,0,64,64), false, {0,0}, {64, 64}),
+			                                                     cocos2d::SpriteFrame::create("dragon_glide0003.png", cocos2d::Rect(0,0,64,64), false, {0,0}, {64, 64}),
+			                                                     cocos2d::SpriteFrame::create("dragon_glide0004.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}),
+			                                                     cocos2d::SpriteFrame::create("dragon_glide0005.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}),
+			                                                     cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}),
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}) ,
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}) ,
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}) ,
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}) ,
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}) ,
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}) ,
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}) ,
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}) ,
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}) ,
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}) ,
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}) ,
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}),
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}),
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}),
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}),
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}),
+																 cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,38), false, {0,0}, {64, 64}) };
+		cocos2d::Vector<cocos2d::SpriteFrame *> jump_frames = { cocos2d::SpriteFrame::create("dragon_jump0001.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}),
+			                                                    cocos2d::SpriteFrame::create("dragon_jump0002.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}),
+			                                                    cocos2d::SpriteFrame::create("dragon_jump0003.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}),
+			                                                    cocos2d::SpriteFrame::create("dragon_jump0004.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}),
+			                                                    cocos2d::SpriteFrame::create("dragon_jump0005.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}),
+			                                                    cocos2d::SpriteFrame::create("dragon_jump0006.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}),
+			                                                    cocos2d::SpriteFrame::create("dragon_jump0007.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}) };
+		cocos2d::Vector<cocos2d::SpriteFrame *> death_frames = { cocos2d::SpriteFrame::create("player_crouch death0000.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}),
+		                                                         cocos2d::SpriteFrame::create("player_crouch death0001.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("player_crouch death0002.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("player_crouch death0003.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("player_crouch death0004.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("player_crouch death0005.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("player_crouch death0006.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("player_crouch death0007.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("player_crouch death0008.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("player_crouch death0009.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("player_crouch death0010.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("player_crouch death0011.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("player_crouch death0012.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), };
 		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(stand_frames, 0.1f));
-		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(crouch_frames, 0.1f));
+		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(crouch_frames, 0.3f));
+		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(crouch_walk_frames, 0.1f));
+		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(climb_frames, 0.3f));
+		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(walk_frames, 0.1f));
+		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(glide_frames, 0.1f));
+		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(jump_frames, 0.1f));
+		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(death_frames, 0.1f));
+		//ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames({ cocos2d::SpriteFrame::create("dragon_glide0006.png", cocos2d::Rect(0,0,64,64), false, {0,0}, {64, 38}) }));
 
 		ret->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(ret->animations.at(0))));
 
@@ -143,13 +224,13 @@ void Player::Update(float dt)
 		if (invince_timer <= 0) {
 		}
 	}
+
 }
 
 void Player::Move()
 {
 	if (!attacking) {
 		setPosition(getPosition() + spd);
-
 		if (spd.y != 0 && on_ground && state != PS_HURT && can_vert) {
 			on_ground = false;
 			state = PS_Jump;
@@ -168,6 +249,7 @@ void Player::Jump()
 		Stand();
 	}
 	if ((on_ground || state == PS_Climb) && !attacking) {
+		this->ChangeAnimation(6);
 		spd.y = JUMP_V;
 		on_ground = false;
 		state = PS_Jump;
@@ -235,7 +317,7 @@ void Player::Climb(Ladder * lad)
 			Stand();
 		}
 		this->stopAllActions();
-		this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(0))));
+		this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(3))));
 		spd = { 0, 0 };
 		climb_lad = lad;
 		setPositionX(lad->getPositionX() + (lad->getBoundingBox().size.width / 2));
@@ -281,6 +363,10 @@ void Player::Land() {
 			on_ground = true;
 			state = PS_Stand;
 			glide_used = false;
+			if (on_ground && state != PS_HURT && spd.y == 0 && spd.x != 0)
+			{
+				this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(4))));
+			}
 		}
 		else {
 			this->stopAllActions();
@@ -331,7 +417,7 @@ void Player::Glide()
 {
 	if (!glide_used && can_horz) {
 		this->stopAllActions();
-		this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(1))));
+		this->runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(5))));
 		state = PS_Glide;
 		spd.y = 0;
 		glide_timer = GLIDE_TIME;

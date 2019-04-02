@@ -37,6 +37,15 @@ public:
 	//bool getonground();
 
 	void SetOnGround(bool b) {on_ground = b;}
+	void ChangeAnimation(int anim_id) {
+		if (anim_id >= 0 && anim_id < animations.size()) {
+			stopAllActions();
+			runAction(cocos2d::RepeatForever::create(cocos2d::Animate::create(animations.at(anim_id))));
+		}
+		else {
+			throw "Woah there friend that'sa no good!";
+		}
+	}
 
 	bool isOnGround() { return on_ground; }
 	virtual void Land() = 0;
