@@ -232,9 +232,11 @@ int Knight::getHp() {
 }
 
 void Knight::Hurt(int dmg) {
-	if (invinceTime <= 0) {
-		hp -= dmg;
-		invinceTime = INVINCE_TIME;
+	if (!death) {
+		if (invinceTime <= 0) {
+			hp -= dmg;
+			invinceTime = INVINCE_TIME;
+		}
 	}
 }
 
@@ -262,47 +264,49 @@ void Knight::Hit(Player * other) {
 
 bool Knight::HitDetect(Entity * other)
 {
-	float o_head = other->getPositionY() + (other->getBoundingBox().size.height / 2);
-	float o_foot = other->getPositionY() - (other->getBoundingBox().size.height / 2);
-	float o_left = other->getPositionX() - (other->getBoundingBox().size.width / 2);
-	float o_right = other->getPositionX() + (other->getBoundingBox().size.width / 2);
+	if (!death) {
+		float o_head = other->getPositionY() + (other->getBoundingBox().size.height / 2);
+		float o_foot = other->getPositionY() - (other->getBoundingBox().size.height / 2);
+		float o_left = other->getPositionX() - (other->getBoundingBox().size.width / 2);
+		float o_right = other->getPositionX() + (other->getBoundingBox().size.width / 2);
 
-	float t_head = this->getPositionY() + (this->getBoundingBox().size.height / 2);
-	float t_foot = this->getPositionY() - (this->getBoundingBox().size.height / 2);
-	float t_left = this->getPositionX() - (this->getBoundingBox().size.width / 2);
-	float t_right = this->getPositionX() + (this->getBoundingBox().size.width / 2);
+		float t_head = this->getPositionY() + (this->getBoundingBox().size.height / 2);
+		float t_foot = this->getPositionY() - (this->getBoundingBox().size.height / 2);
+		float t_left = this->getPositionX() - (this->getBoundingBox().size.width / 2);
+		float t_right = this->getPositionX() + (this->getBoundingBox().size.width / 2);
 
-	if (o_head + other->spd.y > t_foot && o_foot + other->spd.y < t_head &&
-		o_left < t_right && o_right > t_left) {
-		if (other->spd.y > 0) {
-			if (((Player *)other)->getState() != PS_HURT && ((Player *)other)->getInvince() <= 0) {
-				other->spd.y = -1;
+		if (o_head + other->spd.y > t_foot && o_foot + other->spd.y < t_head &&
+			o_left < t_right && o_right > t_left) {
+			if (other->spd.y > 0) {
+				if (((Player *)other)->getState() != PS_HURT && ((Player *)other)->getInvince() <= 0) {
+					other->spd.y = -1;
+				}
+				return true;
 			}
-			return true;
+			else {
+				if (((Player *)other)->getState() != PS_HURT && ((Player *)other)->getInvince() <= 0) {
+					other->spd.y = 5;
+				}
+				return true;
+			}
 		}
-		else {
-			if (((Player *)other)->getState() != PS_HURT && ((Player *)other)->getInvince() <= 0) {
-				other->spd.y = 5;
-			} 
-			return true;
-		}
-	}
 
-	if (o_head > t_foot && o_foot < t_head &&
-		o_left + other->spd.x < t_right + spd.x && o_right + other->spd.x > t_left + spd.x) {
-		if (other->spd.x > 0) {
-			if (((Player *)other)->getState() != PS_HURT && ((Player *)other)->getInvince() <= 0) {
-				other->spd.y = 3;
-				other->spd.x = -3;
+		if (o_head > t_foot && o_foot < t_head &&
+			o_left + other->spd.x < t_right + spd.x && o_right + other->spd.x > t_left + spd.x) {
+			if (other->spd.x > 0) {
+				if (((Player *)other)->getState() != PS_HURT && ((Player *)other)->getInvince() <= 0) {
+					other->spd.y = 3;
+					other->spd.x = -3;
+				}
+				return true;
 			}
-			return true;
-		}
-		else {
-			if (((Player *)other)->getState() != PS_HURT && ((Player *)other)->getInvince() <= 0) {
-				other->spd.y = 3;
-				other->spd.x = 3;
+			else {
+				if (((Player *)other)->getState() != PS_HURT && ((Player *)other)->getInvince() <= 0) {
+					other->spd.y = 3;
+					other->spd.x = 3;
+				}
+				return true;
 			}
-			return true;
 		}
 	}
 
@@ -714,42 +718,43 @@ void Moth::Hurt(int dmg)
 
 void Moth::Hit(Player * p)
 {
-	float o_head = p->getPositionY() + (p->getBoundingBox().size.height / 2);
-	float o_foot = p->getPositionY() - (p->getBoundingBox().size.height / 2);
-	float o_left = p->getPositionX() - (p->getBoundingBox().size.width / 2);
-	float o_right = p->getPositionX() + (p->getBoundingBox().size.width / 2);
+	if (!death) {
+		float o_head = p->getPositionY() + (p->getBoundingBox().size.height / 2);
+		float o_foot = p->getPositionY() - (p->getBoundingBox().size.height / 2);
+		float o_left = p->getPositionX() - (p->getBoundingBox().size.width / 2);
+		float o_right = p->getPositionX() + (p->getBoundingBox().size.width / 2);
 
-	float t_head = this->getPositionY() + (this->getBoundingBox().size.height / 2);
-	float t_foot = this->getPositionY() - (this->getBoundingBox().size.height / 2);
-	float t_left = this->getPositionX() - (this->getBoundingBox().size.width / 2);
-	float t_right = this->getPositionX() + (this->getBoundingBox().size.width / 2);
+		float t_head = this->getPositionY() + (this->getBoundingBox().size.height / 2);
+		float t_foot = this->getPositionY() - (this->getBoundingBox().size.height / 2);
+		float t_left = this->getPositionX() - (this->getBoundingBox().size.width / 2);
+		float t_right = this->getPositionX() + (this->getBoundingBox().size.width / 2);
 
-	if (p->getState() != PS_HURT && p->getInvince() <= 0) {
+		if (p->getState() != PS_HURT && p->getInvince() <= 0) {
 
-		if (o_head + p->spd.y > t_foot && o_foot + p->spd.y < t_head &&
-			o_left < t_right && o_right > t_left) {
-			if (p->spd.y > 0) {
-				p->spd.y = -3;
-				this->spd.x = 0;
-				this->spd.y = 0;
-				p->hurt(1);
+			if (o_head + p->spd.y > t_foot && o_foot + p->spd.y < t_head &&
+				o_left < t_right && o_right > t_left) {
+				if (p->spd.y > 0) {
+					p->spd.y = -3;
+					this->spd.x = 0;
+					this->spd.y = 0;
+					p->hurt(1);
+				}
+				else {
+					p->spd.y = 5;
+					this->spd.x = 0;
+					this->spd.y = 0;
+					p->hurt(1);
+				}
 			}
-			else {
-				p->spd.y = 5;
+
+			if (o_head > t_foot && o_foot < t_head && o_left + p->spd.x < t_right + spd.x && o_right + p->spd.x > t_left + spd.x) {
+				p->spd.y = 3;
+				p->spd.x = (this->spd.x) * 4;
 				this->spd.x = 0;
 				this->spd.y = 0;
 				p->hurt(1);
 			}
 		}
-
-		if (o_head > t_foot && o_foot < t_head && o_left + p->spd.x < t_right + spd.x && o_right + p->spd.x > t_left + spd.x) {
-			p->spd.y = 3;
-			p->spd.x = (this->spd.x) * 4;
-			this->spd.x = 0;
-			this->spd.y = 0;
-			p->hurt(1);
-		}
-
 	}
 }
 
@@ -905,6 +910,7 @@ Rat * Rat::create(const std::string & filename, Entity * Platform)
 
 	void Rat::Hit(Player * p)
 	{
+		if (!death) {
 		float o_head = p->getPositionY() + (p->getBoundingBox().size.height / 2);
 		float o_foot = p->getPositionY() - (p->getBoundingBox().size.height / 2);
 		float o_left = p->getPositionX() - (p->getBoundingBox().size.width / 2);
@@ -920,7 +926,7 @@ Rat * Rat::create(const std::string & filename, Entity * Platform)
 			if (o_head + p->spd.y > t_foot && o_foot + p->spd.y < t_head &&
 				o_left < t_right && o_right > t_left) {
 				if (p->spd.y > 0) {
-					
+
 					p->spd.y = -3;
 					this->spd.x = 0;
 					p->hurt(1);
@@ -948,7 +954,7 @@ Rat * Rat::create(const std::string & filename, Entity * Platform)
 					p->hurt(1);
 				}
 			}
-
+		}
 		}
 	}
 
