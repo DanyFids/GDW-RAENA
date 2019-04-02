@@ -37,7 +37,7 @@ public:
 protected:
     bool init();
 
-	static const int MAX_LIGHTS = 10;
+	static const int MAX_LIGHTS = 30;
 
     cocos2d::Vec3 _lightPos[MAX_LIGHTS];
 	int _num_lights = 0;

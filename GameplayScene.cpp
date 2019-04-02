@@ -784,6 +784,10 @@ void GameplayScene::update(float dt) {
 				}
 			}
 		}
+
+		if (player->getHP() <= 0) {
+			GameOver();
+		}
 	}
 	else {
 		if ((GAMEPLAY_INPUT.key_interact && !GAMEPLAY_INPUT.key_interact_p ) || (TheGamepad->CheckConnection()  && TheGamepad->IsPressed(XINPUT_GAMEPAD_Y)) ) {
@@ -1573,7 +1577,6 @@ bool A1_R5::init()
 
 		terrain.pushBack(Block::create(1403, 100, 290, 442)); //Ground 4
 
-		//Projectiles.pushBack(Projectile::create(100, 45, 0, 100, 500, this));
 
 		for each (Entity* plat in terrain)
 		{
@@ -1884,11 +1887,12 @@ void A1_R6::update(float dt)
 		cutScene = false;
 		cutSceneC = true;
 	}
+}
 
-	if (player->getHP() <= 0) {
-		cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A2_R1));
-		player->setHP(6);
-	}
+void A1_R6::GameOver()
+{
+	cocos2d::Director::getInstance()->replaceScene(LevelManager::GetLevel(A2_R1));
+	player->setHP(6);
 }
 
 
@@ -1909,16 +1913,21 @@ bool A2_R1::init()
 		//Parallax & Background //////////////////////////////////////////////////////////////////////////////
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
-		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
+		EffectSprite *_bgColor = EffectSprite::create("terrain/Dungeon/meat_pit_BG_1.png");
 
 		_bgColor->setScale(1);
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
-		EffectSprite *_bgColor2 = EffectSprite::create("BGP2.png");
+		EffectSprite *_bgColor2 = EffectSprite::create("terrain/Dungeon/meat_pit_BG_2.png");
 
 		_bgColor2->setScale(1);
-		paraNode->addChild(_bgColor2, -1, Vec2(1.4f, 1.5f), Vec2::ZERO);
+		paraNode->addChild(_bgColor2, 2, Vec2(0.8f, 0.8f), Vec2::ZERO);
+
+		EffectSprite *_bgColor3 = EffectSprite::create("terrain/Dungeon/meat_pit_BG_3.png");
+
+		_bgColor3->setScale(1);
+		paraNode->addChild(_bgColor3, 2, Vec2(1.2f, 1.0f), Vec2::ZERO);
 
 		this->addChild(paraNode);
 
@@ -1942,10 +1951,16 @@ bool A2_R1::init()
 		player->setEffect(_effect, "layerNorm.png");
 		_bgColor->setEffect(_effect, "layerNorm.png");
 		_bgColor2->setEffect(_effect, "layerNorm.png");
+		_bgColor3->setEffect(_effect, "layerNorm.png");
 
 		auto visibleSize = Director::getInstance()->getVisibleSize();
 		//Center of screen ///////////////////////////////////////////////////////////////////////
 		Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+		auto FG = EffectSprite::create("levels/A2_R1.png");
+		FG->setEffect(_effect, "layerNorm.png");
+		FG->setAnchorPoint({ 0,0 });
+		addChild(FG, 4);
 
 		//Player Loc /////////////////////////////////////////////////////////////////////////
 		if (player != nullptr) {
@@ -2434,9 +2449,11 @@ bool A2_R4::init()
 		//Parallax & Background //////////////////////////////////////////////////////////////////////////////
 
 		EffectSprite * tileSet = EffectSprite::create("Levels/A2_R4.png");
+		tileSet->setAnchorPoint(Vec2(0, 0));
+
 		tileSet->setScale(1.4);
 		tileSet->setPositionY(tileSet->getPositionY() - 25);
-		tileSet->setAnchorPoint(Vec2(0, 0));
+		
 
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
@@ -2836,6 +2853,9 @@ bool A2_AT1::init()
 			return false;
 		}
 
+		
+
+
 		//platforms ////////////////////////////////////////////////////////////////////////////////
 		terrain.pushBack(Block::create(0, 200, 64, 1500));			//Left Boundary
 
@@ -2889,7 +2909,7 @@ bool A2_AT1::init()
 
 		//Interactables /////////////////////////////////////////////////////////////////////////////////////////
 		//interactables.pushBack(LoadZone::create(1500, 650, 500, 300, A2_R2, Vec2(50, 205)));
-		//interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(400, 100), Vec2(400, 140), A2_R3));	//SceneDoor
+		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(750, 650), Vec2(400, 140), BOSS_R1));	//SceneDoor
 		//interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1100, 100), Vec2(400, 140), A2_R4));
 
 		interactables.pushBack(LoadZone::create(-10, 0, 10, 900, A2_R2, Vec2(1550, 200)));
@@ -2898,7 +2918,8 @@ bool A2_AT1::init()
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
-				this->addChild(inter);
+				inter->setEffect(_effect,"layerNorm.png");
+				this->addChild(inter,7);
 			}
 			else {
 				return false;
@@ -2934,7 +2955,7 @@ bool A2_AT1::init()
 				/*p->setScale(SCALE);
 				p->getTexture()->setTexParameters(tp);*/
 				p->setEffect(_effect, "layerNorm.png");
-				this->addChild(p);
+				this->addChild(p,7);
 			}
 			else
 				return false;
@@ -2960,7 +2981,7 @@ bool A2_AT1::init()
 		for each (Torch* t in torches)
 		{
 			if (t != nullptr) {
-				addChild(t, 2);
+				addChild(t, 7);
 			}
 			else {
 				return false;
@@ -2998,18 +3019,23 @@ bool BOSS_R1::init()
 		//Parallax & Background //////////////////////////////////////////////////////////////////////////////
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
-		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
+		EffectSprite *_bgColor = EffectSprite::create("Levels/BOSS.png");
 
 		_bgColor->setScale(1);
 
 		paraNode->addChild(_bgColor, 1, Vec2(0.4f, 0.5f), Vec2::ZERO);
 
-		EffectSprite *_bgColor2 = EffectSprite::create("BGP2.png");
+		EffectSprite *_bgColor2 = EffectSprite::create("Levels/BOSS.png");
 
 		_bgColor2->setScale(1);
 		paraNode->addChild(_bgColor2, -1, Vec2(1.4f, 1.5f), Vec2::ZERO);
 
 		this->addChild(paraNode);
+
+		EffectSprite * tileSet = EffectSprite::create("Levels/BOSS.png");
+		tileSet->setAnchorPoint(Vec2(0, 0));
+
+		this->addChild(tileSet, 4);
 
 		// Lighting Tests
 		auto _effect = LightEffect::create();
@@ -3026,11 +3052,12 @@ bool BOSS_R1::init()
 		_effect->setLightCutoffRadius(250);
 		_effect->setLightHalfRadius(0.5);
 		_effect->setBrightness(0.7);
-		_effect->setAmbientLightColor(Color3B(255, 255, 255));
+		_effect->setAmbientLightColor(Color3B(75, 75, 75));
 
 		player->setEffect(_effect, "layerNorm.png");
 		_bgColor->setEffect(_effect, "layerNorm.png");
 		_bgColor2->setEffect(_effect, "layerNorm.png");
+		tileSet->setEffect(_effect, "layerNorm.png");
 
 		auto visibleSize = Director::getInstance()->getVisibleSize();
 		//Center of screen ///////////////////////////////////////////////////////////////////////
@@ -3045,6 +3072,10 @@ bool BOSS_R1::init()
 		else {
 			return false;
 		}
+
+		Projectiles.pushBack(Projectile::create(100, 45, 0, 500, 500, this));
+
+
 
 		//platforms ////////////////////////////////////////////////////////////////////////////////
 		terrain.pushBack(Block::create(0, 200, 200, 1500));			//Left Boundary
@@ -3063,7 +3094,7 @@ bool BOSS_R1::init()
 		{
 			if (plat != nullptr) {
 				plat->setEffect(_effect, "layerNorm.png");
-				this->addChild(plat);
+				this->addChild(plat,7);
 			}
 			else {
 				return false;
@@ -3095,7 +3126,8 @@ bool BOSS_R1::init()
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
-				this->addChild(inter);
+				inter->setEffect(_effect, "layerNorm.png");
+				this->addChild(inter,7);
 			}
 			else {
 				return false;
@@ -3144,7 +3176,7 @@ bool BOSS_R1::init()
 				/*p->setScale(SCALE);
 				p->getTexture()->setTexParameters(tp);*/
 				p->setEffect(_effect, "layerNorm.png");
-				this->addChild(p);
+				this->addChild(p,7);
 			}
 			else
 				return false;
@@ -3153,49 +3185,18 @@ bool BOSS_R1::init()
 		
 
 		//Set Torches;
+		torches.pushBack(Torch::create(cocos2d::Vec2(600, 200), _effect));
+		torches.pushBack(Torch::create(cocos2d::Vec2(1200, 200), _effect));
 
+		torches.pushBack(Torch::create(cocos2d::Vec2(1800, 200), _effect));
 
-
-
-		moth.pushBack(Moth::create("MothBoi.png", &torches));
-		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(0)->getBoundingBox().size.height / 2)));
-		moth.at(0)->setPosition(600, 200);
-		moth.pushBack(Moth::create("MothBoi.png", &torches));
-		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(1)->getBoundingBox().size.height / 2)));
-		moth.at(0)->setPosition(1200, 450);
-		moth.pushBack(Moth::create("MothBoi.png", &torches));
-		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(2)->getBoundingBox().size.height / 2)));
-		moth.at(0)->setPosition(1200, 200);
-
-
-		moth.pushBack(Moth::create("MothBoi.png", &torches));
-		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(3)->getBoundingBox().size.height / 2)));
-		moth.at(0)->setPosition(1800, 450);
-		moth.pushBack(Moth::create("MothBoi.png", &torches));
-		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(4)->getBoundingBox().size.height / 2)));
-		moth.at(0)->setPosition(1800, 200);
-
-		moth.pushBack(Moth::create("MothBoi.png", &torches));
-		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(5)->getBoundingBox().size.height / 2)));
-		moth.at(0)->setPosition(3000, 450);
-		moth.pushBack(Moth::create("MothBoi.png", &torches));
-		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(6)->getBoundingBox().size.height / 2)));
-		moth.at(0)->setPosition(3000, 200);
-
-
-		moth.pushBack(Moth::create("MothBoi.png", &torches));
-		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(7)->getBoundingBox().size.height / 2)));
-		moth.at(0)->setPosition(4200, 450);
-		moth.pushBack(Moth::create("MothBoi.png", &torches));
-		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(8)->getBoundingBox().size.height / 2)));
-		moth.at(0)->setPosition(4200, 200);
-
-
+		torches.pushBack(Torch::create(cocos2d::Vec2(3000, 450), _effect));
 		
 
+		torches.pushBack(Torch::create(cocos2d::Vec2(3600, 450), _effect));
 
-
-
+		
+		torches.pushBack(Torch::create(cocos2d::Vec2(4200, 200), _effect));
 
 
 
@@ -3203,12 +3204,14 @@ bool BOSS_R1::init()
 		{
 			if (t != nullptr) {
 				t->Hurt(1);
-				addChild(t, 2);
+				addChild(t, 7);
 			}
 			else {
 				return false;
 			}
 		}
+
+	
 
 
 		//rat.pushBack(Rat::create("Rat Death Animation/Rat_Death_Animation1.png", ActualPlatforms.at(3)));
@@ -3222,45 +3225,6 @@ bool BOSS_R1::init()
 		//	}
 		//}
 
-		Moth * m1 = Moth::create("Mothboi.png", &torches);
-		m1->setPosition(Vec2(1200, 200));
-		moth.pushBack(m1);
-
-		Moth * a1 = Moth::create("Mothboi.png", &torches);
-		a1->setPosition(Vec2(1200, 200));
-		moth.pushBack(a1);
-
-		Moth * m2 = Moth::create("Mothboi.png", &torches);
-		m1->setPosition(Vec2(1800, 200));
-		moth.pushBack(m2);
-
-		Moth * a2 = Moth::create("Mothboi.png", &torches);
-		a1->setPosition(Vec2(1800, 200));
-		moth.pushBack(a2);
-
-		Moth * m3 = Moth::create("Mothboi.png", &torches);
-		m3->setPosition(Vec2(2400, 200));
-		moth.pushBack(m3);
-
-		Moth * a3 = Moth::create("Mothboi.png", &torches);
-		a3->setPosition(Vec2(3000, 200));
-		moth.pushBack(a3);
-
-		Moth * m4 = Moth::create("Mothboi.png", &torches);
-		m4->setPosition(Vec2(3600, 200));
-		moth.pushBack(m4);
-
-		Moth * m5 = Moth::create("Mothboi.png", &torches);
-		m5->setPosition(Vec2(4200, 200));
-		moth.pushBack(m5);
-
-		for each (Moth* m in moth) {
-			if (m != nullptr) {
-		
-				//this->addChild(m);
-		
-			}
-		}
 
 		player->switchLight();
 		view = this->getDefaultCamera();

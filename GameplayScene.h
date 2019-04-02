@@ -218,6 +218,7 @@ class A1_R6 : public GameplayScene {
 public:
 	virtual bool init() override;
 	void A1_R6::update(float dt);
+	virtual void GameOver() override;
 	CREATE_FUNC(A1_R6);
 };
 

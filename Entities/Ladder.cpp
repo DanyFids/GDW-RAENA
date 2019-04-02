@@ -9,9 +9,9 @@ Ladder * Ladder::create(int x, int y, int w, int h)
 		ret->setPosition(cocos2d::Vec2(x, y));
 		ret->setContentSize(cocos2d::Size(cocos2d::Vec2(w, h)));
 		
-		auto prim = cocos2d::DrawNode::create();
+		/*auto prim = cocos2d::DrawNode::create();
 		prim->drawSolidRect(cocos2d::Vec2(0, 0), cocos2d::Vec2(w, h), cocos2d::Color4F::GREEN);
-		ret->addChild(prim);
+		ret->addChild(prim);*/
 
 		return ret;
 	}
