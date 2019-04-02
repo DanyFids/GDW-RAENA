@@ -32,7 +32,7 @@ protected:
 	bool promptInit = false;
 	bool overlap = false;
 
-	player_inventory * currInv;
+	
 
 	cocos2d::ParallaxNode * PNode;
 	cocos2d::Camera * view;
@@ -66,6 +66,8 @@ protected:
 	int STAGE_WIDTH = 1000;
 	int STAGE_HEIGHT = 600;
 public:
+	player_inventory * currInv;
+
 	Player * player;
 	Knight * knight = nullptr;
 	BossKnight * bossKnight;
@@ -242,4 +244,25 @@ public:
 	virtual bool init() override;
 	void A2_R5::update(float dt);
 	CREATE_FUNC(A2_R5);
+};
+
+class A2_AT1 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A2_AT1::update(float dt);
+	CREATE_FUNC(A2_AT1);
+};
+
+class BOSS_R1 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void BOSS_R1::update(float dt);
+	CREATE_FUNC(BOSS_R1);
+};
+
+class END : public GameplayScene {
+public:
+	virtual bool init() override;
+	void END::update(float dt);
+	CREATE_FUNC(END);
 };

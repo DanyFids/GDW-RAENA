@@ -148,7 +148,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 		A2_R2::create(),
 		A2_R3::create(),
 		A2_R4::create(),
-		A2_R5::create()
+		A2_R5::create(),
+		A2_AT1::create(),
+		BOSS_R1::create()
 	};
 
 	player_inventory* inv = new player_inventory(0);
