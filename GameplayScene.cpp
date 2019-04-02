@@ -224,7 +224,7 @@ void GameplayScene::update(float dt) {
 
 	if (knight != nullptr) {
 		if (knight->getHp() <= 0) {
-
+			knight->setDeath(true);
 		}
 	}
 

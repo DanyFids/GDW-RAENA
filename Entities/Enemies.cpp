@@ -223,6 +223,30 @@ void Knight::AI(Player* player, float dt) {
 			invinceTime -= dt;
 		}
 	}
+	else {
+		if (!dieDone) {
+			//Add dying anim
+
+			death_time -= dt;
+		}
+		else {
+			dieDone = true;
+			revive_time = REVIVE_TIME;
+			//Add reviving anim
+		}
+
+		if (revive_time > 0) {
+			revive_time -= dt;
+		}
+		else {
+			dieDone = false;
+			death = false;
+			death_time = DEATH_TIME;
+			//Return normal anims
+
+		}
+		
+	}
 
 }
 

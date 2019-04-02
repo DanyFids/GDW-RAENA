@@ -13,11 +13,16 @@ private:
 	bool paused = false;
 	bool swipe = false;
 	bool delay = false;
+	bool dieDone = false;
 	int turn;
 	const float TURNT_TIME = 3;
 	const float CHOP_TIME = 1;
 	const float HIT_TIME = 0.5;
 	const float INVINCE_TIME = 1;
+	const float DEATH_TIME = 8.7;
+	const float REVIVE_TIME = 5.4;
+	float revive_time = 0;
+	float death_time = DEATH_TIME;
 	float invinceTime = 0;
 	float timer = TURNT_TIME;
 	float swing = CHOP_TIME;
@@ -56,6 +61,8 @@ private:
 	int turn;
 	const float TURNT_TIME = 3;
 	const float INVINCE_TIME = 1;
+	const float DEATH_TIME = 0;
+	float death_time = DEATH_TIME;
 	float invinceTime = 0;
 	float timer = TURNT_TIME;
 	int hp = 1;
@@ -93,6 +100,8 @@ private:
 	int turn;
 	const float TURNT_TIME = 3;
 	const float INVINCE_TIME = 1;
+	const float DEATH_TIME = 0;
+	float death_time = DEATH_TIME;
 	float invinceTime = 0;
 	float timer = TURNT_TIME;
 	int hp = 2;
