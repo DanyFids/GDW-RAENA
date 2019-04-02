@@ -53,6 +53,8 @@ private:
 	Fireball * atk = nullptr;
 	Ladder * climb_lad = nullptr;
 public:
+	bool moving = false;
+
 	static Player * create(const std::string& filename, cocos2d::Scene * s);
 
 	void switchLight();
@@ -114,5 +116,8 @@ public:
 		can_vert = true;
 		can_horz = true;
 	}
+	
 	void DetectObstruction(Entity * other);
+
+
 };

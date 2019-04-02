@@ -201,7 +201,7 @@ void GameplayScene::update(float dt) {
 
 	if (knight != nullptr) {
 		if (knight->getHp() <= 0) {
-
+			knight->ChangeAnimation(2);
 		}
 	}
 
@@ -329,7 +329,6 @@ void GameplayScene::update(float dt) {
 			if (player->getState() != PS_Climb) {
 				if (player->getState() == PS_Crouch) {
 					player->spd.x = CROUCH_SPEED * dt;
-					player->ChangeAnimation(2);
 				}
 				player->spd.x = PLAYER_SPEED * dt;
 			}
@@ -356,6 +355,31 @@ void GameplayScene::update(float dt) {
 		else if (GAMEPLAY_INPUT.key_left) {
 			player->setFacingRight(false);
 			player->setFlipX(true);
+		}
+
+		if (!player->moving) {
+			player->moving = true;
+			switch (player->getState()) {
+			case PS_Crouch:
+				player->ChangeAnimation(2);
+				break;
+			case PS_Stand:
+				player->ChangeAnimation(4);
+				break;
+			}
+		}
+	}
+	else {
+		if (GAMEPLAY_INPUT.key_left == GAMEPLAY_INPUT.key_right && player->moving) {
+			player->moving = false;
+			switch (player->getState()) {
+			case PS_Crouch:
+				player->ChangeAnimation(1);
+				break;
+			case PS_Stand:
+				player->ChangeAnimation(0);
+				break;
+			}
 		}
 	}
 
