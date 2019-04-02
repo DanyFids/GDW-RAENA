@@ -123,20 +123,13 @@ bool GameplayScene::init() {
 		KeyHandler->onKeyReleased = [this](EventKeyboard::KeyCode key, Event * event) {
 			switch (key) {
 			case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
-				if (player->getState() == PS_Crouch)
-				{
-					player->ChangeAnimation(1);
-				}
+				
 				GAMEPLAY_INPUT.key_left = false;
 				break;
 			case EventKeyboard::KeyCode::KEY_UP_ARROW:
 				GAMEPLAY_INPUT.key_up = false;
 				break;
 			case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
-				if (player->getState() == PS_Crouch)
-				{
-					player->ChangeAnimation(1);
-				}
 				GAMEPLAY_INPUT.key_right = false;
 				break;
 			case EventKeyboard::KeyCode::KEY_DOWN_ARROW:
@@ -231,28 +224,6 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (knight != nullptr) {
-		if (knight->getHp() <= 0) {
-			knight->ChangeAnimation(2);
-			knight->setDeath(true);
-		}
-	}
-
-	
-	for (int m = 0; m < moth.size(); m++) {
-		if (moth.at(m)->getHp() <= 0) {
-			this->removeChild(moth.at(m));
-			moth.erase(m);
-		}
-	}
-
-	for (int r = 0; r < rat.size(); r++) {
-		if (rat.at(r)->getHp() <= 0) {
-			this->removeChild(rat.at(r));
-			rat.erase(r);
-		}
-	}
-
 	PNode->setPosition(view->getPosition());
 
 	if (interactables.size() > 0) {
@@ -338,7 +309,7 @@ void GameplayScene::update(float dt) {
 	}
 
 	if (player->getState() != PS_HURT) {
-		if (GAMEPLAY_INPUT.key_left || TheGamepad->leftStickX <= -0.2 && TheGamepad->CheckConnection()) {
+		if ((GAMEPLAY_INPUT.key_left && !GAMEPLAY_INPUT.key_right) || TheGamepad->leftStickX <= -0.2 && TheGamepad->CheckConnection()) {
 			if (player->getState() != PS_Climb) {
 				player->spd.x = -PLAYER_SPEED * dt;
 				if (player->getState() == PS_Crouch) {
@@ -348,7 +319,7 @@ void GameplayScene::update(float dt) {
 		}
 
 
-		if (GAMEPLAY_INPUT.key_right || TheGamepad->leftStickX >= 0.2 && TheGamepad->CheckConnection()) {
+		if ((GAMEPLAY_INPUT.key_right && !GAMEPLAY_INPUT.key_left) || TheGamepad->leftStickX >= 0.2 && TheGamepad->CheckConnection()) {
 			if (player->getState() != PS_Climb) {
 				if (player->getState() == PS_Crouch) {
 					player->spd.x = CROUCH_SPEED * dt;
@@ -357,13 +328,13 @@ void GameplayScene::update(float dt) {
 			}
 		}
 
-		if (GAMEPLAY_INPUT.key_down || TheGamepad->leftStickY <= -0.2 && TheGamepad->CheckConnection()) {
+		if ((GAMEPLAY_INPUT.key_down && !GAMEPLAY_INPUT.key_up) || TheGamepad->leftStickY <= -0.2 && TheGamepad->CheckConnection()) {
 			if (player->getState() == PS_Climb) {
 				player->spd.y = -PLAYER_SPEED * dt;
 			}
 		}
 
-		if (GAMEPLAY_INPUT.key_up || TheGamepad->leftStickY >= 0.2 && TheGamepad->CheckConnection()) {
+		if ((GAMEPLAY_INPUT.key_up && !GAMEPLAY_INPUT.key_down) || TheGamepad->leftStickY >= 0.2 && TheGamepad->CheckConnection()) {
 			if (player->getState() == PS_Climb) {
 				player->spd.y = PLAYER_SPEED * dt;
 			}
@@ -396,8 +367,7 @@ void GameplayScene::update(float dt) {
 				break;
 			}
 		}
-	}
-	else {
+
 		if (GAMEPLAY_INPUT.key_left == GAMEPLAY_INPUT.key_right && player->moving) {
 			player->moving = false;
 			switch (player->getState()) {
@@ -409,6 +379,9 @@ void GameplayScene::update(float dt) {
 				break;
 			}
 		}
+	}
+	else {
+		player->ChangeAnimation(6);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -598,6 +571,28 @@ void GameplayScene::update(float dt) {
 	{
 		for each (Rat* r in rat) {
 			player->HitDetectEnem(r);
+		}
+	}
+
+	if (knight != nullptr) {
+		if (knight->getHp() <= 0) {
+			knight->setDeath(true);
+			knight->ChangeAnimation(2);
+		}
+	}
+
+
+	for (int m = 0; m < moth.size(); m++) {
+		if (moth.at(m)->getHp() <= 0) {
+			this->removeChild(moth.at(m));
+			moth.erase(m);
+		}
+	}
+
+	for (int r = 0; r < rat.size(); r++) {
+		if (rat.at(r)->getHp() <= 0) {
+			this->removeChild(rat.at(r));
+			rat.erase(r);
 		}
 	}
 

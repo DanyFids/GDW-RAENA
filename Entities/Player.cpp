@@ -73,19 +73,19 @@ Player * Player::create(const std::string& filename, cocos2d::Scene * s)
 			                                                    cocos2d::SpriteFrame::create("dragon_jump0005.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}),
 			                                                    cocos2d::SpriteFrame::create("dragon_jump0006.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}),
 			                                                    cocos2d::SpriteFrame::create("dragon_jump0007.png", cocos2d::Rect(0,0,38,64), false, {0,0}, {38,64}) };
-		cocos2d::Vector<cocos2d::SpriteFrame *> death_frames = { cocos2d::SpriteFrame::create("player_crouch death0000.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}),
-		                                                         cocos2d::SpriteFrame::create("player_crouch death0001.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
-		                                                         cocos2d::SpriteFrame::create("player_crouch death0002.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
-		                                                         cocos2d::SpriteFrame::create("player_crouch death0003.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
-		                                                         cocos2d::SpriteFrame::create("player_crouch death0004.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
-		                                                         cocos2d::SpriteFrame::create("player_crouch death0005.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
-		                                                         cocos2d::SpriteFrame::create("player_crouch death0006.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
-		                                                         cocos2d::SpriteFrame::create("player_crouch death0007.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
-		                                                         cocos2d::SpriteFrame::create("player_crouch death0008.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
-		                                                         cocos2d::SpriteFrame::create("player_crouch death0009.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
-		                                                         cocos2d::SpriteFrame::create("player_crouch death0010.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
-		                                                         cocos2d::SpriteFrame::create("player_crouch death0011.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
-		                                                         cocos2d::SpriteFrame::create("player_crouch death0012.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), };
+		cocos2d::Vector<cocos2d::SpriteFrame *> death_frames = { cocos2d::SpriteFrame::create("raena_death_anim/player_crouch death0000.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}),
+		                                                         cocos2d::SpriteFrame::create("raena_death_anim/player_crouch death0001.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("raena_death_anim/player_crouch death0002.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("raena_death_anim/player_crouch death0003.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("raena_death_anim/player_crouch death0004.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("raena_death_anim/player_crouch death0005.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("raena_death_anim/player_crouch death0006.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("raena_death_anim/player_crouch death0007.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("raena_death_anim/player_crouch death0008.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("raena_death_anim/player_crouch death0009.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("raena_death_anim/player_crouch death0010.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("raena_death_anim/player_crouch death0011.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), 
+		                                                         cocos2d::SpriteFrame::create("raena_death_anim/player_crouch death0012.png", cocos2d::Rect(0, 0, 64, 38), false, {0,0}, {64,38}), };
 		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(stand_frames, 0.1f));
 		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(crouch_frames, 0.3f));
 		ret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(crouch_walk_frames, 0.1f));
@@ -381,6 +381,7 @@ void Player::Land() {
 void Player::Crouch()
 {
 	if (can_horz) {
+		moving = !moving;
 		float foot = this->getPositionY() - (getContentSize().height / 2);
 
 
@@ -402,6 +403,7 @@ void Player::Crouch()
 void Player::Stand()
 {
 	if (can_vert) {
+		moving = !moving;
 		float crouch_height = getBoundingBox().size.height;
 		float stand_height = getBoundingBox().size.width;
 		this->stopAllActions();

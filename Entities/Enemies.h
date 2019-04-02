@@ -104,7 +104,7 @@ private:
 	float death_time = DEATH_TIME;
 	float invinceTime = 0;
 	float timer = TURNT_TIME;
-	int hp = 2;
+	int hp = 1;
 	Entity * platform;
 	float pLeft;
 	float pRight;
