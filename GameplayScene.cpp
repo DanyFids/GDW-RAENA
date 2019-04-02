@@ -143,6 +143,7 @@ bool GameplayScene::init() {
 				break;
 			case EventKeyboard::KeyCode::KEY_D:
 				GAMEPLAY_INPUT.key_interact = false;
+				GAMEPLAY_INPUT.key_interact_p = false;
 				break;
 			case EventKeyboard::KeyCode::KEY_X:
 				GAMEPLAY_INPUT.key_crouch = false;
@@ -183,151 +184,153 @@ bool GameplayScene::init() {
 
 
 void GameplayScene::update(float dt) {
-	player->Update(dt);
+	if (!inDialogue) {
+		player->Update(dt);
 
-	TheGamepad->Refresh();
+		TheGamepad->Refresh();
 
-	if (Projectiles.size() > 0)	//Are there projectiles on this map?
-	{
-		for each (Projectile* i in Projectiles) {
-			i->updateShotProjectile(dt);
-			if (i->HitDetect(player))
-			{
-				player->hurt(1);
-			}
-		}
-	}
-
-	if (knight != nullptr) {
-		knight->Update(dt);
-		knight->AI(player, dt);
-	}
-
-	if (bossKnight != nullptr) {
-		bossKnight->Update(dt);
-		bossKnight->AI(player, dt);
-	}
-
-	if (moth.size() > 0) {
-		for each (Moth* m in moth) {
-			m->Update(dt);
-			m->AI(player, dt);
-		}
-	}
-
-	if (rat.size() > 0) {
-		for each (Rat* r in rat) {
-			r->Update(dt);
-			r->AI(player, dt);
-		}
-	}
-
-	if (knight != nullptr) {
-		if (knight->getHp() <= 0) {
-
-		}
-	}
-
-	
-	for (int m = 0; m < moth.size(); m++) {
-		if (moth.at(m)->getHp() <= 0) {
-			this->removeChild(moth.at(m));
-			moth.erase(m);
-		}
-	}
-
-	for (int r = 0; r < rat.size(); r++) {
-		if (rat.at(r)->getHp() <= 0) {
-			this->removeChild(rat.at(r));
-			rat.erase(r);
-		}
-	}
-
-	PNode->setPosition(view->getPosition());
-
-	if (interactables.size() > 0) {
-		for each (Interactable* i in interactables) { //Showing Prompts?
-			if (i->inRange(player) && i->getType() != LOAD_ZONE) {
-				if (promptInit == false) {
-					auto Prompt1 = Prompt::create(1, (this));
-					//Prompt1->Load();
-					if (ActivePrompt)
-					{
-						ActivePrompt->Close();
-					}
-					ActivePrompt = Prompt1;
-					promptInit = true;
-					addChild(ActivePrompt, 10);
-				}
-				overlap = true;
-				promptInit = true;
-				ActivePrompt->Show();
-				break;
-			}
-			else
-			{
-				overlap = false;
-
-			}
-
-			if (!(i->inRange(player) || i->getCooldown())) {
-				if (ActivePrompt && !(overlap)) { ActivePrompt->Hide(); }
-			}
-		}
-
-		if (GAMEPLAY_INPUT.key_interact || TheGamepad->IsPressed(XINPUT_GAMEPAD_Y)) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
-			for each (Interactable* i in interactables) {
-				if (i->inRange(player)) {
-					InteractType curr_thing = i->getType();
-				}
-			}
-		}
-
-		if (GAMEPLAY_INPUT.key_interact || TheGamepad->IsPressed(XINPUT_GAMEPAD_Y) && TheGamepad->CheckConnection()) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
-			for (int i = 0; i < interactables.size(); i++) {
-				if (interactables.at(i)->inRange(player)) {
-					InteractType curr_thing = interactables.at(i)->getType(); //Getting the type
-					switch (curr_thing) {
-					case DOOR:
-						((Door*)i)->Effect(player, currInv);
-						interactables.at(i)->setCooldown();
-						break;
-					case SWITCH:
-						break;
-					case S_DOOR:
-						((SceneDoor*)interactables.at(i))->Effect(player, currInv);
-						interactables.at(i)->setCooldown();
-						break;
-					case PUZZLE:
-						((PuzzleInteract*)interactables.at(i))->Effect(player, currInv, this);
-						//if (((PuzzleInteract*)i)->checkPuzzle(Princess1) ) {
-						//	this->addChild(knight);
-						//}
-						interactables.at(i)->setCooldown();
-						break;
-					case PICKUP:
-						((Pickup*)interactables.at(i))->Effect(player, currInv);
-						this->removeChild(interactables.at(i));
-						interactables.erase(i);
-						break;
-					}
-				}
-			}
-		}
-
-
-		for each (Interactable* i in interactables) {
-			i->Update(dt);
-		}
-	}
-
-	if (Pushables.size() > 0)
-	{
-		for each (Pushable* P in Pushables)
+		if (Projectiles.size() > 0)	//Are there projectiles on this map?
 		{
-			P->Update(dt);
+			for each (Projectile* i in Projectiles) {
+				i->updateShotProjectile(dt);
+				if (i->HitDetect(player))
+				{
+					player->hurt(1);
+				}
+			}
 		}
-	}
+
+		if (knight != nullptr) {
+			knight->Update(dt);
+			knight->AI(player, dt);
+		}
+
+		if (bossKnight != nullptr) {
+			bossKnight->Update(dt);
+			bossKnight->AI(player, dt);
+		}
+
+		if (moth.size() > 0) {
+			for each (Moth* m in moth) {
+				m->Update(dt);
+				m->AI(player, dt);
+			}
+		}
+
+		if (rat.size() > 0) {
+			for each (Rat* r in rat) {
+				r->Update(dt);
+				r->AI(player, dt);
+			}
+		}
+
+		if (knight != nullptr) {
+			if (knight->getHp() <= 0) {
+
+			}
+		}
+
+
+		for (int m = 0; m < moth.size(); m++) {
+			if (moth.at(m)->getHp() <= 0) {
+				this->removeChild(moth.at(m));
+				moth.erase(m);
+			}
+		}
+
+		for (int r = 0; r < rat.size(); r++) {
+			if (rat.at(r)->getHp() <= 0) {
+				this->removeChild(rat.at(r));
+				rat.erase(r);
+			}
+		}
+
+		PNode->setPosition(view->getPosition());
+
+		if (interactables.size() > 0) {
+			for each (Interactable* i in interactables) { //Showing Prompts?
+				if (i->inRange(player) && i->getType() != LOAD_ZONE) {
+					if (promptInit == false) {
+						auto Prompt1 = Prompt::create(1, (this));
+						//Prompt1->Load();
+						if (ActivePrompt)
+						{
+							ActivePrompt->Close();
+						}
+						ActivePrompt = Prompt1;
+						promptInit = true;
+						addChild(ActivePrompt, 10);
+					}
+					overlap = true;
+					promptInit = true;
+					ActivePrompt->Show();
+					break;
+				}
+				else
+				{
+					overlap = false;
+
+				}
+
+				if (!(i->inRange(player) || i->getCooldown())) {
+					if (ActivePrompt && !(overlap)) { ActivePrompt->Hide(); }
+				}
+			}
+
+			if (GAMEPLAY_INPUT.key_interact || TheGamepad->IsPressed(XINPUT_GAMEPAD_Y)) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
+				for each (Interactable* i in interactables) {
+					if (i->inRange(player)) {
+						InteractType curr_thing = i->getType();
+					}
+				}
+			}
+
+			if (GAMEPLAY_INPUT.key_interact || TheGamepad->IsPressed(XINPUT_GAMEPAD_Y) && TheGamepad->CheckConnection()) {	//When the Interact Key is pressed, it looks through to see if the player is close enough to any interactables
+				for (int i = 0; i < interactables.size(); i++) {
+					if (interactables.at(i)->inRange(player)) {
+						InteractType curr_thing = interactables.at(i)->getType(); //Getting the type
+						switch (curr_thing) {
+						case DOOR:
+							((Door*)i)->Effect(player, currInv);
+							interactables.at(i)->setCooldown();
+							break;
+						case SWITCH:
+							break;
+						case S_DOOR:
+							((SceneDoor*)interactables.at(i))->Effect(player, currInv);
+							interactables.at(i)->setCooldown();
+							break;
+						case PUZZLE:
+							((PuzzleInteract*)interactables.at(i))->Effect(player, currInv, this);
+							//if (((PuzzleInteract*)i)->checkPuzzle(Princess1) ) {
+							//	this->addChild(knight);
+							//}
+							interactables.at(i)->setCooldown();
+							break;
+						case PICKUP:
+							((Pickup*)interactables.at(i))->Effect(player, currInv);
+							this->removeChild(interactables.at(i));
+							interactables.erase(i);
+							break;
+						}
+						GAMEPLAY_INPUT.key_interact_p = true;
+					}
+				}
+			}
+
+
+			for each (Interactable* i in interactables) {
+				i->Update(dt);
+			}
+		}
+
+		if (Pushables.size() > 0)
+		{
+			for each (Pushable* P in Pushables)
+			{
+				P->Update(dt);
+			}
+		}
 
 	if (player->getState() != PS_HURT) {
 		if ((GAMEPLAY_INPUT.key_left && !GAMEPLAY_INPUT.key_right) || TheGamepad->leftStickX <= -0.2 && TheGamepad->CheckConnection()) {
@@ -337,7 +340,6 @@ void GameplayScene::update(float dt) {
 					player->spd.x = -CROUCH_SPEED * dt;
 				}
 			}
-		}
 
 
 		if ((GAMEPLAY_INPUT.key_right && !GAMEPLAY_INPUT.key_left) || TheGamepad->leftStickX >= 0.2 && TheGamepad->CheckConnection()) {
@@ -345,328 +347,333 @@ void GameplayScene::update(float dt) {
 				if (player->getState() == PS_Crouch) {
 					player->spd.x = CROUCH_SPEED * dt;
 				}
-				player->spd.x = PLAYER_SPEED * dt;
 			}
 		}
-	}
 
-	if (GAMEPLAY_INPUT.key_inv || TheGamepad->IsPressed(XINPUT_GAMEPAD_START))
-	{
-		Director::getInstance()->pushScene(InventoryScene::create());
-	}
-
-	if (GAMEPLAY_INPUT.key_down || TheGamepad->leftStickY <= -0.2 && TheGamepad->CheckConnection()) {
-		if (player->getState() == PS_Climb) {
-			player->spd.y = -PLAYER_SPEED * dt;
+		if (GAMEPLAY_INPUT.key_inv || TheGamepad->IsPressed(XINPUT_GAMEPAD_START))
+		{
+			Director::getInstance()->pushScene(InventoryScene::create());
 		}
 
-		if (GAMEPLAY_INPUT.key_up || TheGamepad->leftStickY >= 0.2 && TheGamepad->CheckConnection()) {
+		if (GAMEPLAY_INPUT.key_down || TheGamepad->leftStickY <= -0.2 && TheGamepad->CheckConnection()) {
 			if (player->getState() == PS_Climb) {
-				player->spd.y = PLAYER_SPEED * dt;
-			}
-		}
-	}
-
-	if (GAMEPLAY_INPUT.key_right != GAMEPLAY_INPUT.key_left && player->getState() != PS_HURT && !player->isAttacking() ) {
-		if (GAMEPLAY_INPUT.key_right) {
-			player->setFacingRight(true);
-			player->setFlipX(false);
-		}
-		else if (GAMEPLAY_INPUT.key_left) {
-			player->setFacingRight(false);
-			player->setFlipX(true);
-		}
-	}
-
-	//////////////////////////////////////////////////////////////////////////////////
-
-	if (player->getState() != PS_HURT) {
-		if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
-		{
-			auto Textbox1 = Textbox::create(1, { 1 }, { "Hello World!" }, (this));
-			addChild(Textbox1, 10);
-			Textbox1->Load();
-			if (ActiveTextbox)
-			{
-				ActiveTextbox->Close();
+				player->spd.y = -PLAYER_SPEED * dt;
 			}
 
-
-			ActiveTextbox = Textbox1;
-
-			GAMEPLAY_INPUT.key_oneP = true;
-		}
-	}
-	if (player->getState() != PS_HURT) {
-		if (GAMEPLAY_INPUT.key_F && !GAMEPLAY_INPUT.key_FP)
-		{
-
-			GAMEPLAY_INPUT.key_FP = true;
-		}
-
-		if (ActivePrompt)
-		{
-			ActivePrompt->Follow(player);
-		}
-
-
-		if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && !GAMEPLAY_INPUT.key_jump && TheGamepad->CheckConnection())
-		{
-			GAMEPLAY_INPUT.key_jump_p = false;
-		}
-		if ((GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) || (TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && !GAMEPLAY_INPUT.key_jump_p)) {
-			player->Jump();
-			GAMEPLAY_INPUT.key_jump_p = true;
-		}
-	}
-
-	if (knight != nullptr)
-	{
-		if (knight->HitDetect(player)) {
-			player->hurt(2);
-		}
-	}
-	
-	player->ResetObstruction();
-	
-	if (interactables.size() > 0)	//Are there interactables on this map?
-	{
-		for each (Interactable* i in interactables) {
-			if (i->getType() == DOOR) {	//Add all interactable types that actually collide with the player here.
-				if (!i->getActive()) {
-					player->DetectObstruction(i);
+			if (GAMEPLAY_INPUT.key_up || TheGamepad->leftStickY >= 0.2 && TheGamepad->CheckConnection()) {
+				if (player->getState() == PS_Climb) {
+					player->spd.y = PLAYER_SPEED * dt;
 				}
-				i->HitDetect(player);
+			}
+		}
 
-				if (knight != nullptr)
+		if (GAMEPLAY_INPUT.key_right != GAMEPLAY_INPUT.key_left && player->getState() != PS_HURT && !player->isAttacking()) {
+			if (GAMEPLAY_INPUT.key_right) {
+				player->setFacingRight(true);
+				player->setFlipX(false);
+			}
+			else if (GAMEPLAY_INPUT.key_left) {
+				player->setFacingRight(false);
+				player->setFlipX(true);
+			}
+		}
+
+		//////////////////////////////////////////////////////////////////////////////////
+
+		if (player->getState() != PS_HURT) {
+			if (GAMEPLAY_INPUT.key_one && !GAMEPLAY_INPUT.key_oneP)
+			{
+				auto Textbox1 = Textbox::create(1, { 1 }, { "Hello World!" }, (this));
+				addChild(Textbox1, 10);
+				Textbox1->Load();
+				if (ActiveTextbox)
 				{
-					i->HitDetect(knight);
+					ActiveTextbox->Close();
 				}
 
-				if (moth.size() > 0) {
-					for each (Moth* m in moth) {
-						i->HitDetect(m);
+
+				ActiveTextbox = Textbox1;
+
+				GAMEPLAY_INPUT.key_oneP = true;
+			}
+		}
+		if (player->getState() != PS_HURT) {
+			if (GAMEPLAY_INPUT.key_F && !GAMEPLAY_INPUT.key_FP)
+			{
+
+				GAMEPLAY_INPUT.key_FP = true;
+			}
+
+			if (ActivePrompt)
+			{
+				ActivePrompt->Follow(player);
+			}
+
+
+			if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && !GAMEPLAY_INPUT.key_jump && TheGamepad->CheckConnection())
+			{
+				GAMEPLAY_INPUT.key_jump_p = false;
+			}
+			if ((GAMEPLAY_INPUT.key_jump && !GAMEPLAY_INPUT.key_jump_p) || (TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && !GAMEPLAY_INPUT.key_jump_p)) {
+				player->Jump();
+				GAMEPLAY_INPUT.key_jump_p = true;
+			}
+		}
+
+		if (knight != nullptr)
+		{
+			if (knight->HitDetect(player)) {
+				player->hurt(2);
+			}
+		}
+
+		player->ResetObstruction();
+
+		if (interactables.size() > 0)	//Are there interactables on this map?
+		{
+			for each (Interactable* i in interactables) {
+				if (i->getType() == DOOR) {	//Add all interactable types that actually collide with the player here.
+					if (!i->getActive()) {
+						player->DetectObstruction(i);
+					}
+					i->HitDetect(player);
+
+					if (knight != nullptr)
+					{
+						i->HitDetect(knight);
+					}
+
+					if (moth.size() > 0) {
+						for each (Moth* m in moth) {
+							i->HitDetect(m);
+						}
+					}
+
+					if (rat.size() > 0) {
+						for each (Rat* r in rat) {
+							i->HitDetect(r);
+						}
 					}
 				}
-				
-				if (rat.size() > 0) {
-					for each (Rat* r in rat) {
-						i->HitDetect(r);
-					}
+
+				if (i->getType() == LOAD_ZONE)
+				{
+					((LoadZone*)i)->HitDetect(player);
 				}
-			}
 
-			if (i->getType() == LOAD_ZONE)
+			}
+		}
+
+		if (player->getState() != PS_HURT) {
+			if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space)
 			{
-				((LoadZone*)i)->HitDetect(player);
+				GAMEPLAY_INPUT.key_space_p = false;
 			}
+			//if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p)) {
 
-		}
-	}
-
-	if (player->getState() != PS_HURT) {
-		if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space)
-		{
-			GAMEPLAY_INPUT.key_space_p = false;
-		}
-		//if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p)) {
-
-		if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space && TheGamepad->CheckConnection())
-		{
-			GAMEPLAY_INPUT.key_space_p = false;
-		}
-		if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p) && TheGamepad->CheckConnection()) {
-
-			player->Attack();
-			GAMEPLAY_INPUT.key_space_p = true;
-		}
-	}
-
-	for each (Block* platform in terrain)
-	{
-		player->DetectObstruction(platform);
-		platform->HitDetect(player);
-		if (knight != nullptr) {
-			platform->HitDetect(knight);
-		}
-
-		if (bossKnight != nullptr) {
-			platform->HitDetect(bossKnight);
-		}
-
-		if (moth.size() > 0) {
-			for each (Moth* m in moth) {
-				platform->HitDetect(m);
-			}
-		}
-
-		if (rat.size() > 0) {
-			for each (Rat* r in rat) {
-				platform->HitDetect(r);
-			}
-		}
-	}
-
-	if (Pushables.size() > 0)
-	{
-		for each (Pushable* Push in Pushables)
-		{
-			player->DetectObstruction(Push);
-			Push->HitDetect(player);
-		}
-	}
-
-		
-	if (ActualPlatforms.size() > 0)
-	{
-		for each (Platform* p in ActualPlatforms) {
-			player->DetectObstruction(p);
-			p->HitDetect(player);
-
-			if (knight != nullptr)
+			if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space && TheGamepad->CheckConnection())
 			{
-				p->HitDetect(knight);
+				GAMEPLAY_INPUT.key_space_p = false;
+			}
+			if (GAMEPLAY_INPUT.key_space && !GAMEPLAY_INPUT.key_space_p || (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && !GAMEPLAY_INPUT.key_space_p) && TheGamepad->CheckConnection()) {
+
+				player->Attack();
+				GAMEPLAY_INPUT.key_space_p = true;
+			}
+		}
+
+		for each (Block* platform in terrain)
+		{
+			player->DetectObstruction(platform);
+			platform->HitDetect(player);
+			if (knight != nullptr) {
+				platform->HitDetect(knight);
+			}
+
+			if (bossKnight != nullptr) {
+				platform->HitDetect(bossKnight);
 			}
 
 			if (moth.size() > 0) {
 				for each (Moth* m in moth) {
-					p->HitDetect(m);
+					platform->HitDetect(m);
 				}
 			}
 
 			if (rat.size() > 0) {
 				for each (Rat* r in rat) {
-					p->HitDetect(r);
+					platform->HitDetect(r);
 				}
 			}
 		}
-	}
 
-	if (torches.size() > 0)
-	{
-		for each (Torch* t in torches) {
-			player->HitDetectEnem(t);
-		}
-	}
-
-	if (knight != nullptr) {
-		player->HitDetectEnem(knight);
-	}
-
-	if (moth.size() > 0)
-	{
-		for each (Moth* m in moth) {
-			player->HitDetectEnem(m);
-		}
-	}
-
-	if (rat.size() > 0)
-	{
-		for each (Rat* r in rat) {
-			player->HitDetectEnem(r);
-		}
-	}
-
-	if (player->getState() != PS_HURT) {
-		if (ladders.size())
+		if (Pushables.size() > 0)
 		{
-			for each (Ladder* lad in ladders)
+			for each (Pushable* Push in Pushables)
 			{
-				if ((lad->HitDetect(player) && player->getState() != PS_Climb)) {
-					if ((GAMEPLAY_INPUT.key_up && !lad->PlayerOnTop()) || (TheGamepad->leftStickY >= 0.2 && player->getState() != PS_Climb)) {
-						player->Climb(lad);
+				player->DetectObstruction(Push);
+				Push->HitDetect(player);
+			}
+		}
+
+
+		if (ActualPlatforms.size() > 0)
+		{
+			for each (Platform* p in ActualPlatforms) {
+				player->DetectObstruction(p);
+				p->HitDetect(player);
+
+				if (knight != nullptr)
+				{
+					p->HitDetect(knight);
+				}
+
+				if (moth.size() > 0) {
+					for each (Moth* m in moth) {
+						p->HitDetect(m);
 					}
-					else if (GAMEPLAY_INPUT.key_down && lad->PlayerOnTop() || (TheGamepad->leftStickY <= -0.2 && player->getState() != PS_Climb)) {
-						player->ClimbDown(lad);
+				}
+
+				if (rat.size() > 0) {
+					for each (Rat* r in rat) {
+						p->HitDetect(r);
 					}
 				}
 			}
 		}
 
-		if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch && TheGamepad->CheckConnection())
+		if (torches.size() > 0)
 		{
-			GAMEPLAY_INPUT.key_crouch_p = false;
-		}
-		if ((GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p && player->isOnGround() && player->getSpeedY() == 0)
-			|| (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch_p) && player->isOnGround() && player->getSpeedY() == 0 && TheGamepad->CheckConnection()) {
-			if (player->getState() == PS_Stand) {
-				player->Crouch();
+			for each (Torch* t in torches) {
+				player->HitDetectEnem(t);
 			}
-			else if (player->getState() == PS_Crouch) {
-				player->Stand();
-			}
-			GAMEPLAY_INPUT.key_crouch_p = true;
 		}
-	}
 
-	player->Move();
-	player->moveLightToPlayer();
+		if (knight != nullptr) {
+			player->HitDetectEnem(knight);
+		}
 
-	if (Pushables.size() > 0)
-	{
-		for each (Pushable* P in Pushables)
+		if (moth.size() > 0)
 		{
-			P->Move();
+			for each (Moth* m in moth) {
+				player->HitDetectEnem(m);
+			}
 		}
-	}
-	
 
-	if (knight != nullptr) {
-		knight->Move();
-	}
-
-	if (bossKnight != nullptr) {
-		bossKnight->Move();
-	}
-
-	if (moth.size() > 0) {
-		for each (Moth* m in moth) {
-			m->Move();
+		if (rat.size() > 0)
+		{
+			for each (Rat* r in rat) {
+				player->HitDetectEnem(r);
+			}
 		}
-	}
 
-	if (rat.size() > 0) {
-		for each (Rat* r in rat) {
-			r->Move();
+		if (player->getState() != PS_HURT) {
+			if (ladders.size())
+			{
+				for each (Ladder* lad in ladders)
+				{
+					if ((lad->HitDetect(player) && player->getState() != PS_Climb)) {
+						if ((GAMEPLAY_INPUT.key_up && !lad->PlayerOnTop()) || (TheGamepad->leftStickY >= 0.2 && player->getState() != PS_Climb)) {
+							player->Climb(lad);
+						}
+						else if (GAMEPLAY_INPUT.key_down && lad->PlayerOnTop() || (TheGamepad->leftStickY <= -0.2 && player->getState() != PS_Climb)) {
+							player->ClimbDown(lad);
+						}
+					}
+				}
+			}
+
+			if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch && TheGamepad->CheckConnection())
+			{
+				GAMEPLAY_INPUT.key_crouch_p = false;
+			}
+			if ((GAMEPLAY_INPUT.key_crouch && !GAMEPLAY_INPUT.key_crouch_p && player->isOnGround() && player->getSpeedY() == 0)
+				|| (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && !GAMEPLAY_INPUT.key_crouch_p) && player->isOnGround() && player->getSpeedY() == 0 && TheGamepad->CheckConnection()) {
+				if (player->getState() == PS_Stand) {
+					player->Crouch();
+				}
+				else if (player->getState() == PS_Crouch) {
+					player->Stand();
+				}
+				GAMEPLAY_INPUT.key_crouch_p = true;
+			}
 		}
-	}
 
-	if (knight != nullptr && player->getState() != PS_HURT) {
-		if (knight->HitDetect(player)) {
-			player->hurt(2);
+		player->Move();
+		player->moveLightToPlayer();
+
+		if (Pushables.size() > 0)
+		{
+			for each (Pushable* P in Pushables)
+			{
+				P->Move();
+			}
 		}
-	}
 
-	if (bossKnight != nullptr && player->getState() != PS_HURT) {
-		bossKnight->HitDetect(player);
-	}
 
-	if (moth.size() > 0) {
-		for each (Moth* m in moth) {
-			if (m->HitDetect(player)) {
-				m->Hit(player);
+		if (knight != nullptr) {
+			knight->Move();
+		}
+
+		if (bossKnight != nullptr) {
+			bossKnight->Move();
+		}
+
+		if (moth.size() > 0) {
+			for each (Moth* m in moth) {
+				m->Move();
+			}
+		}
+
+		if (rat.size() > 0) {
+			for each (Rat* r in rat) {
+				r->Move();
+			}
+		}
+
+		if (knight != nullptr && player->getState() != PS_HURT) {
+			if (knight->HitDetect(player)) {
+				player->hurt(2);
+			}
+		}
+
+		if (bossKnight != nullptr && player->getState() != PS_HURT) {
+			bossKnight->HitDetect(player);
+		}
+
+		if (moth.size() > 0) {
+			for each (Moth* m in moth) {
+				if (m->HitDetect(player)) {
+					m->Hit(player);
+				}
+			}
+		}
+
+		if (rat.size() > 0) {
+			for each (Rat* r in rat) {
+				if (r->HitDetect(player)) {
+					r->Hit(player);
+				}
+			}
+		}
+
+		// Move Camera
+		if (!cutScene) {
+			if (!cutSceneC) {
+				if (player->getPositionX() >= (Director::getInstance()->getVisibleSize().width / 2) && player->getPositionX() <= STAGE_WIDTH - (Director::getInstance()->getVisibleSize().width / 2)) {
+					view->setPositionX(player->getPositionX());
+				}
+
+				if (player->getPositionY() >= (Director::getInstance()->getVisibleSize().height / 3) && player->getPositionY() <= STAGE_HEIGHT - (Director::getInstance()->getVisibleSize().height * 2 / 3)) {
+					view->setPositionY(player->getPositionY() + (Director::getInstance()->getVisibleSize().height / 6));
+				}
 			}
 		}
 	}
-
-	if (rat.size() > 0) {
-		for each (Rat* r in rat) {
-			if (r->HitDetect(player)) {
-				r->Hit(player);
-			}
-		}
-	}
-
-	// Move Camera
-	if (!cutScene) {
-		if (!cutSceneC) {
-			if (player->getPositionX() >= (Director::getInstance()->getVisibleSize().width / 2) && player->getPositionX() <= STAGE_WIDTH - (Director::getInstance()->getVisibleSize().width / 2)) {
-				view->setPositionX(player->getPositionX());
-			}
-
-			if (player->getPositionY() >= (Director::getInstance()->getVisibleSize().height / 3) && player->getPositionY() <= STAGE_HEIGHT - (Director::getInstance()->getVisibleSize().height * 2 / 3)) {
-				view->setPositionY(player->getPositionY() + (Director::getInstance()->getVisibleSize().height / 6));
-			}
+	else {
+		if ((GAMEPLAY_INPUT.key_interact && !GAMEPLAY_INPUT.key_interact_p ) || (TheGamepad->CheckConnection()  && TheGamepad->IsPressed(XINPUT_GAMEPAD_Y)) ) {
+			GAMEPLAY_INPUT.key_interact_p = true;
+			ActiveTextbox->Flippage();
 		}
 	}
 }
@@ -766,7 +773,8 @@ bool A1_R1::init()
 			}
 		}
 
-
+		ActiveTextbox = Textbox::create(2, { 0,0 }, {"Hello and welcome to our Demo!","A young Dragon awakens in the forest..."}, this);
+		addChild(ActiveTextbox, 12);
 
 		//Push_back
 		//for each (Ladder* lad in ladders) {

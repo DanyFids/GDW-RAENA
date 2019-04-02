@@ -335,10 +335,10 @@ void Knight::Move()
 Moth * Moth::create(const std::string & filename, cocos2d::Vector<Torch *> * t)
 {
 	if (mothret && mothret->initWithFile(filename)) {
-		cocos2d::Vector<cocos2d::SpriteFrame *> fly_frames = { cocos2d::SpriteFrame::create("MothFlyingAnimation0000.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}),
-		 cocos2d::SpriteFrame::create("MothFlyingAnimation0002.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}),
-		 cocos2d::SpriteFrame::create("MothFlyingAnimation0004.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}),
-		 cocos2d::SpriteFrame::create("MothFlyingAnimation0006.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}) };
+		cocos2d::Vector<cocos2d::SpriteFrame *> fly_frames = { cocos2d::SpriteFrame::create("Moth Fly Animation/MothFlyingAnimation0.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}),
+		 cocos2d::SpriteFrame::create("Moth Fly Animation/MothFlyingAnimation1.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}),
+		 cocos2d::SpriteFrame::create("Moth Fly Animation/MothFlyingAnimation2.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}),
+		 cocos2d::SpriteFrame::create("Moth Fly Animation/MothFlyingAnimation3.png", cocos2d::Rect(0,0,29,41), false, {0,0}, {29,41}) };
 		mothret->animations.pushBack(cocos2d::Animation::createWithSpriteFrames(fly_frames, 0.1f));
 
 		mothret->torches = t;

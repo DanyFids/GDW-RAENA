@@ -27,7 +27,6 @@ class Prompt;
 
 class GameplayScene : public cocos2d::Scene {
 protected:
-	Textbox* ActiveTextbox;
 	Prompt* ActivePrompt;
 	bool promptInit = false;
 	bool overlap = false;
@@ -76,6 +75,8 @@ public:
 	cocos2d::Vector<Rat *> rat;
 	cocos2d::Vector<Interactable *> interactables;
 
+	Textbox* ActiveTextbox;
+	bool inDialogue = false;
 
 	struct {
 		bool key_up = false;
@@ -89,6 +90,7 @@ public:
 		bool key_crouch = false;
 		bool key_crouch_p = false;
 		bool key_interact = false;
+		bool key_interact_p = false;
 		bool key_inv = false;
 
 
@@ -153,7 +155,9 @@ public:
 		terrain.pushBack(howCouldDylanNotKnowHowToDoThis);
 	}
 
-	
+	cocos2d::Camera * getView() {
+		return view;
+	};
 
 	std::vector<inventoryItem>* getInvRef() {
 		return &(currInv->items);
