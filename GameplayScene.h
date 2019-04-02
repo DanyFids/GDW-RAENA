@@ -89,6 +89,7 @@ public:
 		bool key_crouch_p = false;
 		bool key_interact = false;
 		bool key_inv = false;
+		bool key_inv_p = false;
 
 
 		bool key_one = false;

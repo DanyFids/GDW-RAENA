@@ -605,7 +605,9 @@ bool InventoryScene::init()
 	this->addChild(inv7, 1);
 	this->addChild(inv8, 1);
 
-
+	auto Updatepad = new (std::nothrow) Gamepad;
+	Updatepad->CheckConnection();
+	TheGamepad = Updatepad;
 
 	this->scheduleUpdate();
 	return true;
@@ -613,12 +615,133 @@ bool InventoryScene::init()
 
 void InventoryScene::update(float dt)
 {
+	TheGamepad->Refresh();
+	
 	timer -= dt;
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_START) && enter_released)
+	{
+		Director::getInstance()->popScene();
+		enter_released = false;
+	}
+	else if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_START))
+	{
+		enter_released = true;
+	}
+	/*if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT) && left)
+	{
+		pointer += 1;
+		removeChild(description);
+		if (pointer == currInvNum)
+		{
+			pointer = 0;
+		}
+		left = false;
+	}
+	else if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT))
+	{
+		left = true;
+	}
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT) && right)
+	{
+		Director::getInstance()->popScene();
+		right = false;
+	}
+	else if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
+	{
+		right = true;
+	}*/
+
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && B)
+	{
+		if (p_inv->items.size() > 0)
+		{
+			if (combine1 == 0) {
+				combine1 = pointer;
+				combinewith = Label::createWithTTF("What would you like to combine the " + (*inventory)[combine1].itemName + " with?", "fonts/fofbb_reg.ttf", 16);
+				combinewith->setPosition(400, 200);
+				addChild(combinewith, 2);
+			}
+			else {
+				if (!(pointer == combine1)) {
+					combine2 = pointer;
+					removeChild(combinewith);
+
+					int yolo = (*inventory)[combine1].Val + (*inventory)[combine2].Val;
+
+					if (combine1 < combine2) {
+						int temp = combine1;
+						combine1 = combine2;
+						combine2 = temp;
+
+					}
+
+					itemEnum newItem;
+					try {
+						newItem = (itemEnum)yolo;
+					}
+					catch (exception e) {
+						newItem = I_NONE;
+					}
+
+					if (newItem != I_NONE)
+					{
+						dropItem(combine1);
+						dropItem(combine2);
+						pickUpItem(inventory->size() - 1, "newItem", "CloseSelected.png", "This is the new item", newItem);
+						combine1 = 0;
+						combine2 = 0;
+						pointer = inventory->size() - 1;
+					}
+				}
+			}
+		}
+		B = false;
+	}
+	else if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_A))
+	{
+		B = true;
+	}
+
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && A)
+	{
+		if (this->inventory->size() > 0)
+		{
+			this->useItem((*inventory)[pointer].itemName);
+		}
+		A = false;
+	}
+	else if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_A))
+	{
+		A = true;
+	}
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && X)
+	{
+		if (lastLabel != nullptr)
+		{
+			removeChild(lastLabel);
+		}
+		description = Label::createWithTTF((*inventory)[pointer].itemDescription, "fonts/fofbb_reg.ttf", 16);
+		lastLabel = description;
+
+		if (p_inv->items.size()>0)
+		{
+			description->setPosition(400, 200);
+			addChild(description, 2);
+		}
+		X = false;
+	}
+	else if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X))
+	{
+		X = true;
+	}
+	
+	
+
 	if (currInvNum != 0) {
 		if (timer == 0)
 		{
 			timer = 10;
-			if (INPUT.left)
+			if (INPUT.left || TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT))
 			{
 				removeChild(description);
 				pointer += 1;
@@ -627,7 +750,7 @@ void InventoryScene::update(float dt)
 					pointer = 0;
 				}
 			}
-			else if (INPUT.right)
+			else if (INPUT.right || TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
 			{	
 				removeChild(description);
 				pointer -= 1;

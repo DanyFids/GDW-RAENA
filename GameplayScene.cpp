@@ -325,9 +325,16 @@ void GameplayScene::update(float dt) {
 		}
 	}
 
-	if (GAMEPLAY_INPUT.key_inv || TheGamepad->IsPressed(XINPUT_GAMEPAD_START))
+	if (GAMEPLAY_INPUT.key_inv || TheGamepad->IsPressed(XINPUT_GAMEPAD_START) && GAMEPLAY_INPUT.key_inv_p)
 	{
-		Director::getInstance()->pushScene(InventoryScene::create());
+		this->clearKeys();
+		Director::getInstance()->pushScene(InventoryScene::create(this));
+
+		GAMEPLAY_INPUT.key_inv_p = false;
+	}
+	else if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_START))
+	{
+		GAMEPLAY_INPUT.key_inv_p = true;
 	}
 
 	if (GAMEPLAY_INPUT.key_down || TheGamepad->leftStickY <= -0.2 && TheGamepad->CheckConnection()) {

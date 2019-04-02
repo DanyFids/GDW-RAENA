@@ -21,6 +21,7 @@ protected:
 	cocos2d::Vector< Interactable*> puzzles;
 	GameplayScene * playScene;
 	Player * player;
+
 private:
 	struct {
 		bool left = false;
@@ -38,6 +39,11 @@ private:
 	cocos2d::Label* lastLabel;
 	GameplayScene * play;
 
+	bool left = true;
+	bool right = true;
+	bool A = true;
+	bool B = true;
+	bool X = true;
 
 	Gamepad* TheGamepad;
 public:
