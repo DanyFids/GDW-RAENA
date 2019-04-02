@@ -58,167 +58,170 @@ bool Knight::onGround() {
 
 void Knight::AI(Player* player, float dt) {
 
-	/****************
-	* All Movement
-	****************/
-	if (!swipe) {
-		
-		/*******************
-		* Player Detection
-		*******************/
+	if (!death) {
 
-		//Left
-		if (!face_right && !delay) {
-			this->setFlipX(true);
-			//attack left
-			if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 60)) {
-				if (player->getPosition().y <= this->getPosition().y + 80 || player->getPosition().y <= this->getPosition().y - 80) {
-					swipe = true;
-					attacking = true;
+		/****************
+		* All Movement
+		****************/
+		if (!swipe) {
+
+			/*******************
+			* Player Detection
+			*******************/
+
+			//Left
+			if (!face_right && !delay) {
+				this->setFlipX(true);
+				//attack left
+				if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 60)) {
+					if (player->getPosition().y <= this->getPosition().y + 80 || player->getPosition().y <= this->getPosition().y - 80) {
+						swipe = true;
+						attacking = true;
+					}
+				}
+
+				else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 500)) {
+
+					if (player->getPosition().y <= this->getPosition().y + 100 || player->getPosition().y <= this->getPosition().y - 100) {
+						this->spd.x -= charge * dt;
+						attacking = true;
+					}
+				}
+
+				//Turn Go Right
+				else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 100)) {
+					if (player->getPosition().y <= this->getPosition().y + 60 || player->getPosition().y <= this->getPosition().y - 60) {
+						face_right = true;
+						this->spd.x += charge * dt;
+						attacking = true;
+					}
+				}
+
+				else {
+					charge = 20;
+					attacking = false;
 				}
 			}
 
-			else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 500)) {
-			
-				if (player->getPosition().y <= this->getPosition().y + 100 || player->getPosition().y <= this->getPosition().y - 100) {
-					this->spd.x -= charge * dt;
-					attacking = true;
+			//Right
+			else if (face_right && !delay)
+			{
+				this->setFlipX(false);
+				//attack right
+				if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 60)) {
+					if (player->getPosition().y <= this->getPosition().y + 80 || player->getPosition().y <= this->getPosition().y - 80) {
+						swipe = true;
+						attacking = true;
+					}
+				}
+
+				else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 500)) {
+
+					if (player->getPosition().y <= this->getPosition().y + 100 || player->getPosition().y <= this->getPosition().y - 100) {
+						this->spd.x += charge * dt;
+						attacking = true;
+					}
+				}
+
+				//Turn Go Left
+				else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 50)) {
+					if (player->getPosition().y <= this->getPosition().y + 60 || player->getPosition().y <= this->getPosition().y - 60) {
+						face_right = false;
+						this->spd.x -= charge * dt;
+						attacking = true;
+					}
+				}
+
+				else {
+					charge = 20;
+					attacking = false;
 				}
 			}
-
-			//Turn Go Right
-			else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 100)) {
-				if (player->getPosition().y <= this->getPosition().y + 60 || player->getPosition().y <= this->getPosition().y - 60) {
-					face_right = true;
-					this->spd.x += charge * dt;
-					attacking = true;
-				}
-			}
-
 			else {
-				charge = 20;
-				attacking = false;
-			}
-		}
-
-		//Right
-		else if (face_right && !delay)
-		{
-			this->setFlipX(false);
-			//attack right
-			if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 60)) {
-				if (player->getPosition().y <= this->getPosition().y + 80 || player->getPosition().y <= this->getPosition().y - 80) {
-					swipe = true;
-					attacking = true;
+				swing -= dt;
+				if (swing <= 0) {
+					swing = CHOP_TIME;
+					delay = false;
 				}
 			}
 
-			else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 500)) {
-			
-				if (player->getPosition().y <= this->getPosition().y + 100 || player->getPosition().y <= this->getPosition().y - 100) {
-					this->spd.x += charge * dt;
-					attacking = true;
+
+			if (attacking && charge <= 100) {
+				charge++;
+			}
+
+			/******************/
+
+			/****************
+			* Idle Movement
+			****************/
+
+			if (timer >= 0) {
+				timer -= dt;
+			}
+			if (timer <= 0 && (!attacking))
+			{
+				std::random_device gen;
+				std::uniform_int_distribution<> range(1, 40);
+				turn = range(gen);
+
+				switch (turn) {
+				case 1:
+					if (face_right) {
+						face_right = false;
+						timer = TURNT_TIME;
+					}
+					else {
+						face_right = true;
+						timer = TURNT_TIME;
+					}
+					break;
+				case 25:
+					timer = TURNT_TIME;
+					break;
 				}
 			}
 
-			//Turn Go Left
-			else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 50)) {
-				if (player->getPosition().y <= this->getPosition().y + 60 || player->getPosition().y <= this->getPosition().y - 60) {
-					face_right = false;
-					this->spd.x -= charge * dt;
-					attacking = true;
+			if (!attacking) {
+				if (face_right) {
+					this->spd.x += 10 * dt;
+				}
+				else {
+					this->spd.x -= 10 * dt;
+				}
+				if (turn == 25) {
+					if (face_right) {
+						this->spd.x -= 10 * dt;
+					}
+					else {
+						this->spd.x += 10 * dt;
+					}
 				}
 			}
-
-			else {
-				charge = 20;
-				attacking = false;
-			}
+			/***************/
 		}
 		else {
 			swing -= dt;
 			if (swing <= 0) {
 				swing = CHOP_TIME;
-				delay = false;
+				swipe = false;
 			}
-		}
 
-
-		if (attacking && charge <= 100) {
-			charge++;
-		}
-
-		/******************/
-
-		/****************
-		* Idle Movement
-		****************/
-
-		if (timer >= 0) {
-			timer -= dt;
-		}
-		if (timer <= 0 && (!attacking))
-		{
-			std::random_device gen;
-			std::uniform_int_distribution<> range(1, 40);
-			turn = range(gen);
-
-			switch (turn) {
-			case 1:
-				if (face_right) {
-					face_right = false;
-					timer = TURNT_TIME;
-				}
-				else {
-					face_right = true;
-					timer = TURNT_TIME;
-				}
-				break;
-			case 25:
-				timer = TURNT_TIME;
-				break;
-			}
-		}
-
-		if (!attacking) {
-			if (face_right) {
-				this->spd.x += 10 * dt;
+			if (hitTimer <= 0) {
+				Hit(player);
+				hitTimer = HIT_TIME;
+				delay = true;
 			}
 			else {
-				this->spd.x -= 10 * dt;
+				hitTimer -= dt;
 			}
-			if (turn == 25) {
-				if (face_right) {
-					this->spd.x -= 10 * dt;
-				}
-				else {
-					this->spd.x += 10 * dt;
-				}
-			}
+
 		}
 		/***************/
-	}
-	else {
-		swing -= dt;
-		if (swing <= 0) {
-			swing = CHOP_TIME;
-			swipe = false;
-		}
 
-		if (hitTimer <= 0) {
-			Hit(player);
-			hitTimer = HIT_TIME;
-			delay = true;
+		if (invinceTime > 0) {
+			invinceTime -= dt;
 		}
-		else {
-			hitTimer -= dt;
-		}
-		
-	}
-	/***************/
-
-	if (invinceTime > 0) {
-		invinceTime -= dt;
 	}
 
 }
@@ -372,331 +375,333 @@ void Moth::setYDir(bool _y)
 void Moth::AI(Player * player, float dt)
 {
 
-	/****************
-	* All Movement
-	****************/
+	if (!death) {
+		/****************
+		* All Movement
+		****************/
 
-	//Left
-	if (!face_right) {
-
-		/********************
-		* Player Detection
-		********************/
-
-		//attack left
-		if (player->getPosition().x - 60 <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 100)) {
-
-			if (player->getPosition().y + 10 == this->getPosition().y) {
-				this->spd.x -= 60 * dt;
-				attacking = true;
-			}
-			else if (player->getPosition().y + 10 > this->getPosition().y && player->getPosition().y < this->getPosition().y + 300){
-				this->spd.x -= 60 * dt;
-				attacking = true;
-				this->spd.y += 50 * dt;
-			}
-			else if (player->getPosition().y + 10 < this->getPosition().y && player->getPosition().y > this->getPosition().y - 300) {
-				this->spd.x -= 60 * dt;
-				attacking = true;
-				this->spd.y -= 50 * dt;
-			}
-		}
-
-		//Turn Go Right
-		else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 75)) {
-
-			if (player->getPosition().y + 10 == this->getPosition().y) {
-				face_right = true;
-				this->spd.x += 60 * dt;
-				attacking = true;
-			}
-			else if (player->getPosition().y + 10 > this->getPosition().y && player->getPosition().y < this->getPosition().y + 250) {
-				face_right = true;
-				this->spd.x += 60 * dt;
-				attacking = true;
-				this->spd.y += 50 * dt;
-			}
-			else if (player->getPosition().y + 10 < this->getPosition().y && player->getPosition().y > this->getPosition().y - 250) {
-				face_right = true;
-				this->spd.x += 60 * dt;
-				attacking = true;
-				this->spd.y -= 50 * dt;
-			}
-		}
-
-		else {
-			attacking = false;
-		}
-	}
-
-	//Right
-	else if (face_right)
-	{
-		//attack right
-		//If there is attack code
-
-		if (player->getPosition().x + 60 >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 100)) {
-
-			if (player->getPosition().y + 10 == this->getPosition().y) {
-				this->spd.x += 60 * dt;
-				attacking = true;
-			}
-			else if (player->getPosition().y + 10 > this->getPosition().y && player->getPosition().y < this->getPosition().y + 300) {
-				this->spd.x += 60 * dt;
-				attacking = true;
-				this->spd.y += 50 * dt;
-			}
-			else if (player->getPosition().y + 10 < this->getPosition().y && player->getPosition().y > this->getPosition().y - 300) {
-				this->spd.x += 60 * dt;
-				attacking = true;
-				this->spd.y -= 50 * dt;
-			}
-		}
-
-		//Turn Go Left
-		else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 75)) {
-
-			if (player->getPosition().y + 10 == this->getPosition().y) {
-				face_right = false;
-				this->spd.x -= 60 * dt;
-				attacking = true;
-			}
-			else if (player->getPosition().y + 10 > this->getPosition().y && player->getPosition().y < this->getPosition().y + 300) {
-				face_right = false;
-				this->spd.x -= 60 * dt;
-				attacking = true;
-				this->spd.y += 50 * dt;
-			}
-			else if (player->getPosition().y + 10 < this->getPosition().y && player->getPosition().y > this->getPosition().y - 300) {
-				face_right = false;
-				this->spd.x -= 60 * dt;
-				attacking = true;
-				this->spd.y -= 50 * dt;
-			}
-		}
-
-		else {
-			attacking = false;
-		}
-	}
-	/********************/
-
-	/*******************
-	* Torch Detection
-	*******************/
-
-	for each (Torch* t in *torches)
-	{
 		//Left
-		if (t->lit && !attacking) {
+		if (!face_right) {
 
-			if (t->getPosition().x - 125 <= player->getPosition().x && player->getPosition().x <= (t->getPosition().x + 125)) {
-				if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 300)) {
-					if (t->getPosition().y == this->getPosition().y) {
-						this->spd.x += 60 * dt;
-						torchFound = true;
-						face_right = true;
-					}
-					else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 300) {
-						this->spd.x += 60 * dt;
-						torchFound = true;
-						this->spd.y += 50 * dt;
-						face_right = true;
-					}
-					else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 300) {
-						this->spd.x += 60 * dt;
-						torchFound = true;
-						this->spd.y -= 50 * dt;
-						face_right = true;
-					}
+			/********************
+			* Player Detection
+			********************/
+
+			//attack left
+			if (player->getPosition().x - 60 <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 100)) {
+
+				if (player->getPosition().y + 10 == this->getPosition().y) {
+					this->spd.x -= 60 * dt;
+					attacking = true;
 				}
-			}
-			else if (t->getPosition().x - 125 <= player->getPosition().x && player->getPosition().x <= (t->getPosition().x + 125)) {
-				if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 300)) {
-					if (t->getPosition().y == this->getPosition().y) {
-						this->spd.x -= 60 * dt;
-						torchFound = true;
-						face_right = false;
-					}
-					else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 300) {
-						this->spd.x -= 60 * dt;
-						torchFound = true;
-						this->spd.y += 50 * dt;
-						face_right = false;
-					}
-					else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 300) {
-						this->spd.x -= 60 * dt;
-						torchFound = true;
-						this->spd.y -= 50 * dt;
-						face_right = false;
-					}
+				else if (player->getPosition().y + 10 > this->getPosition().y && player->getPosition().y < this->getPosition().y + 300) {
+					this->spd.x -= 60 * dt;
+					attacking = true;
+					this->spd.y += 50 * dt;
+				}
+				else if (player->getPosition().y + 10 < this->getPosition().y && player->getPosition().y > this->getPosition().y - 300) {
+					this->spd.x -= 60 * dt;
+					attacking = true;
+					this->spd.y -= 50 * dt;
 				}
 			}
 
-			else if (!face_right && !attacking) {
-				//attack left
-				//if tere is an attack animation
-				
+			//Turn Go Right
+			else if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 75)) {
 
-				if (t->getPosition().x - 100 <= this->getPosition().x && this->getPosition().x <= (t->getPosition().x + 150)) {
-
-					if (t->getPosition().y == this->getPosition().y) {
-						this->spd.x -= 30 * dt;
-						torchFound = true;
-					}
-					else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 300) {
-						this->spd.x -= 30 * dt;
-						torchFound = true;
-						this->spd.y += 25 * dt;
-					}
-					else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 300) {
-						this->spd.x -= 30 * dt;
-						torchFound = true;
-						this->spd.y -= 25 * dt;
-					}
+				if (player->getPosition().y + 10 == this->getPosition().y) {
+					face_right = true;
+					this->spd.x += 60 * dt;
+					attacking = true;
 				}
-
-				//Turn Go Right
-				else if (t->getPosition().x >= this->getPosition().x && this->getPosition().x >= (t->getPosition().x - 150)) {
-
-					if (t->getPosition().y == this->getPosition().y) {
-						face_right = true;
-						this->spd.x += 30 * dt;
-						torchFound = true;
-					}
-					else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 250) {
-						face_right = true;
-						this->spd.x += 30 * dt;
-						torchFound = true;
-						this->spd.y += 25 * dt;
-					}
-					else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 250) {
-						face_right = true;
-						this->spd.x += 30 * dt;
-						torchFound = true;
-						this->spd.y -= 25 * dt;
-					}
+				else if (player->getPosition().y + 10 > this->getPosition().y && player->getPosition().y < this->getPosition().y + 250) {
+					face_right = true;
+					this->spd.x += 60 * dt;
+					attacking = true;
+					this->spd.y += 50 * dt;
 				}
-
-				else {
-					torchFound = false;
+				else if (player->getPosition().y + 10 < this->getPosition().y && player->getPosition().y > this->getPosition().y - 250) {
+					face_right = true;
+					this->spd.x += 60 * dt;
+					attacking = true;
+					this->spd.y -= 50 * dt;
 				}
 			}
 
-			//Right
-			else if (face_right && !attacking)
-			{
-				//attack right
-				//If there is attack code
+			else {
+				attacking = false;
+			}
+		}
 
+		//Right
+		else if (face_right)
+		{
+			//attack right
+			//If there is attack code
 
-				if (t->getPosition().x + 100 >= this->getPosition().x && this->getPosition().x >= (t->getPosition().x - 150)) {
+			if (player->getPosition().x + 60 >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 100)) {
 
-					if (player->getPosition().y == this->getPosition().y) {
-						this->spd.x += 30 * dt;
-						torchFound = true;
+				if (player->getPosition().y + 10 == this->getPosition().y) {
+					this->spd.x += 60 * dt;
+					attacking = true;
+				}
+				else if (player->getPosition().y + 10 > this->getPosition().y && player->getPosition().y < this->getPosition().y + 300) {
+					this->spd.x += 60 * dt;
+					attacking = true;
+					this->spd.y += 50 * dt;
+				}
+				else if (player->getPosition().y + 10 < this->getPosition().y && player->getPosition().y > this->getPosition().y - 300) {
+					this->spd.x += 60 * dt;
+					attacking = true;
+					this->spd.y -= 50 * dt;
+				}
+			}
+
+			//Turn Go Left
+			else if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 75)) {
+
+				if (player->getPosition().y + 10 == this->getPosition().y) {
+					face_right = false;
+					this->spd.x -= 60 * dt;
+					attacking = true;
+				}
+				else if (player->getPosition().y + 10 > this->getPosition().y && player->getPosition().y < this->getPosition().y + 300) {
+					face_right = false;
+					this->spd.x -= 60 * dt;
+					attacking = true;
+					this->spd.y += 50 * dt;
+				}
+				else if (player->getPosition().y + 10 < this->getPosition().y && player->getPosition().y > this->getPosition().y - 300) {
+					face_right = false;
+					this->spd.x -= 60 * dt;
+					attacking = true;
+					this->spd.y -= 50 * dt;
+				}
+			}
+
+			else {
+				attacking = false;
+			}
+		}
+		/********************/
+
+		/*******************
+		* Torch Detection
+		*******************/
+
+		for each (Torch* t in *torches)
+		{
+			//Left
+			if (t->lit && !attacking) {
+
+				if (t->getPosition().x - 125 <= player->getPosition().x && player->getPosition().x <= (t->getPosition().x + 125)) {
+					if (player->getPosition().x >= this->getPosition().x && this->getPosition().x >= (player->getPosition().x - 300)) {
+						if (t->getPosition().y == this->getPosition().y) {
+							this->spd.x += 60 * dt;
+							torchFound = true;
+							face_right = true;
+						}
+						else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 300) {
+							this->spd.x += 60 * dt;
+							torchFound = true;
+							this->spd.y += 50 * dt;
+							face_right = true;
+						}
+						else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 300) {
+							this->spd.x += 60 * dt;
+							torchFound = true;
+							this->spd.y -= 50 * dt;
+							face_right = true;
+						}
 					}
-					else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 300) {
-						this->spd.x += 30 * dt;
-						torchFound = true;
-						this->spd.y += 25 * dt;
-					}
-					else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 300) {
-						this->spd.x += 30 * dt;
-						torchFound = true;
-						this->spd.y -= 25 * dt;
+				}
+				else if (t->getPosition().x - 125 <= player->getPosition().x && player->getPosition().x <= (t->getPosition().x + 125)) {
+					if (player->getPosition().x <= this->getPosition().x && this->getPosition().x <= (player->getPosition().x + 300)) {
+						if (t->getPosition().y == this->getPosition().y) {
+							this->spd.x -= 60 * dt;
+							torchFound = true;
+							face_right = false;
+						}
+						else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 300) {
+							this->spd.x -= 60 * dt;
+							torchFound = true;
+							this->spd.y += 50 * dt;
+							face_right = false;
+						}
+						else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 300) {
+							this->spd.x -= 60 * dt;
+							torchFound = true;
+							this->spd.y -= 50 * dt;
+							face_right = false;
+						}
 					}
 				}
 
-				//Turn Go Left
-				else if (t->getPosition().x <= this->getPosition().x && this->getPosition().x <= (t->getPosition().x + 150)) {
+				else if (!face_right && !attacking) {
+					//attack left
+					//if tere is an attack animation
 
-					if (t->getPosition().y == this->getPosition().y) {
-						face_right = false;
-						this->spd.x -= 30 * dt;
-						torchFound = true;
+
+					if (t->getPosition().x - 100 <= this->getPosition().x && this->getPosition().x <= (t->getPosition().x + 150)) {
+
+						if (t->getPosition().y == this->getPosition().y) {
+							this->spd.x -= 30 * dt;
+							torchFound = true;
+						}
+						else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 300) {
+							this->spd.x -= 30 * dt;
+							torchFound = true;
+							this->spd.y += 25 * dt;
+						}
+						else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 300) {
+							this->spd.x -= 30 * dt;
+							torchFound = true;
+							this->spd.y -= 25 * dt;
+						}
 					}
-					else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 300) {
-						face_right = false;
-						this->spd.x -= 30 * dt;
-						torchFound = true;
-						this->spd.y += 25 * dt;
+
+					//Turn Go Right
+					else if (t->getPosition().x >= this->getPosition().x && this->getPosition().x >= (t->getPosition().x - 150)) {
+
+						if (t->getPosition().y == this->getPosition().y) {
+							face_right = true;
+							this->spd.x += 30 * dt;
+							torchFound = true;
+						}
+						else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 250) {
+							face_right = true;
+							this->spd.x += 30 * dt;
+							torchFound = true;
+							this->spd.y += 25 * dt;
+						}
+						else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 250) {
+							face_right = true;
+							this->spd.x += 30 * dt;
+							torchFound = true;
+							this->spd.y -= 25 * dt;
+						}
 					}
-					else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 300) {
-						face_right = false;
-						this->spd.x -= 30 * dt;
-						torchFound = true;
-						this->spd.y -= 25 * dt;
+
+					else {
+						torchFound = false;
 					}
 				}
 
-				else {
-					torchFound = false;
+				//Right
+				else if (face_right && !attacking)
+				{
+					//attack right
+					//If there is attack code
+
+
+					if (t->getPosition().x + 100 >= this->getPosition().x && this->getPosition().x >= (t->getPosition().x - 150)) {
+
+						if (player->getPosition().y == this->getPosition().y) {
+							this->spd.x += 30 * dt;
+							torchFound = true;
+						}
+						else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 300) {
+							this->spd.x += 30 * dt;
+							torchFound = true;
+							this->spd.y += 25 * dt;
+						}
+						else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 300) {
+							this->spd.x += 30 * dt;
+							torchFound = true;
+							this->spd.y -= 25 * dt;
+						}
+					}
+
+					//Turn Go Left
+					else if (t->getPosition().x <= this->getPosition().x && this->getPosition().x <= (t->getPosition().x + 150)) {
+
+						if (t->getPosition().y == this->getPosition().y) {
+							face_right = false;
+							this->spd.x -= 30 * dt;
+							torchFound = true;
+						}
+						else if (t->getPosition().y > this->getPosition().y && t->getPosition().y < this->getPosition().y + 300) {
+							face_right = false;
+							this->spd.x -= 30 * dt;
+							torchFound = true;
+							this->spd.y += 25 * dt;
+						}
+						else if (t->getPosition().y < this->getPosition().y && t->getPosition().y > this->getPosition().y - 300) {
+							face_right = false;
+							this->spd.x -= 30 * dt;
+							torchFound = true;
+							this->spd.y -= 25 * dt;
+						}
+					}
+
+					else {
+						torchFound = false;
+					}
 				}
 			}
 		}
-	}
-	/*******************/
+		/*******************/
 
-	/*****************
-	* Idle Movement
-	*****************/
+		/*****************
+		* Idle Movement
+		*****************/
 
-	if (timer >= 0) {
-		timer -= dt;
-	}
-	if (timer <= 0 && (!attacking) && !torchFound)
-	{
-		std::random_device gen;
-		std::uniform_int_distribution<> range(1, 40);
-		turn = range(gen);
+		if (timer >= 0) {
+			timer -= dt;
+		}
+		if (timer <= 0 && (!attacking) && !torchFound)
+		{
+			std::random_device gen;
+			std::uniform_int_distribution<> range(1, 40);
+			turn = range(gen);
 
-		switch (turn) {
-		case 1:
+			switch (turn) {
+			case 1:
+				if (face_right) {
+					face_right = false;
+					timer = TURNT_TIME;
+				}
+				else {
+					face_right = true;
+					timer = TURNT_TIME;
+				}
+				break;
+			case 3:
+				go_up = true;
+				break;
+			case 5:
+				go_up = false;
+				break;
+			}
+		}
+
+		if (!attacking && !torchFound) {
 			if (face_right) {
-				face_right = false;
-				timer = TURNT_TIME;
+				this->spd.x += 60 * dt;
 			}
 			else {
-				face_right = true;
-				timer = TURNT_TIME;
+				this->spd.x -= 60 * dt;
 			}
-			break;
-		case 3:
-			go_up = true;
-			break;
-		case 5:
-			go_up = false;
-			break;
+			if (go_up) {
+				this->spd.y += 30 * dt;
+			}
+			else {
+				this->spd.y -= 30 * dt;
+			}
 		}
-	}
 
-	if (!attacking && !torchFound) {
 		if (face_right) {
-			this->spd.x += 60 * dt;
+			setFlipX(false);
 		}
 		else {
-			this->spd.x -= 60 * dt;
+			setFlipX(true);
 		}
-		if (go_up) {
-			this->spd.y += 30 * dt;
+		/*****************/
+		if (invinceTime > 0) {
+			invinceTime -= dt;
 		}
-		else {
-			this->spd.y -= 30 * dt;
-		}
+		/****************/
 	}
-
-	if (face_right) {
-		setFlipX(false);
-	}
-	else {
-		setFlipX(true);
-	}
-	/*****************/
-	if (invinceTime > 0) {
-		invinceTime -= dt;
-	}
-	/****************/
 }
 
 void Moth::Hurt(int dmg)
@@ -824,65 +829,69 @@ Rat * Rat::create(const std::string & filename, Entity * Platform)
 
 	void Rat::AI(Player * player, float dt)
 	{
-		/****************
-		* Idle Movement
-		****************/
 
-		
-		if (timer >= 0) {
-			timer -= dt;
-		}
-		if (timer <= 0 && (!attacking))
-		{
-			std::random_device gen;
-			std::uniform_int_distribution<> range(1, 40);
-			turn = range(gen);
+		if (!death) {
 
-			switch (turn) {
-			case 1:
-				if (face_right) {
-					face_right = false;
+			/****************
+			* Idle Movement
+			****************/
+
+
+			if (timer >= 0) {
+				timer -= dt;
+			}
+			if (timer <= 0 && (!attacking))
+			{
+				std::random_device gen;
+				std::uniform_int_distribution<> range(1, 40);
+				turn = range(gen);
+
+				switch (turn) {
+				case 1:
+					if (face_right) {
+						face_right = false;
+						timer = TURNT_TIME;
+					}
+					else {
+						face_right = true;
+						timer = TURNT_TIME;
+					}
+					break;
+				case 25:
 					timer = TURNT_TIME;
+					break;
 				}
-				else {
-					face_right = true;
-					timer = TURNT_TIME;
-				}
-				break;
-			case 25:
-				timer = TURNT_TIME;
-				break;
 			}
-		}
 
-		if (!attacking) {
-			if (face_right) {
-				this->spd.x += 6 * dt;
-			}
-			else {
-				this->spd.x -= 6 * dt;
-			}
-			if (turn == 25) {
+			if (!attacking) {
 				if (face_right) {
-					this->spd.x -= 6 * dt;
-				}
-				else {
 					this->spd.x += 6 * dt;
 				}
+				else {
+					this->spd.x -= 6 * dt;
+				}
+				if (turn == 25) {
+					if (face_right) {
+						this->spd.x -= 6 * dt;
+					}
+					else {
+						this->spd.x += 6 * dt;
+					}
+				}
 			}
-		}
 
-		if (this->getPositionX() >= pRight) {
-			spd.x = spd.x * (-1);
-			face_right = false;
-		}
-		else if (this->getPositionX() <= pLeft) {
-			spd.x = spd.x * (-1);
-			face_right = true;
-		}
-		/***************/
-		if (invinceTime > 0) {
-			invinceTime -= dt;
+			if (this->getPositionX() >= pRight) {
+				spd.x = spd.x * (-1);
+				face_right = false;
+			}
+			else if (this->getPositionX() <= pLeft) {
+				spd.x = spd.x * (-1);
+				face_right = true;
+			}
+			/***************/
+			if (invinceTime > 0) {
+				invinceTime -= dt;
+			}
 		}
 	}
 
@@ -1000,21 +1009,6 @@ Rat * Rat::create(const std::string & filename, Entity * Platform)
 		setPosition(getPosition() + spd);
 	}
 
-	//How to actually spawn a Rat:
-
-	//IMPORTANT: All ActualPlatforms need to be at the same #
-
-	//rat.pushBack(Rat::create("Rat Death Animation/Rat_Death_Animation1.png", ActualPlatforms.at(3)));
-	//rat.at(0)->setPosition(ActualPlatforms.at(3)->getPositionX(), ActualPlatforms.at(3)->getPositionY() + 32);
-	//
-	//for each (Rat* r in rat) {
-	//	if (r != nullptr) {
-	//
-	//		this->addChild(r);
-	//
-	//	}
-	//}
-
 	void BossKnight::AI(Player * player, float dt)
 	{
 		this->spd.x += 70 * dt;
@@ -1058,3 +1052,32 @@ Rat * Rat::create(const std::string & filename, Entity * Platform)
 		}
 
 	}
+
+	//How to actually spawn a Rat:
+
+	//IMPORTANT: All ActualPlatforms need to be at the same #
+
+	//rat.pushBack(Rat::create("Rat Death Animation/Rat_Death_Animation1.png", ActualPlatforms.at(3)));
+	//rat.at(0)->setPosition(ActualPlatforms.at(3)->getPositionX(), ActualPlatforms.at(3)->getPositionY() + 32);
+	//
+	//for each (Rat* r in rat) {
+	//	if (r != nullptr) {
+	//
+	//		this->addChild(r);
+	//
+	//	}
+	//}
+
+	//Moth Spawning
+
+	//moth.pushBack(Moth::create("MothBoi.png", &torches));
+	//moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(0)->getBoundingBox().size.height / 2)));
+	//moth.at(0)->setPosition(500, 300);
+	//
+	//for each (Moth* m in moth) {
+	//	if (m != nullptr) {
+	//
+	//		this->addChild(m);
+	//
+	//	}
+	//}

@@ -75,6 +75,8 @@ public:
 	cocos2d::Vector<Rat *> rat;
 	cocos2d::Vector<Interactable *> interactables;
 
+	bool boss = false;
+
 
 	struct {
 		bool key_up = false;

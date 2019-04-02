@@ -5,6 +5,7 @@
 
 class Knight : public Enemy {
 private:
+	bool death = false;
 	int knight_light;
 	bool light_on = false;
 	bool face_right = true;
@@ -26,6 +27,8 @@ private:
 public:
 	static Knight * create(const std::string& filename);
 
+	bool getDeath() { return death; }
+	void setDeath(bool die) { death = die; }
 	void moveLightToKnight();
 	static const int ENEMY_SPEED = 10;
 	bool onGround();
@@ -44,6 +47,7 @@ public:
 
 class Moth : public Enemy {
 private:
+	bool death = false;
 	bool face_right = true;
 	bool go_up = true;
 	bool attacking = false;
@@ -59,6 +63,8 @@ private:
 public:
 	static Moth * create(const std::string& filename, cocos2d::Vector<Torch *> * t);
 
+	bool getDeath() { return death; }
+	void setDeath(bool die) { death = die; }
 	void setSpd(cocos2d::Vec2 m_spd);
 	cocos2d::Vec2 getSpd();
 
@@ -79,6 +85,7 @@ public:
 
 class Rat : public Enemy {
 private:
+	bool death = false;
 	bool face_right = false;
 	bool attacking = false;
 	bool delay = false;
@@ -94,6 +101,9 @@ private:
 	float pRight;
 public:
 	static Rat * create(const std::string& filename, Entity * Platform);
+
+	bool getDeath() { return death; }
+	void setDeath(bool die) { death = die; }
 
 	// Inherited via Enemy
 	void AI(Player* player, float dt);

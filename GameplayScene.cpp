@@ -659,7 +659,7 @@ void GameplayScene::update(float dt) {
 
 	// Move Camera
 	if (!cutScene) {
-		//if (!cutSceneC) {
+		if (!boss) {
 			if (player->getPositionX() >= (Director::getInstance()->getVisibleSize().width / 2) && player->getPositionX() <= STAGE_WIDTH - (Director::getInstance()->getVisibleSize().width / 2)) {
 				view->setPositionX(player->getPositionX());
 			}
@@ -667,7 +667,7 @@ void GameplayScene::update(float dt) {
 			if (player->getPositionY() >= (Director::getInstance()->getVisibleSize().height / 3) && player->getPositionY() <= STAGE_HEIGHT - (Director::getInstance()->getVisibleSize().height * 2 / 3)) {
 				view->setPositionY(player->getPositionY() + (Director::getInstance()->getVisibleSize().height / 6));
 			}
-		//}
+		}
 	}
 }
 
@@ -1741,6 +1741,10 @@ void A1_R6::update(float dt)
 		GAMEPLAY_INPUT.key_crouch = false;
 		GAMEPLAY_INPUT.key_crouch_p = false;
 	}
+	else if (player->getPosition().x <= 800 && cutSceneC) {
+		cutScene = false;
+		cutSceneC = false;
+	}
 
 	if (view->getPositionX() <= 1000 && cutScene) {
 		view->setPositionX(view->getPositionX() + 75 * dt);
@@ -1908,18 +1912,6 @@ bool A2_R1::init()
 			}
 			else {
 				return false;
-			}
-		}
-
-		moth.pushBack(Moth::create("MothBoi.png", &torches));
-		moth.at(0)->setPosition(cocos2d::Vec2(850, 200 + (moth.at(0)->getBoundingBox().size.height / 2)));
-		moth.at(0)->setPosition(500, 300);
-
-		for each (Moth* m in moth) {
-			if (m != nullptr) {
-
-				this->addChild(m);
-
 			}
 		}
 
