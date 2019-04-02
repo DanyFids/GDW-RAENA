@@ -114,7 +114,6 @@ bool Knight::onGround() {
 
 void Knight::AI(Player* player, float dt) {
 
-	if (!death) {
 
 		/****************
 		* All Movement
@@ -262,56 +261,13 @@ void Knight::AI(Player* player, float dt) {
 				}
 			}
 			/***************/
-		}
-		else {
-			swing -= dt;
-			if (swing <= 0) {
-				swing = CHOP_TIME;
-				swipe = false;
-			}
-
-			if (hitTimer <= 0) {
-				Hit(player);
-				hitTimer = HIT_TIME;
-				delay = true;
-			}
-			else {
-				hitTimer -= dt;
-			}
-
-		}
+	
 		/***************/
 
 		if (invinceTime > 0) {
 			invinceTime -= dt;
-		}
+		}	
 	}
-	else {
-		if (!dieDone && death_time > 0) {
-			//Add dying anim
-			death_time -= dt;
-		}
-		else if (!dieDone && death_time <= 0) {
-			dieDone = true;
-			revive_time = REVIVE_TIME;
-			//Add reviving anim
-			this->ChangeAnimation(3);
-		}
-
-		if (revive_time > 0) {
-			revive_time -= dt;
-		}
-		else {
-			dieDone = false;
-			death = false;
-			death_time = DEATH_TIME;
-			//Return normal anims
-			hp = 5;
-			this->ChangeAnimation(0);
-		}
-		
-	}
-
 }
 
 
@@ -352,7 +308,6 @@ void Knight::Hit(Player * other) {
 
 bool Knight::HitDetect(Entity * other)
 {
-	if (!death) {
 		float o_head = other->getPositionY() + (other->getBoundingBox().size.height / 2);
 		float o_foot = other->getPositionY() - (other->getBoundingBox().size.height / 2);
 		float o_left = other->getPositionX() - (other->getBoundingBox().size.width / 2);
@@ -394,7 +349,6 @@ bool Knight::HitDetect(Entity * other)
 					other->spd.x = 3;
 				}
 				return true;
-			}
 		}
 	}
 
