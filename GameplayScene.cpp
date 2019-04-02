@@ -1978,6 +1978,21 @@ bool A2_R2::init()
 		//Parallax & Background //////////////////////////////////////////////////////////////////////////////
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
+
+		EffectSprite * tileSet = EffectSprite::create("Levels/A2_R2.png");
+		tileSet->setScale(1.35);
+		tileSet->setPositionY(tileSet->getPositionY() - 90);
+		tileSet->setAnchorPoint(Vec2(0, 0));
+
+		EffectSprite * tileSet2 = EffectSprite::create("Levels/Full Wall.png");
+		tileSet2->setScale(1.35);
+		tileSet2->setPositionY(tileSet2->getPositionY());
+		tileSet2->setAnchorPoint(Vec2(0, 0));
+
+		this->addChild(tileSet2, 1);
+		
+		this->addChild(tileSet, 2);
+
 		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
 
 		_bgColor->setScale(1);
@@ -2011,6 +2026,8 @@ bool A2_R2::init()
 		player->setEffect(_effect, "layerNorm.png");
 		_bgColor->setEffect(_effect, "layerNorm.png");
 		_bgColor2->setEffect(_effect, "layerNorm.png");
+		tileSet->setEffect(_effect, "layerNorm.png");
+		tileSet2->setEffect(_effect, "layerNorm.png");
 
 		auto visibleSize = Director::getInstance()->getVisibleSize();
 		//Center of screen ///////////////////////////////////////////////////////////////////////
@@ -2055,7 +2072,7 @@ bool A2_R2::init()
 
 		for each (Ladder* lad in ladders) {
 			if (lad != nullptr) {
-				this->addChild(lad);
+				this->addChild(lad, 7);
 			}
 			else {
 				return false;
@@ -2064,12 +2081,13 @@ bool A2_R2::init()
 
 		//Interactables /////////////////////////////////////////////////////////////////////////////////////////
 		//interactables.pushBack(LoadZone::create(1500, 650, 500, 300, A2_R2, Vec2(50, 205)));
-		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(400, 100), Vec2(400, 140), A2_R3));	//SceneDoor
-		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1270, 100), Vec2(400, 140), A2_R4));
+		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(220, 100), Vec2(400, 140), A2_R3));	//SceneDoor
+		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1425, 100), Vec2(400, 140), A2_R4));
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
-				this->addChild(inter);
+				inter->setEffect(_effect, "layerNorm.png");
+				this->addChild(inter, 7);
 			}
 			else {
 				return false;
@@ -2092,15 +2110,15 @@ bool A2_R2::init()
 		}
 
 		//Set Torches;
-		torches.pushBack(Torch::create(cocos2d::Vec2(180, 150), _effect));
+		torches.pushBack(Torch::create(cocos2d::Vec2(200, 150), _effect));
 		torches.pushBack(Torch::create(cocos2d::Vec2(650, 150), _effect));
-		torches.pushBack(Torch::create(cocos2d::Vec2(950, 150), _effect));
-		torches.pushBack(Torch::create(cocos2d::Vec2(1454, 150), _effect));
+		torches.pushBack(Torch::create(cocos2d::Vec2(1050, 150), _effect));
+		torches.pushBack(Torch::create(cocos2d::Vec2(1490, 150), _effect));
 
 		for each (Torch* t in torches)
 		{
 			if (t != nullptr) {
-				addChild(t, 2);
+				addChild(t, 8);
 			}
 			else {
 				return false;
@@ -2289,6 +2307,12 @@ bool A2_R4::init()
 	if (GameplayScene::init()) {
 
 		//Parallax & Background //////////////////////////////////////////////////////////////////////////////
+
+		EffectSprite * tileSet = EffectSprite::create("Levels/A2_R4.png");
+		tileSet->setScale(1.4);
+		tileSet->setPositionY(tileSet->getPositionY() - 25);
+		tileSet->setAnchorPoint(Vec2(0, 0));
+
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
 		EffectSprite *_bgColor = EffectSprite::create("BGP1.png");
@@ -2324,6 +2348,9 @@ bool A2_R4::init()
 		player->setEffect(_effect, "layerNorm.png");
 		_bgColor->setEffect(_effect, "layerNorm.png");
 		_bgColor2->setEffect(_effect, "layerNorm.png");
+		tileSet->setEffect(_effect, "layerNorm.png");
+
+		this->addChild(tileSet, 2);
 
 		auto visibleSize = Director::getInstance()->getVisibleSize();
 		//Center of screen ///////////////////////////////////////////////////////////////////////
@@ -2366,7 +2393,7 @@ bool A2_R4::init()
 
 		for each (Ladder* lad in ladders) {
 			if (lad != nullptr) {
-				this->addChild(lad);
+				this->addChild(lad, 7);
 			}
 			else {
 				return false;
@@ -2379,7 +2406,8 @@ bool A2_R4::init()
 		
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
-				this->addChild(inter);
+				inter->setEffect(_effect, "layerNorm.png");
+				this->addChild(inter, 7);
 			}
 			else {
 				return false;
@@ -2395,7 +2423,7 @@ bool A2_R4::init()
 				/*p->setScale(SCALE);
 				p->getTexture()->setTexParameters(tp);*/
 				p->setEffect(_effect, "layerNorm.png");
-				this->addChild(p);
+				this->addChild(p, 7);
 			}
 			else
 				return false;
@@ -2403,13 +2431,13 @@ bool A2_R4::init()
 
 		//Set Torches;
 		//torches.pushBack(Torch::create(cocos2d::Vec2(200, 230), _effect));
-		//torches.pushBack(Torch::create(cocos2d::Vec2(350, 400), _effect));
-		//torches.pushBack(Torch::create(cocos2d::Vec2(600, 310), _effect));
+		torches.pushBack(Torch::create(cocos2d::Vec2(375, 150), _effect));
+		torches.pushBack(Torch::create(cocos2d::Vec2(650, 150), _effect));
 
 		for each (Torch* t in torches)
 		{
 			if (t != nullptr) {
-				addChild(t, 2);
+				addChild(t, 3);
 			}
 			else {
 				return false;
@@ -2420,7 +2448,8 @@ bool A2_R4::init()
 
 		for each (Pushable* push in Pushables) {
 			if (push != nullptr) {
-				this->addChild(push);
+				push->setEffect(_effect, "layerNorm.png");
+				this->addChild(push, 7);
 			}
 			else
 				return false;
