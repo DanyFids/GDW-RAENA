@@ -12,8 +12,6 @@ private:
 	std::vector<std::string> Text;
 	int CurrPage;
 
-	
-
 	cocos2d::Scene* scene;
 
 public:

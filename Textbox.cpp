@@ -7,18 +7,40 @@ Textbox * Textbox::create(int P, std::vector<int> C, std::vector<std::string> T,
 {
 	auto ret = new (std::nothrow) Textbox;
 
-	ret->Pages = P;
-	ret->Character = C;
-	ret->Text = T;
-	ret->scene = scn;
-	ret->CurrPage = 0;
+	if (ret->initWithFile("TextBox.png")) {
+		ret->Pages = P;
+		ret->Character = C;
+		ret->Text = T;
+		ret->scene = scn;
+		((GameplayScene*)ret->scene)->inDialogue = true;
+		ret->CurrPage = 0;
 
-	return ret;
+		ret->setAnchorPoint(cocos2d::Vec2(0, 0));
+		ret->setPosition(cocos2d::Vec2(scn->getDefaultCamera()->getPositionX() - 250, 20));
+
+		auto TheText = cocos2d::Label::createWithSystemFont(ret->Text[ret->CurrPage], "Arial", 24);
+		TheText->enableShadow();
+		TheText->setAnchorPoint(cocos2d::Vec2(0, 0));
+		TheText->setPosition(cocos2d::Vec2(50, 100));
+		ret->Yeet = TheText;
+		ret->addChild(TheText);
+
+		return ret;
+	}
+
+	CC_SAFE_RELEASE(ret);
+	return nullptr;
 }
 
 void Textbox::Flippage()
 {
-	this->CurrPage++;	
+	this->CurrPage++;
+	if (CurrPage < Pages) {
+		Yeet->setString(Text[CurrPage]);
+	}
+	else {
+		Close();
+	}
 }
 
 void Textbox::Load()
@@ -37,7 +59,7 @@ void Textbox::Load()
 	{
 		this->Box->setOpacity(255);
 	}
-	
+
 	auto TheText = cocos2d::Label::createWithSystemFont(Text[CurrPage], "Arial", 24);
 	TheText->enableShadow();
 	TheText->setAnchorPoint(cocos2d::Vec2(0, 0));
@@ -49,8 +71,8 @@ void Textbox::Load()
 
 void Textbox::Close(/*cocos2d::Sprite del1, cocos2d::Label del2*/)
 {
-	scene->removeChild(this->Yeet);
-	scene->removeChild(this->Box);
+	scene->removeChild(this);
+	((GameplayScene*)scene)->inDialogue = false;
 	//this->Box->setOpacity(0);
 }
 

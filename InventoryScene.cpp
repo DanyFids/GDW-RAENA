@@ -70,6 +70,12 @@ void InventoryScene::useItem(std::string usename)
 			play->setKnight(newKnight);
 			play->addChild(play->knight);
 			dropItem((*inventory)[pointer].itemId);
+
+			Block * blk = Block::create(0, 0, 598, 650);
+
+			play->addTerrain(blk); //wall
+			play->addChild(blk);
+
 			Director::getInstance()->popScene();
 		}
 		InteractType type =(puzzles.at(i))->getType();
