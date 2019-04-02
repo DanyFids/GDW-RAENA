@@ -49,8 +49,8 @@ bool LightEffect::init()
     if (initGLProgramState("spot_light.frag"))
     {
         setLightColor(cocos2d::Color3B::WHITE);
-        setAmbientLightColor(cocos2d::Color3B(127,127,127));
-        setLightCutoffRadius(500.0f);
+        setAmbientLightColor(cocos2d::Color3B(110,110,110));
+        setLightCutoffRadius(770.0f);
         setLightHalfRadius(0.5f);
 
 		layer_normalmap = cocos2d::Director::getInstance()->getTextureCache()->addImage("layerNorm.png");

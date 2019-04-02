@@ -27,13 +27,11 @@ class Prompt;
 
 class GameplayScene : public cocos2d::Scene {
 protected:
-	Textbox* ActiveTextbox;
 	Prompt* ActivePrompt;
 	bool promptInit = false;
 	bool overlap = false;
 
-
-	player_inventory * currInv;
+	
 
 	cocos2d::ParallaxNode * PNode;
 	cocos2d::Camera * view;
@@ -51,6 +49,7 @@ protected:
 	CocosDenshion::SimpleAudioEngine* TheAudioD;
 	CocosDenshion::SimpleAudioEngine* TheAudioB;
 	CocosDenshion::SimpleAudioEngine* TheAudioT;
+	CocosDenshion::SimpleAudioEngine* TheAudioSFX;
 
 	cocos2d::Vector<Entity *> terrain;
 	cocos2d::Vector<Ladder *> ladders;
@@ -62,19 +61,24 @@ protected:
 	bool audioinitD = false;
 	bool audioinitB = false;
 	bool audioinitT = false;
+	bool audioinitSFX = false;
 
 
 	int STAGE_WIDTH = 1000;
 	int STAGE_HEIGHT = 600;
 public:
+	player_inventory * currInv;
+
 	Player * player;
 	Knight * knight = nullptr;
-	BossKnight * bossKnight = nullptr;
-
+	BossKnight * bossKnight;
+	
 	cocos2d::Vector<Moth *> moth;
 	cocos2d::Vector<Rat *> rat;
 	cocos2d::Vector<Interactable *> interactables;
 
+	Textbox* ActiveTextbox;
+	bool inDialogue = false;
 	bool boss = false;
 
 
@@ -90,7 +94,9 @@ public:
 		bool key_crouch = false;
 		bool key_crouch_p = false;
 		bool key_interact = false;
+		bool key_interact_p = false;
 		bool key_inv = false;
+		bool key_inv_p = false;
 
 
 		bool key_one = false;
@@ -153,7 +159,10 @@ public:
 	void addTerrain(Block* howCouldDylanNotKnowHowToDoThis) {
 		terrain.pushBack(howCouldDylanNotKnowHowToDoThis);
 	}
-	
+
+	cocos2d::Camera * getView() {
+		return view;
+	};
 
 	std::vector<inventoryItem>* getInvRef() {
 		return &(currInv->items);
@@ -162,6 +171,8 @@ public:
 	void SetInventory(player_inventory* inv) {
 		currInv = inv;
 	};
+
+	virtual void GameOver();
 
 	CREATE_FUNC(GameplayScene);
 };
@@ -244,4 +255,25 @@ public:
 	virtual bool init() override;
 	void A2_R5::update(float dt);
 	CREATE_FUNC(A2_R5);
+};
+
+class A2_AT1 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void A2_AT1::update(float dt);
+	CREATE_FUNC(A2_AT1);
+};
+
+class BOSS_R1 : public GameplayScene {
+public:
+	virtual bool init() override;
+	void BOSS_R1::update(float dt);
+	CREATE_FUNC(BOSS_R1);
+};
+
+class END : public GameplayScene {
+public:
+	virtual bool init() override;
+	void END::update(float dt);
+	CREATE_FUNC(END);
 };

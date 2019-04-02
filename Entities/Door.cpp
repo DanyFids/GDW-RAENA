@@ -48,6 +48,8 @@ Door * Door::create(std::string filename, cocos2d::Vec2 p, KeyType key)
 		ret->CD = 0.5f;
 		ret->temp_CD = 0.5f;
 
+		ret->setScale(2.0f);
+
 		ret->setAnchorPoint(cocos2d::Vec2(0, 0));
 		ret->setPosition(p);
 
@@ -226,7 +228,7 @@ SceneDoor * SceneDoor::create(std::string filename, cocos2d::Vec2 p, cocos2d::Ve
 		ret->requiredKey = key;
 		ret->goTo = lvl;
 		ret->movePlayer = pPos;
-		ret->setScale(1.5);
+		ret->setScale(1.7);
 		//ret->goTo = scn;
 
 		if (key != NONE) { ret->locked = true; } // If this door requires a key it starts as locked.
@@ -279,7 +281,7 @@ void SceneDoor::Effect(Entity * player, player_inventory * p_inv)
 
 }
 
-
+//////////////whats up gamer nation
 // LOAD ZONE
 
 LoadZone * LoadZone::create(int x, int y, int w, int h, levelEnum dest,cocos2d::Vec2 pPos)

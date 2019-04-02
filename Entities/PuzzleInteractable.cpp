@@ -1,5 +1,6 @@
 #include "PuzzleInteractable.h"
 #include "GameplayScene.h"
+#include"Textbox.h"
 
 PuzzleInteract * PuzzleInteract::create(std::string filename, cocos2d::Vec2 p, PuzzleType puz, itemEnum item)
 {
@@ -67,19 +68,21 @@ bool PuzzleInteract::inRange(Entity * other)
 void PuzzleInteract::Effect(Entity * player, player_inventory * p_inv,GameplayScene* scn)
 {
 	if (puzzle == Princess1 && this->getCooldown() == false) {
-		scn->clearKeys();
-		cocos2d::Director::getInstance()->pushScene(InventoryScene::createScene(scn));
-		Knight * knight = Knight::create("knightwalkyboi0000.png");
-		knight->setScale(1);
-		knight->setPosition(cocos2d::Vec2(850, 250 + (knight->getBoundingBox().size.height / 2)));
-		scn->boss = true;
-
-		Block * blk = Block::create(0, 0, 598, 650);
-
-		scn->addTerrain(blk); //wall
-		scn->addChild(blk);
-		scn->addChild(knight);
-		scn->setKnight(knight);
+		scn->ActiveTextbox = Textbox::create(2, { 0, 0 }, {"A Princess picks flowers\nin the field.", "She seems dissapointed..."},scn);
+		scn->addChild(scn->ActiveTextbox, 12);
+		//scn->clearKeys();
+		//cocos2d::Director::getInstance()->pushScene(InventoryScene::createScene(scn));
+		//
+		//Knight * knight = Knight::create("knightwalkyboi0000.png");
+		//knight->setScale(1);
+		//knight->setPosition(cocos2d::Vec2(850, 200 + (knight->getBoundingBox().size.height / 2)));
+		//
+		//Block * blk = Block::create(0, 0, 598, 650);
+		//
+		//scn->addTerrain(blk); //wall
+		//scn->addChild(blk);
+		//scn->addChild(knight);
+		//scn->setKnight(knight);
 	}
 }
 

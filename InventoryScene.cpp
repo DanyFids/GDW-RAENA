@@ -66,14 +66,21 @@ void InventoryScene::useItem(std::string usename)
 		if (usename == "Rose" && ((PuzzleInteract*)puzzles.at(i))->checkPuzzle(Princess1) && ((Interactable*)puzzles.at(i))->inRange(player) ) {
 			Knight * newKnight = Knight::create("knightwalkyboi0000.png");
 			newKnight->setScale(1);
-			newKnight->setPosition(cocos2d::Vec2(850, 200 + (newKnight->getBoundingBox().size.height / 2)));
+			newKnight->setPosition(cocos2d::Vec2(850, 250 + (newKnight->getBoundingBox().size.height / 2)));
 			play->setKnight(newKnight);
 			play->addChild(play->knight);
 			dropItem((*inventory)[pointer].itemId);
+
+			Block * blk = Block::create(0, 0, 598, 650);
+
+			play->addTerrain(blk); //wall
+			play->addChild(blk);
+
 			Director::getInstance()->popScene();
 		}
 		InteractType type =(puzzles.at(i))->getType();
 		if (usename == "Key" && type == DOOR && ((Interactable*)puzzles.at(i))->inRange(player)) {
+			Door* d =(Door*) puzzles.at(i);
 			if (d->locked) {	 // Checks to see A. Door is locked ... B. Player has enough of Key ... C. removes a key and unlocks door
 
 				if (d->requiredKey == GEN_KEY) {
@@ -239,9 +246,10 @@ bool InventoryScene::init()
 
 
 
-	auto use = cocos2d::ui::Button::create("Use.png", "CloseSelected.png");
+	auto use = cocos2d::ui::Button::create("UI/Use.png", "UI/UseClicked.png");
 
 	use->setTitleText("");
+	use->setScale(2);
 
 	use->addTouchEventListener([this](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
 		switch (type)
@@ -249,7 +257,11 @@ bool InventoryScene::init()
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			useItem((*inventory)[pointer].itemName);
+			if (this->inventory->size() > 0)
+			{
+				this->useItem((*inventory)[pointer].itemName);
+			}
+			
 			break;
 		default:
 			break;
@@ -310,9 +322,10 @@ bool InventoryScene::init()
 
 	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(KeyHandle, this);
 
-	auto examine = cocos2d::ui::Button::create("Examine.png", "CloseSelected.png");
+	auto examine = cocos2d::ui::Button::create("UI/Examine.png", "UI/ExamineClicked.png");
 
 	examine->setTitleText("");
+	examine->setScale(2);
 	examine->addTouchEventListener([this](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
 		if (lastLabel != nullptr)
 		{
@@ -326,9 +339,11 @@ bool InventoryScene::init()
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-
+			if(inventory->size()>0)
+			{
 			description->setPosition(400, 200);
 			addChild(description, 2);
+			}
 			break;
 		default:
 			break;
@@ -337,52 +352,55 @@ bool InventoryScene::init()
 
 	
 
-	auto combine = cocos2d::ui::Button::create("Combine.png", "CloseSelected.png");
+	auto combine = cocos2d::ui::Button::create("UI/Combine.png", "UI/CombineClicked.png");
 
 	combine->setTitleText("");
-
+	combine->setScale(2);
 	combine->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			if (combine1 == 0) {
-				combine1 = pointer;
-				combinewith = Label::createWithTTF("What would you like to combine the "+ (*inventory)[combine1].itemName+" with?", "fonts/fofbb_reg.ttf", 16);
-				combinewith->setPosition(400, 200);
-				addChild(combinewith, 2);
-			}
-			else {
-				if(!(pointer == combine1)){
-					combine2 = pointer;
-					removeChild(combinewith);
+			if (p_inv->items.size() > 0)
+			{
+				if (combine1 == 0) {
+					combine1 = pointer;
+					combinewith = Label::createWithTTF("What would you like to combine the " + (*inventory)[combine1].itemName + " with?", "fonts/fofbb_reg.ttf", 16);
+					combinewith->setPosition(400, 200);
+					addChild(combinewith, 2);
+				}
+				else {
+					if (!(pointer == combine1)) {
+						combine2 = pointer;
+						removeChild(combinewith);
 
-					int yolo = (*inventory)[combine1].Val + (*inventory)[combine2].Val;
+						int yolo = (*inventory)[combine1].Val + (*inventory)[combine2].Val;
 
-					if (combine1 < combine2) {
-						int temp = combine1;
-						combine1 = combine2;
-						combine2 = temp;
+						if (combine1 < combine2) {
+							int temp = combine1;
+							combine1 = combine2;
+							combine2 = temp;
 
-					}
+						}
 
-					itemEnum newItem;
-					try {
-						newItem = (itemEnum)yolo;
-					}
-					catch(exception e){
-						newItem = I_NONE;
-					}
+						itemEnum newItem;
+						try {
+							newItem = (itemEnum)yolo;
+						}
+						catch (exception e) {
+							newItem = I_NONE;
+						}
 
-					if (newItem != I_NONE)
-					{
-						dropItem(combine1);
-						dropItem(combine2);
-						pickUpItem(inventory->size() - 1, "newItem", "CloseSelected.png", "This is the new item", newItem);
-						combine1 = 0;
-						combine2 = 0;
-						pointer = inventory->size() - 1;
+						if (newItem != I_NONE)
+						{
+							dropItem(combine1);
+							dropItem(combine2);
+							pickUpItem(inventory->size() - 1, "newItem", "CloseSelected.png", "This is the new item", newItem);
+							combine1 = 0;
+							combine2 = 0;
+							pointer = inventory->size() - 1;
+						}
 					}
 				}
 			}
@@ -396,7 +414,7 @@ bool InventoryScene::init()
 
 
 
-	auto left = cocos2d::ui::Button::create("Left.png", "CloseSelected.png");
+	auto left = cocos2d::ui::Button::create("UI/Left_Arrow.png", "UI/Left_Arrow.png");
 
 	left->setTitleText("");
 
@@ -421,7 +439,7 @@ bool InventoryScene::init()
 
 
 
-	auto right = cocos2d::ui::Button::create("Right.png", "CloseSelected.png");
+	auto right = cocos2d::ui::Button::create("UI/Right_Arrow.png", "UI/Right_Arrow.png");
 
 	right->setTitleText("");
 
@@ -594,7 +612,9 @@ bool InventoryScene::init()
 	this->addChild(inv7, 1);
 	this->addChild(inv8, 1);
 
-
+	auto Updatepad = new (std::nothrow) Gamepad;
+	Updatepad->CheckConnection();
+	TheGamepad = Updatepad;
 
 	this->scheduleUpdate();
 	return true;
@@ -602,12 +622,133 @@ bool InventoryScene::init()
 
 void InventoryScene::update(float dt)
 {
+	TheGamepad->Refresh();
+	
 	timer -= dt;
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_START) && enter_released  && TheGamepad->CheckConnection())
+	{
+		Director::getInstance()->popScene();
+		enter_released = false;
+	}
+	else if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_START))
+	{
+		enter_released = true;
+	}
+	/*if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT) && left)
+	{
+		pointer += 1;
+		removeChild(description);
+		if (pointer == currInvNum)
+		{
+			pointer = 0;
+		}
+		left = false;
+	}
+	else if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT))
+	{
+		left = true;
+	}
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT) && right)
+	{
+		Director::getInstance()->popScene();
+		right = false;
+	}
+	else if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT))
+	{
+		right = true;
+	}*/
+
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_B) && B && TheGamepad->CheckConnection())
+	{
+		if (p_inv->items.size() > 0)
+		{
+			if (combine1 == 0) {
+				combine1 = pointer;
+				combinewith = Label::createWithTTF("What would you like to combine the " + (*inventory)[combine1].itemName + " with?", "fonts/fofbb_reg.ttf", 16);
+				combinewith->setPosition(400, 200);
+				addChild(combinewith, 2);
+			}
+			else {
+				if (!(pointer == combine1)) {
+					combine2 = pointer;
+					removeChild(combinewith);
+
+					int yolo = (*inventory)[combine1].Val + (*inventory)[combine2].Val;
+
+					if (combine1 < combine2) {
+						int temp = combine1;
+						combine1 = combine2;
+						combine2 = temp;
+
+					}
+
+					itemEnum newItem;
+					try {
+						newItem = (itemEnum)yolo;
+					}
+					catch (exception e) {
+						newItem = I_NONE;
+					}
+
+					if (newItem != I_NONE)
+					{
+						dropItem(combine1);
+						dropItem(combine2);
+						pickUpItem(inventory->size() - 1, "newItem", "CloseSelected.png", "This is the new item", newItem);
+						combine1 = 0;
+						combine2 = 0;
+						pointer = inventory->size() - 1;
+					}
+				}
+			}
+		}
+		B = false;
+	}
+	else if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_A))
+	{
+		B = true;
+	}
+
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_A) && A && TheGamepad->CheckConnection())
+	{
+		if (this->inventory->size() > 0)
+		{
+			this->useItem((*inventory)[pointer].itemName);
+		}
+		A = false;
+	}
+	else if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_A))
+	{
+		A = true;
+	}
+	if (TheGamepad->IsPressed(XINPUT_GAMEPAD_X) && X && TheGamepad->CheckConnection())
+	{
+		if (lastLabel != nullptr)
+		{
+			removeChild(lastLabel);
+		}
+		description = Label::createWithTTF((*inventory)[pointer].itemDescription, "fonts/fofbb_reg.ttf", 16);
+		lastLabel = description;
+
+		if (inventory->size()>0)
+		{
+			description->setPosition(400, 200);
+			addChild(description, 2);
+		}
+		X = false;
+	}
+	else if (!TheGamepad->IsPressed(XINPUT_GAMEPAD_X))
+	{
+		X = true;
+	}
+	
+	
+
 	if (currInvNum != 0) {
 		if (timer == 0)
 		{
 			timer = 10;
-			if (INPUT.left)
+			if (INPUT.left || (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_LEFT) && TheGamepad->CheckConnection()))
 			{
 				removeChild(description);
 				pointer += 1;
@@ -616,7 +757,7 @@ void InventoryScene::update(float dt)
 					pointer = 0;
 				}
 			}
-			else if (INPUT.right)
+			else if (INPUT.right || (TheGamepad->IsPressed(XINPUT_GAMEPAD_DPAD_RIGHT) && TheGamepad->CheckConnection()))
 			{	
 				removeChild(description);
 				pointer -= 1;

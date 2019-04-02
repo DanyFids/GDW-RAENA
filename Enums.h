@@ -34,6 +34,9 @@ enum levelEnum {
 	A2_R3,
 	A2_R4,
 	A2_R5,
+	ATRIUM,
+	BOSS_R1,
+	END,
 	nil
 };
 
