@@ -2152,6 +2152,10 @@ bool A2_R3::init()
 
 	if (GameplayScene::init()) {
 
+
+		EffectSprite * tileSet = EffectSprite::create("Levels/A2_R3.png");
+		tileSet->setAnchorPoint(Vec2(0, 0));
+
 		//Parallax & Background //////////////////////////////////////////////////////////////////////////////
 		auto paraNode = ParallaxNode::create();
 		PNode = paraNode;
@@ -2188,6 +2192,8 @@ bool A2_R3::init()
 		player->setEffect(_effect, "layerNorm.png");
 		_bgColor->setEffect(_effect, "layerNorm.png");
 		_bgColor2->setEffect(_effect, "layerNorm.png");
+		tileSet->setEffect(_effect, "layerNorm.png");
+		this->addChild(tileSet, 2);
 
 		auto visibleSize = Director::getInstance()->getVisibleSize();
 		//Center of screen ///////////////////////////////////////////////////////////////////////
@@ -2245,7 +2251,8 @@ bool A2_R3::init()
 
 		for each (Interactable* inter in interactables) {
 			if (inter != nullptr) {
-				this->addChild(inter);
+				inter->setEffect(_effect, "layerNorm.png");
+				this->addChild(inter, 7);
 			}
 			else {
 				return false;
@@ -2261,7 +2268,7 @@ bool A2_R3::init()
 				/*p->setScale(SCALE);
 				p->getTexture()->setTexParameters(tp);*/
 				p->setEffect(_effect, "layerNorm.png");
-				this->addChild(p);
+				this->addChild(p, 7);
 			}
 			else
 				return false;

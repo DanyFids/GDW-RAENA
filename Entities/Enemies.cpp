@@ -1151,8 +1151,8 @@ Rat * Rat::create(const std::string & filename, Entity * Platform)
 
 	//IMPORTANT: All ActualPlatforms need to be at the same #
 
-	//rat.pushBack(Rat::create("Rat Death Animation/Rat_Death_Animation1.png", ActualPlatforms.at(3)));
-	//rat.at(0)->setPosition(ActualPlatforms.at(3)->getPositionX(), ActualPlatforms.at(3)->getPositionY() + 32);
+	//rat.pushBack(Rat::create("Rat Death Animation/Rat_Death_Animation1.png", ActualPlatforms.at(#)));
+	//rat.at(0)->setPosition(ActualPlatforms.at(#)->getPositionX(), ActualPlatforms.at(#)->getPositionY() + 32);
 	//
 	//for each (Rat* r in rat) {
 	//	if (r != nullptr) {
