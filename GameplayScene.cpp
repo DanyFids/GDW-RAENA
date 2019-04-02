@@ -2872,11 +2872,11 @@ bool A2_AT1::init()
 			}
 		}
 
-		rat.pushBack(Rat::create("Rat Death Animation/Rat_Death_Animation1.png", ActualPlatforms.at(2)));
-		rat.at(0)->setPosition(ActualPlatforms.at(2)->getPositionX(), ActualPlatforms.at(2)->getPositionY() + 32);
-
-		rat.pushBack(Rat::create("Rat Death Animation/Rat_Death_Animation1.png", ActualPlatforms.at(6)));
-		rat.at(0)->setPosition(ActualPlatforms.at(6)->getPositionX(), ActualPlatforms.at(6)->getPositionY() + 32);
+		//rat.pushBack(Rat::create("Rat Death Animation/Rat_Death_Animation1.png", ActualPlatforms.at(2)));
+		//rat.at(0)->setPosition(ActualPlatforms.at(2)->getPositionX(), ActualPlatforms.at(2)->getPositionY() + 32);
+		//
+		//rat.pushBack(Rat::create("Rat Death Animation/Rat_Death_Animation1.png", ActualPlatforms.at(6)));
+		//rat.at(0)->setPosition(ActualPlatforms.at(6)->getPositionX(), ActualPlatforms.at(6)->getPositionY() + 32);
 		
 		for each (Rat* r in rat) {
 			if (r != nullptr) {
