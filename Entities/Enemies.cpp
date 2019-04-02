@@ -243,7 +243,7 @@ void Knight::AI(Player* player, float dt) {
 			death = false;
 			death_time = DEATH_TIME;
 			//Return normal anims
-
+			hp = 5;
 		}
 		
 	}
