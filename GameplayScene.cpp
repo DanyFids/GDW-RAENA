@@ -2209,7 +2209,7 @@ bool A2_R2::init()
 		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(220, 100), Vec2(400, 140), A2_R3));	//SceneDoor
 		interactables.pushBack(SceneDoor::create("closed_door.png", Vec2(1425, 100), Vec2(400, 140), A2_R4));
 
-		interactables.pushBack(Door::create("closed_door_side.png", Vec2(1500, 100), GEN_KEY));
+		//interactables.pushBack(Door::create("closed_door_side.png", Vec2(1500, 100), GEN_KEY));
 
 		interactables.pushBack(LoadZone::create(1600, 100, 42, 1200, ATRIUM, Vec2(50, 130)));
 
